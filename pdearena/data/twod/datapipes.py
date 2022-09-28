@@ -267,7 +267,7 @@ class TimestepPDEEvalData(dp.iter.IterDataPipe):
         self.delta_t = delta_t
 
     def __iter__(self):
-        # TODO: not sure if this is fully correct
+
         for begin in range(self.pde.trajlen - self.delta_t):
             for (u, v, cond, grid) in self.dp:
                 newu = u[begin :: self.delta_t, ...]
