@@ -336,7 +336,7 @@ def get_model(args, pde):
     return model
 
 
-class FNOModel(LightningModule):
+class PDEModel(LightningModule):
     def __init__(
         self,
         name: str,
@@ -374,14 +374,15 @@ class FNOModel(LightningModule):
 
         self.model = get_model(self.hparams, self.pde)
         if criterion == "mse":
-            self.criterion = CustomMSELoss()
+            self.train_criterion = CustomMSELoss()
             self.rollout_criterion = torch.nn.MSELoss(reduction="none")
         elif criterion == "scaledl2":
-            self.criterion = ScaledLpLoss()
-            self.rollout_criterion = torch.nn.MSELoss(reduction="none")
+            self.train_criterion = ScaledLpLoss()
         else:
             raise NotImplementedError(f"Criterion {criterion} not implemented yet")
 
+        self.val_criterions = {"mse": CustomMSELoss(), "scaledl2": ScaledLpLoss()}
+        self.rollout_criterion = torch.nn.MSELoss(reduction="none")
         time_resolution = self.pde.trajlen
         # Max number of previous points solver can eat
         reduced_time_resolution = time_resolution - self.hparams.time_history
@@ -396,23 +397,29 @@ class FNOModel(LightningModule):
     def forward(self, *args):
         return self.model(*args)
 
-    def step(self, batch):
+    def train_step(self, batch):
         x, y = batch
         pred = self.model(x)
         loss = self.criterion(pred, y)
         return loss, pred, y
 
+    def eval_step(self, batch):
+        x, y = batch
+        pred = self.model(x)
+        loss = {k: vc(pred, y) for k, vc in self.val_criterions.items()}
+        return pred, loss
+
     def training_step(self, batch, batch_idx: int):
-        loss, preds, targets = self.step(batch)
+        loss, preds, targets = self.train_step(batch)
 
         if self._mode == "2D":
-            scalar_loss = self.criterion(
+            scalar_loss = self.train_criterion(
                 preds[:, :, 0 : self.hparams.n_scalar_components, ...],
                 targets[:, :, 0 : self.hparams.n_scalar_components, ...],
             )
 
             if self.pde.n_vector_components > 0:
-                vector_loss = self.criterion(
+                vector_loss = self.train_criterion(
                     preds[:, :, self.hparams.n_scalar_components :, ...],
                     targets[:, :, self.hparams.n_scalar_components :, ...],
                 )
@@ -484,24 +491,21 @@ class FNOModel(LightningModule):
 
     def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0):
         if dataloader_idx == 0:
-            loss, preds, targets = self.step(batch)
+            loss, preds, targets = self.eval_step(batch)
             if self._mode == "2D":
-                scalar_loss = self.criterion(
+                loss["scalar_mse"] = self.val_criterions["mse"](
                     preds[:, :, 0 : self.hparams.n_scalar_components, ...],
                     targets[:, :, 0 : self.hparams.n_scalar_components, ...],
                 )
-                vector_loss = self.criterion(
+                loss["vector_mse"] = self.val_criterions["mse"](
                     preds[:, :, self.hparams.n_scalar_components :, ...],
                     targets[:, :, self.hparams.n_scalar_components :, ...],
                 )
-                chan_avg_loss = loss / (self.pde.n_scalar_components + self.pde.n_vector_components)
-                self.log("valid/loss", loss)
-                return {
-                    "loss": loss,
-                    "scalar_loss": scalar_loss,
-                    "vector_loss": vector_loss,
-                    "chan_avg_loss": chan_avg_loss,
-                }
+                
+                for k in loss.keys():
+                    self.log(f"valid/loss/{k}", loss[k])
+                return {f"{k}_loss": v for k, v in loss.items()}
+
             elif self._mode == "3D":
                 raise NotImplementedError(f"{self._mode}")
 
@@ -549,22 +553,20 @@ class FNOModel(LightningModule):
 
     def test_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0):
         if dataloader_idx == 0:
-            loss, preds, targets = self.step(batch)
+            loss, preds, targets = self.eval_step(batch)
             if self._mode == "2D":
-                scalar_loss = self.criterion(
+                loss["scalar_mse"] = self.val_criterions["mse"](
                     preds[:, :, 0 : self.hparams.n_scalar_components, ...],
                     targets[:, :, 0 : self.hparams.n_scalar_components, ...],
                 )
-                vector_loss = self.criterion(
+                loss["vector_mse"] = self.val_criterions["mse"](
                     preds[:, :, self.hparams.n_scalar_components :, ...],
                     targets[:, :, self.hparams.n_scalar_components :, ...],
                 )
 
                 self.log("test/loss", loss)
                 return {
-                    "loss": loss,
-                    "scalar_loss": scalar_loss,
-                    "vector_loss": vector_loss,
+                    f"{k}_loss": v for k, v in loss.items()
                 }
             elif self._mode == "3D":
                 raise NotImplementedError(f"{self._mode}")
