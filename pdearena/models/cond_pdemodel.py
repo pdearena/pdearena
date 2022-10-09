@@ -147,7 +147,7 @@ def get_model(args, pde):
     return model
 
 
-class CondFNOModel(LightningModule):
+class CondPDEModel(LightningModule):
     def __init__(
         self,
         name: str,

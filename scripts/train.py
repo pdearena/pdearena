@@ -1,6 +1,6 @@
 import os
 
-from pdearena.models.fnomodel import FNOModel
+from pdearena.models.pdemodel import PDEModel
 from pdearena.data.datamodule import PDEDataModule
 from pdearena.lr_scheduler import LinearWarmupCosineAnnealingLR  # noqa: F401
 from pdearena import utils
@@ -16,7 +16,7 @@ def setupdir(path):
 
 def main():
     cli = utils.FNOCLI(
-        FNOModel,
+        PDEModel,
         PDEDataModule,
         seed_everything_default=42,
         save_config_overwrite=True,

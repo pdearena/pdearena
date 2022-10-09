@@ -1,6 +1,6 @@
 import os
 from pytorch_lightning.utilities.cli import LightningCLI
-from pdearena.models.cond_fnomodel import CondFNOModel
+from pdearena.models.cond_pdemodel import CondPDEModel
 from pdearena.data.cond_datamodule import CondPDEDataModule
 from pdearena.lr_scheduler import LinearWarmupCosineAnnealingLR  # noqa: F401
 from pdearena import utils
@@ -21,7 +21,7 @@ class CondCLI(LightningCLI):
 
 def main():
     cli = CondCLI(
-        CondFNOModel,
+        CondPDEModel,
         CondPDEDataModule,
         seed_everything_default=42,
         save_config_overwrite=True,
