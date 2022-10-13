@@ -1,4 +1,5 @@
-from typing import Tuple
+from importlib import import_module
+from typing import Dict, Tuple, Any
 
 from dataclasses import fields as datafields
 from functools import partialmethod
@@ -19,14 +20,19 @@ class Timer(object):
         self.t_end = timeit.default_timer()
         self.dt = self.t_end - self.t_start
 
+def instantiate_class(init: Dict[str, Any]) -> Any:
+    """Instantiates a class with the given args and init.
+    Args:
+        todo
+    Returns:
+        The instantiated class object.
+    """
+    kwargs = {k: init[k] for k in set(list(init.keys())) - {"_target_"}}
 
-# XXX
-def dataclass_from_dict(klass, dikt):
-    try:
-        fieldtypes = {f.name: f.type for f in datafields(klass)}
-        return klass(**{f: dataclass_from_dict(fieldtypes[f], dikt[f]) for f in dikt})
-    except:  # noqa: E722
-        return dikt
+    class_module, class_name = init["_target_"].rsplit(".", 1)
+    module = import_module(class_module, package=class_name)
+    args_class = getattr(module, class_name)
+    return args_class(**kwargs)
 
 
 def get_logger(name=__name__) -> logging.Logger:

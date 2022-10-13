@@ -1,5 +1,6 @@
 import glob
 import os
+import sys
 from dataclasses import dataclass
 
 from omegaconf import OmegaConf
@@ -60,7 +61,7 @@ def main(cfg):
         f.write(OmegaConf.to_yaml(cfg.pdeconfig))
 
     if cfg.experiment == "smoke":
-        pde = utils.dataclass_from_dict(NavierStokes2D, cfg.pdeconfig)
+        pde = utils.instantiate_class(cfg.pdeconfig)
         generate_trajectories_smoke(
             pde=pde,
             mode=cfg.mode,
@@ -75,7 +76,7 @@ def main(cfg):
         bfys = np.random.uniform(0.2, 0.5, size=cfg.samples // 32)
         for bf in bfys:
             cfg.pdeconfig.buoyancy_y = bf.item()
-            pde = utils.dataclass_from_dict(NavierStokes2D, cfg.pdeconfig)
+            pde = utils.instantiate_class(cfg.pdeconfig)
             generate_trajectories_smoke(
                 pde=pde,
                 mode=cfg.mode,
@@ -87,11 +88,10 @@ def main(cfg):
                 seed=seed,
             )
     elif cfg.experiment == "smoke_cond_eval":
-        #bfys = np.random.uniform(0.2, 0.5, size=cfg.samples // 32)
         bfys = np.linspace(0.1, 0.6, num=18)
         for bf in bfys:
             cfg.pdeconfig.buoyancy_y = bf.item()
-            pde = utils.dataclass_from_dict(NavierStokes2D, cfg.pdeconfig)
+            pde = utils.instantiate_class(cfg.pdeconfig)
             generate_trajectories_smoke(
                 pde=pde,
                 mode=cfg.mode,
@@ -105,6 +105,22 @@ def main(cfg):
     else:
         raise NotImplementedError()
 
+def cli():
+    # This is worth it to avoid hydra complexity
+    if "--help" in sys.argv:
+        print("Usage: python generate_data.py base=<config.yaml>")
+        sys.exit(0)
+    cfg = OmegaConf.from_cli()
+
+    if "base" in cfg:
+        basecfg = OmegaConf.load(cfg.base)
+        del cfg.base
+        cfg = OmegaConf.merge(basecfg, cfg)
+        OmegaConf.resolve(cfg)
+        main(cfg)
+    else:
+        raise SystemExit("Base configuration file not specified! Exiting.")
+
 
 if __name__ == "__main__":
-    main()
+    cli()
