@@ -10,6 +10,7 @@ from pdearena.pde import NavierStokes2D, PDEConfig
 from pdedatagen.navier_stokes import (
     generate_trajectories_smoke,
 )
+from pdedatagen.shallowwater import generate_trajectories_shallowwater
 from pdearena import utils
 
 
@@ -31,7 +32,7 @@ MODE2SEED = {
 
 def main(cfg):
     seed = cfg.seed + MODE2SEED[cfg.mode]
-    if cfg.parallel is None and cfg.pdeconfig.device == "cpu":
+    if 'parallel' not in cfg and cfg.pdeconfig.device == "cpu":
         cfg.parallel = _safe_cpucount() // 2 + _safe_cpucount() // 4
     else:
         cfg.parallel = 1
@@ -90,7 +91,13 @@ def main(cfg):
                 dirname=cfg.dirname,
                 n_parallel=cfg.parallel,
                 seed=seed,
-            )            
+            )    
+    elif cfg.experiment == "shallowwater":
+        generate_trajectories_shallowwater(
+            savedir=os.path.join(cfg.dirname, cfg.mode),
+            num_samples=cfg.samples,
+            seed=seed,
+        )
     else:
         raise NotImplementedError()
 

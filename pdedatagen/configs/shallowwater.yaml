@@ -1,0 +1,9 @@
+dirname: ???
+experiment: ???
+mode: ???
+samples: 32
+pdeconfig:
+  _target_: pdearena.pde.ShallowWaterWeather
+seed: 42
+parallel: 1
+overwrite: false
