@@ -1,53 +1,17 @@
 from typing import Tuple, List, Union
-from abc import abstractmethod
-import math
 import torch
 from torch import nn
 
+from .condition_utils import ConditionedBlock, fourier_embedding, zero_module
 from .fourier import SpectralConv2d
 
 
-def zero_module(module):
-    """
-    Zero out the parameters of a module and return it.
-    """
-    for p in module.parameters():
-        p.detach().zero_()
-    return module
 
 
-def fourier_embedding(timesteps, dim, max_period=10000):
-    """
-    Create sinusoidal timestep embeddings.
-    Arguments:
-        - `timesteps`: a 1-D Tensor of N indices, one per batch element.
-                      These may be fractional.
-        - `dim`: the dimension of the output.
-        - `max_period`: controls the minimum frequency of the embeddings.
-    Returns:
-        - embedding: [N x dim] Tensor of positional embeddings.
-    """
-    half = dim // 2
-    freqs = torch.exp(
-        -math.log(max_period) * torch.arange(start=0, end=half, dtype=torch.float32) / half
-    ).to(device=timesteps.device)
-    args = timesteps[:, None].float() * freqs[None]
-    embedding = torch.cat([torch.cos(args), torch.sin(args)], dim=-1)
-    if dim % 2:
-        embedding = torch.cat([embedding, torch.zeros_like(embedding[:, :1])], dim=-1)
-    return embedding
-
-
-# Large based on https://github.com/labmlai/annotated_deep_learning_paper_implementations/blob/master/labml_nn/diffusion/ddpm/unet.py
+# Largely based on https://github.com/labmlai/annotated_deep_learning_paper_implementations/blob/master/labml_nn/diffusion/ddpm/unet.py
 # MIT License
 
 
-class ConditionedBlock(nn.Module):
-    @abstractmethod
-    def forward(self, x, emb):
-        """
-        Apply the module to `x` given `emb` embdding of time or others
-        """
 
 
 class ResidualBlock(ConditionedBlock):

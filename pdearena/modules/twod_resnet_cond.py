@@ -3,18 +3,8 @@ from torch import nn
 import torch.nn.functional as F
 
 from .fourier import SpectralConv2d
-from .twod_unet_cond import fourier_embedding, ConditionedBlock
+from .condition_utils import fourier_embedding, ConditionedBlock
 
-
-class EmbedSequential(nn.Sequential, ConditionedBlock):
-    def forward(self, x, emb):
-        for layer in self:
-            if isinstance(layer, ConditionedBlock):
-                x = layer(x, emb)
-            else:
-                x = layer(x)
-
-        return x
 
 
 class FourierBasicBlock(ConditionedBlock):

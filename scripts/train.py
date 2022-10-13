@@ -15,7 +15,7 @@ def setupdir(path):
 
 
 def main():
-    cli = utils.FNOCLI(
+    cli = utils.PDECLI(
         PDEModel,
         PDEDataModule,
         seed_everything_default=42,

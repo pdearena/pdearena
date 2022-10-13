@@ -103,7 +103,7 @@ def get_cpu_stats():
     }
 
 
-class FNOCLI(LightningCLI):
+class PDECLI(LightningCLI):
     def add_arguments_to_parser(self, parser) -> None:
         parser.link_arguments("data.time_gap", "model.time_gap")
         parser.link_arguments("data.time_history", "model.time_history")
@@ -111,45 +111,3 @@ class FNOCLI(LightningCLI):
         parser.link_arguments("data.pde", "model.pdeconfig")
         parser.link_arguments("data.usegrid", "model.usegrid")
 
-
-# @rank_zero_only
-# def log_hyperparameters(
-#     config,
-#     model: pl.LightningModule,
-#     datamodule: pl.LightningDataModule,
-#     trainer: pl.Trainer,
-#     callbacks: List[pl.Callback],
-#     logger: List[pl.loggers.LightningLoggerBase],
-# ) -> None:
-#     """Controls which config parts are saved by Lightning loggers.
-#     Additionaly saves:
-#     - number of model parameters
-#     """
-
-#     if not trainer.logger:
-#         return
-
-#     hparams = {}
-
-#     # choose which parts of hydra config will be saved to loggers
-#     hparams["model"] = config["model"]
-
-#     # save number of model parameters
-#     hparams["model/params/total"] = sum(p.numel() for p in model.parameters())
-#     hparams["model/params/trainable"] = sum(
-#         p.numel() for p in model.parameters() if p.requires_grad
-#     )
-#     hparams["model/params/non_trainable"] = sum(
-#         p.numel() for p in model.parameters() if not p.requires_grad
-#     )
-
-#     hparams["datamodule"] = config["datamodule"]
-#     hparams["trainer"] = config["trainer"]
-
-#     if "seed" in config:
-#         hparams["seed"] = config["seed"]
-#     if "callbacks" in config:
-#         hparams["callbacks"] = config["callbacks"]
-
-#     # send hparams to all loggers
-#     trainer.logger.log_hyperparams(hparams)

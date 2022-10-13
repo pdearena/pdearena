@@ -18,7 +18,7 @@ from pdearena.data.twod.datapipes import (
     WeatherDatasetOpener,
     VortWeatherDatasetOpener,
 )
-from pdearena.data.twod.dataset import PDEDataset, RandomizedPDETimeStepDataset
+
 
 
 def collate_fn_cat(batch):
@@ -124,7 +124,6 @@ class PDEDataModule(LightningDataModule):
                 else:
                     self.dataset_opener = WeatherDatasetOpener
             self.randomized_traindatapipe = RandomizedPDETrainData
-            self.randomized_traindata = RandomizedPDETimeStepDataset
             self.evaldatapipe = PDEEvalTimeStepData
             self.train_filter = _weathertrain_filter
             self.valid_filter = _weathervalid_filter
@@ -135,9 +134,7 @@ class PDEDataModule(LightningDataModule):
             self.sharder = lambda x: x
         elif len(self.pde.grid_size) == 3:
             self.dataset_opener = PDEDatasetOpener
-            self.dataset = PDEDataset
             self.randomized_traindatapipe = RandomizedPDETrainData
-            self.randomized_traindata = RandomizedPDETimeStepDataset
             self.evaldatapipe = PDEEvalTimeStepData
             self.train_filter = _train_filter
             self.valid_filter = _valid_filter
@@ -164,22 +161,6 @@ class PDEDataModule(LightningDataModule):
             ).cycle(
                 self.pde.trajlen
             ),  # We run every epoch as often as we have number of timesteps in one trajectory.
-            self.pde,
-            time_history=self.hparams.time_history,
-            time_future=self.hparams.time_future,
-            time_gap=self.hparams.time_gap,
-        )
-
-    def _setup_datasets(self):
-        train_files = glob.glob(os.path.join(self.data_dir, "*train*.h5"))
-        assert len(train_files) == 1
-        self.train_dp = self.randomized_traindata(
-            self.dataset(
-                train_files[0],
-                mode="train",
-                limit_trajectories=self.hparams.train_limit_trajectories,
-                usegrid=self.hparams.usegrid,
-            ),
             self.pde,
             time_history=self.hparams.time_history,
             time_future=self.hparams.time_future,

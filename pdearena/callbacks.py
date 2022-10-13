@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 
 import pytorch_lightning as pl
 from pytorch_lightning import Callback
-from pytorch_lightning.utilities.cli import CALLBACK_REGISTRY
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from pytorch_lightning.utilities.types import STEP_OUTPUT
 from pdearena.rollout import rollout2d
@@ -31,7 +30,6 @@ def log_figure(fig, prefix, save_dir, trainer):
         logger.warn(f"Could not add image to logger due to {e}")
 
 
-@CALLBACK_REGISTRY
 class Plot2DTrajPredsCallback(Callback):
     def __init__(self, trajidx: int = 0, save_dir: str = "None") -> None:
         super().__init__()
@@ -271,7 +269,6 @@ class Plot2DTrajPredsCallback(Callback):
         # plt.close(fig)
 
 
-@CALLBACK_REGISTRY
 class OneStep2DPredsCallback(Callback):
     def __init__(self, save_dir: str = "None") -> None:
         super().__init__()
