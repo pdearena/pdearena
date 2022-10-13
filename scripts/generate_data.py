@@ -2,13 +2,12 @@ import glob
 import os
 from dataclasses import dataclass
 
-import hydra
 from omegaconf import OmegaConf
 import numpy as np
 import torch
 from pytorch_lightning import seed_everything
 from pdearena.pde import NavierStokes2D, PDEConfig
-from pdearena.data.datagen import (
+from pdedatagen.datagen import (
     generate_trajectories_smoke,
 )
 from pdearena import utils
@@ -44,7 +43,7 @@ MODE2SEED = {
 }
 
 
-@hydra.main(config_path="../dataconfs", config_name="config", version_base="1.1")
+
 def main(cfg):
     seed = cfg.seed + MODE2SEED[cfg.mode]
     seed_everything(seed)
