@@ -1,14 +1,11 @@
-# Project
+# PDEArena
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+Tested on PyTorch 1.12.
 
-As the maintainer of this project, please make a few updates:
+- `scripts/generate.py` for generating Navier Stokes 2D data
+- `scripts/train.py` for training non conditioned models
+- `scripts/cond_train.py` for training conditioned models
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
 
 ## Contributing
 
