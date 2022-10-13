@@ -19,6 +19,7 @@ class Timer(object):
         self.t_end = timeit.default_timer()
         self.dt = self.t_end - self.t_start
 
+
 def instantiate_class(init: Dict[str, Any]) -> Any:
     """Instantiates a class with the given args and init.
     Args:

@@ -11,7 +11,7 @@ from pytorch_lightning import Callback
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from pytorch_lightning.utilities.types import STEP_OUTPUT
 from pdearena.rollout import rollout2d
-from pdearena.visualization import plot_3d_quiver, plot_scalar, plot_2dvec
+from pdearena.visualization import plot_scalar, plot_2dvec
 from pdearena import utils
 
 logger = utils.get_logger(__name__)
