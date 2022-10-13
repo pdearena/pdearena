@@ -47,6 +47,9 @@ MODE2SEED = {
 
 def main(cfg):
     seed = cfg.seed + MODE2SEED[cfg.mode]
+    if cfg.parallel is None and cfg.pdeconfig.device == "cpu":
+        cfg.parallel = _safe_cpucount() // 2 + _safe_cpucount() // 4
+
     seed_everything(seed)
     os.makedirs(cfg.dirname, exist_ok=True)
     existing_files = glob.glob(os.path.join(cfg.dirname, f"*{cfg.mode}_seed_{cfg.seed}*.h5"))
