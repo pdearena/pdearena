@@ -1,14 +1,13 @@
 import glob
 import os
 import sys
-from dataclasses import dataclass
 
 from omegaconf import OmegaConf
 import numpy as np
 import torch
 from pytorch_lightning import seed_everything
 from pdearena.pde import NavierStokes2D, PDEConfig
-from pdedatagen.datagen import (
+from pdedatagen.navier_stokes import (
     generate_trajectories_smoke,
 )
 from pdearena import utils
@@ -20,21 +19,6 @@ def _safe_cpucount() -> int:
         cnt = 4
     return cnt
 
-
-@dataclass
-class DataGenConfig:
-    dirname: str
-    experiment: str
-    mode: str
-    pdeconfig: PDEConfig
-    samples: int = 2**5
-    batchsize: int = 8
-    overwrite: bool = True
-    seed: int = 42
-    parallel: int = _safe_cpucount() // 2 + _safe_cpucount() // 4
-
-    def __post_init__(self):
-        assert self.mode in ["train", "valid", "test"]
 
 
 MODE2SEED = {
