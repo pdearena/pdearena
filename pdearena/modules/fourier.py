@@ -1,6 +1,5 @@
 import torch
 from torch import nn
-import pdearena.functional as CF
 
 
 # Complex multiplication
