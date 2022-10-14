@@ -7,13 +7,22 @@ from pdearena.modules.twod import BasicBlock, FourierBasicBlock, ResNet
 from pdearena.modules.twod_oldunet import OldUnet
 from pdearena.modules.twod_unet import FourierUnet, Unet, AltFourierUnet
 from pdearena.modules.twod_uno import UNO
+from pdearena.modules.twod_unet2015 import UNet2015
 from pdearena.rollout import rollout2d
 from pytorch_lightning import LightningModule
 from pytorch_lightning.utilities.cli import instantiate_class
 
 
 def get_model(args, pde):
-    if args.name == "OldUnet":
+    if args.name == "Unet2015":
+        model = UNet2015(
+            pde=pde,
+            time_history=args.time_history,
+            time_future=args.time_future,
+            hidden_channels=args.hidden_channels,
+            activation=args.activation,
+        )
+    elif args.name == "OldUnet":
         model = OldUnet(
             pde=pde,
             time_history=args.time_history,
@@ -301,7 +310,10 @@ def get_model(args, pde):
         model = ResNet(
             pde=pde,
             block=utils.partialclass(
-                "CustomFourierBasicBlock", FourierBasicBlock, modes1=args.modes1, modes2=args.modes2
+                "CustomFourierBasicBlock",
+                FourierBasicBlock,
+                modes1=args.modes1,
+                modes2=args.modes2,
             ),
             num_blocks=[1, 1, 1, 1],
             time_history=args.time_history,
@@ -316,7 +328,10 @@ def get_model(args, pde):
         model = ResNet(
             pde=pde,
             block=utils.partialclass(
-                "CustomFourierBasicBlock", FourierBasicBlock, modes1=args.modes1, modes2=args.modes2
+                "CustomFourierBasicBlock",
+                FourierBasicBlock,
+                modes1=args.modes1,
+                modes2=args.modes2,
             ),
             num_blocks=[
                 1,
@@ -345,8 +360,6 @@ class PDEModel(LightningModule):
         time_gap: int,
         max_num_steps: int,
         hidden_channels: int,
-        hidden_channels_scalar: int,
-        hidden_channels_vector: int,
         n_scalar_components: int,
         n_vector_components: int,
         modes1: int,
@@ -356,7 +369,6 @@ class PDEModel(LightningModule):
         diffmode: bool,
         criterion: str,
         lr: float,
-        lr_decay: float,
         unrolling: int,
         rotation: bool,
         usegrid: bool,
@@ -375,7 +387,6 @@ class PDEModel(LightningModule):
         self.model = get_model(self.hparams, self.pde)
         if criterion == "mse":
             self.train_criterion = CustomMSELoss()
-            self.rollout_criterion = torch.nn.MSELoss(reduction="none")
         elif criterion == "scaledl2":
             self.train_criterion = ScaledLpLoss()
         else:
@@ -400,14 +411,14 @@ class PDEModel(LightningModule):
     def train_step(self, batch):
         x, y = batch
         pred = self.model(x)
-        loss = self.criterion(pred, y)
+        loss = self.train_criterion(pred, y)
         return loss, pred, y
 
     def eval_step(self, batch):
         x, y = batch
         pred = self.model(x)
         loss = {k: vc(pred, y) for k, vc in self.val_criterions.items()}
-        return pred, loss
+        return loss, pred, y
 
     def training_step(self, batch, batch_idx: int):
         loss, preds, targets = self.train_step(batch)
@@ -459,7 +470,8 @@ class PDEModel(LightningModule):
             end_time = start + self.hparams.time_history
             target_start_time = end_time + self.hparams.time_gap
             target_end_time = (
-                target_start_time + self.hparams.time_future * self.hparams.max_num_steps
+                target_start_time
+                + self.hparams.time_future * self.hparams.max_num_steps
             )
 
             init_u = u[:, start:end_time, ...]
@@ -488,7 +500,6 @@ class PDEModel(LightningModule):
         loss_vec = torch.stack(losses, dim=0).mean(dim=0)
         return loss_vec
 
-
     def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0):
         if dataloader_idx == 0:
             loss, preds, targets = self.eval_step(batch)
@@ -501,7 +512,7 @@ class PDEModel(LightningModule):
                     preds[:, :, self.hparams.n_scalar_components :, ...],
                     targets[:, :, self.hparams.n_scalar_components :, ...],
                 )
-                
+
                 for k in loss.keys():
                     self.log(f"valid/loss/{k}", loss[k])
                 return {f"{k}_loss": v for k, v in loss.items()}
@@ -517,7 +528,9 @@ class PDEModel(LightningModule):
             # summing across "time axis"
             loss = loss_vec.sum()
             loss_t = loss_vec.cumsum(0)
-            chan_avg_loss = loss / (self.pde.n_scalar_components + self.pde.n_vector_components)
+            chan_avg_loss = loss / (
+                self.pde.n_scalar_components + self.pde.n_vector_components
+            )
             self.log("valid/unrolled_loss", loss)
             return {
                 "unrolled_loss": loss,
@@ -530,7 +543,9 @@ class PDEModel(LightningModule):
             if len(outputs[0]) > 0:
                 for key in outputs[0][0].keys():
                     if "loss" in key:
-                        loss_vec = torch.stack([outputs[0][i][key] for i in range(len(outputs[0]))])
+                        loss_vec = torch.stack(
+                            [outputs[0][i][key] for i in range(len(outputs[0]))]
+                        )
                         mean, std = utils.bootstrap(loss_vec, 64, 1)
                         self.log(f"valid/{key}_mean", mean)
                         self.log(f"valid/{key}_std", std)
@@ -565,9 +580,7 @@ class PDEModel(LightningModule):
                 )
 
                 self.log("test/loss", loss)
-                return {
-                    f"{k}_loss": v for k, v in loss.items()
-                }
+                return {f"{k}_loss": v for k, v in loss.items()}
             elif self._mode == "3D":
                 raise NotImplementedError(f"{self._mode}")
 
@@ -591,7 +604,9 @@ class PDEModel(LightningModule):
         if len(outputs[0]) > 0:
             for key in outputs[0][0].keys():
                 if "loss" in key:
-                    loss_vec = torch.stack([outputs[0][i][key] for i in range(len(outputs[0]))])
+                    loss_vec = torch.stack(
+                        [outputs[0][i][key] for i in range(len(outputs[0]))]
+                    )
                     mean, std = utils.bootstrap(loss_vec, 64, 1)
                     self.log(f"test/{key}_mean", mean)
                     self.log(f"test/{key}_std", std)
@@ -612,14 +627,22 @@ class PDEModel(LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.model.parameters(), lr=self.hparams.lr)
-        # scheduler = torch.optim.lr_scheduler.MultiStepLR(
-        #     optimizer, milestones=[self.hparams.unrolling, 5, 10, 15], gamma=self.hparams.lr_decay
-        # )
         return optimizer
 
 
 def compute_unrolled_loss(
-    model, criterion, u, v, grid, start, data, pred, pde, time_history, time_gap, time_future
+    model,
+    criterion,
+    u,
+    v,
+    grid,
+    start,
+    data,
+    pred,
+    pde,
+    time_history,
+    time_gap,
+    time_future,
 ):
     batch_size = u.shape[0]
     end_time = start + time_history
