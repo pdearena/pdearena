@@ -6,7 +6,7 @@ from omegaconf import OmegaConf
 import numpy as np
 import torch
 from pytorch_lightning import seed_everything
-from pdearena.pde import NavierStokes2D, PDEConfig
+
 from pdedatagen.navier_stokes import (
     generate_trajectories_smoke,
 )
@@ -21,7 +21,6 @@ def _safe_cpucount() -> int:
     return cnt
 
 
-
 MODE2SEED = {
     "train": 100,
     "valid": 200,
@@ -29,17 +28,18 @@ MODE2SEED = {
 }
 
 
-
 def main(cfg):
     seed = cfg.seed + MODE2SEED[cfg.mode]
-    if 'parallel' not in cfg and cfg.pdeconfig.device == "cpu":
+    if "parallel" not in cfg and cfg.pdeconfig.device == "cpu":
         cfg.parallel = _safe_cpucount() // 2 + _safe_cpucount() // 4
     else:
         cfg.parallel = 1
 
     seed_everything(seed)
     os.makedirs(cfg.dirname, exist_ok=True)
-    existing_files = glob.glob(os.path.join(cfg.dirname, f"*{cfg.mode}_seed_{cfg.seed}*.h5"))
+    existing_files = glob.glob(
+        os.path.join(cfg.dirname, f"*{cfg.mode}_seed_{cfg.seed}*.h5")
+    )
     if cfg.overwrite:
         for file in existing_files:
             os.remove(file)
@@ -47,7 +47,9 @@ def main(cfg):
         print("Existing files:", len(existing_files))
 
     print(cfg)
-    with open(os.path.join(cfg.dirname, f"pde_{cfg.mode}_seed_{cfg.seed}.yaml"), "w") as f:
+    with open(
+        os.path.join(cfg.dirname, f"pde_{cfg.mode}_seed_{cfg.seed}.yaml"), "w"
+    ) as f:
         f.write(OmegaConf.to_yaml(cfg.pdeconfig))
 
     if cfg.experiment == "smoke":
@@ -91,7 +93,7 @@ def main(cfg):
                 dirname=cfg.dirname,
                 n_parallel=cfg.parallel,
                 seed=seed,
-            )    
+            )
     elif cfg.experiment == "shallowwater":
         generate_trajectories_shallowwater(
             savedir=os.path.join(cfg.dirname, cfg.mode),
@@ -100,6 +102,7 @@ def main(cfg):
         )
     else:
         raise NotImplementedError()
+
 
 def cli():
     # This is worth it to avoid hydra complexity
