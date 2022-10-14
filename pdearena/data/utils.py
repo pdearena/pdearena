@@ -37,20 +37,20 @@ def create_data(
         data_vector = vector_fields[start:end_time]
         labels_vector = vector_fields[target_start_time:target_end_time]
         data = torch.cat((data_scalar, data_vector), dim=1).unsqueeze(0)
-        labels = torch.cat((labels_scalar, labels_vector), dim=1).unsqueeze(0)
+        targets = torch.cat((labels_scalar, labels_vector), dim=1).unsqueeze(0)
     else:
         data = data_scalar.unsqueeze(0)
-        labels = labels_scalar.unsqueeze(0)
+        targets = labels_scalar.unsqueeze(0)
 
     # if grid is not None:
     #     raise NotImplementedError()
     #     data = torch.cat((data, grid), dim=1)
 
-    if labels.size(1) == 0:
+    if targets.size(1) == 0:
         import pdb
 
         pdb.set_trace()
-    return data, labels
+    return data, targets
 
 
 def create_time_conditioned_data(
@@ -59,16 +59,14 @@ def create_time_conditioned_data(
     assert pde.n_scalar_components > 0 or pde.n_vector_components > 0
     if pde.n_scalar_components > 0:
         data_scalar = scalar_fields[start_time : start_time + 1]
-        label_scalar = scalar_fields[end_time : end_time + 1]
+        target_scalar = scalar_fields[end_time : end_time + 1]
 
     if pde.n_vector_components > 0:
         data_vector = vector_fields[start_time : start_time + 1]
-        label_vector = vector_fields[end_time : end_time + 1]
+        target_vector = vector_fields[end_time : end_time + 1]
         data = torch.cat((data_scalar, data_vector), dim=1).unsqueeze(0)
-        labels = torch.cat((label_scalar, label_vector), dim=1).unsqueeze(0)
+        targets = torch.cat((target_scalar, target_vector), dim=1).unsqueeze(0)
     if grid is not None:
         data = torch.cat((data, grid), dim=1)
 
-    return data, labels, delta_t
-
-
+    return data, targets, delta_t
