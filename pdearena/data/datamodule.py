@@ -9,7 +9,7 @@ from pytorch_lightning.utilities.cli import instantiate_class
 
 from pdearena.data.twod.datapipes import (
     RandomizedPDETrainData,
-    PDEDatasetOpener,
+    NavierStokesDatasetOpener,
     PDEEvalTimeStepData,
     VortWeatherDatasetOpener1Day,
     VortWeatherDatasetOpener2Day,
@@ -133,7 +133,7 @@ class PDEDataModule(LightningDataModule):
             )
             self.sharder = lambda x: x
         elif len(self.pde.grid_size) == 3:
-            self.dataset_opener = PDEDatasetOpener
+            self.dataset_opener = NavierStokesDatasetOpener
             self.randomized_traindatapipe = RandomizedPDETrainData
             self.evaldatapipe = PDEEvalTimeStepData
             self.train_filter = _train_filter

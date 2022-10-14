@@ -13,7 +13,7 @@ import pdearena.data.utils as datautils
 
 
 
-class PDEDatasetOpener(dp.iter.IterDataPipe):
+class NavierStokesDatasetOpener(dp.iter.IterDataPipe):
     def __init__(
         self, dp, mode: str, limit_trajectories: Optional[int] = None, usegrid: bool = False
     ) -> None:
@@ -99,8 +99,6 @@ class WeatherDatasetOpener(dp.iter.IterDataPipe):
 
 
             normstat = torch.load(os.path.join(path, "..", "normstats.pt"))
-            # pres_mean = torch.from_numpy(data.pres.mean(("b", "time")).to_numpy())
-            # pres_var = torch.from_numpy(data.pres.var(("b", "time")).to_numpy())
             if self.limit_trajectories is None or self.limit_trajectories == -1:
                 num = data["u"].shape[0]
             else:
@@ -134,7 +132,6 @@ class WeatherDatasetOpener(dp.iter.IterDataPipe):
                 else:
                     u = torch.tensor(data["u"][idx].to_numpy())
                     v = torch.tensor(data["v"][idx].to_numpy())
-                    # concatenate the velocity components such that [vx(t0), vy(t0), vx(t1), vy(t1), ...]
                     vecf = torch.cat((u, v), dim=1)
 
                 pres = torch.tensor(data["pres"][idx].to_numpy())
