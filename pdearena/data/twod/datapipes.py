@@ -12,7 +12,7 @@ from pdearena.pde import PDEConfig
 import pdearena.data.utils as datautils
 
 
-@torch.utils.data.functional_datapipe("read_uvfields")
+
 class PDEDatasetOpener(dp.iter.IterDataPipe):
     def __init__(
         self, dp, mode: str, limit_trajectories: Optional[int] = None, usegrid: bool = False
@@ -43,14 +43,9 @@ class PDEDatasetOpener(dp.iter.IterDataPipe):
                         cond = torch.tensor(data["buo_y"][idx]).unsqueeze(0).float()
                     else:
                         cond = None
-                    # u = u / u.amax(dim=(-2, -1))[..., None, None]
-                    # v_norm = torch.sqrt(torch.square(vx) + torch.square(vy))
-                    # vx = vx / v_norm.amax(dim=(-2, -1))[..., None, None]
-                    # vy = vy / v_norm.amax(dim=(-2, -1))[..., None, None]
 
-                    # concatenate the velocity components such that [vx(t0), vy(t0), vx(t1), vy(t1), ...]
                     v = torch.cat((vx[:, None], vy[:, None]), dim=1)
-                    # v = v.view(-1, *v.shape[-2:])
+
                     if self.usegrid:
                         gridx = torch.linspace(0, 1, data["x"][idx].shape[0])
                         gridy = torch.linspace(0, 1, data["y"][idx].shape[0])
@@ -70,7 +65,7 @@ class PDEDatasetOpener(dp.iter.IterDataPipe):
                     yield u.unsqueeze(1).float(), v.float(), cond, grid
 
 
-@torch.utils.data.functional_datapipe("read_uvpfields")
+
 class WeatherDatasetOpener(dp.iter.IterDataPipe):
     def __init__(
         self,
@@ -91,13 +86,17 @@ class WeatherDatasetOpener(dp.iter.IterDataPipe):
 
     def __iter__(self):
         for path in self.dp:
-            # data = xr.open_mfdataset(
-            #     os.path.join(path, "seed=*", "run*", "output.nc"),
-            #     concat_dim="b",
-            #     combine="nested",
-            #     parallel=True,
-            # )
-            data = xr.open_zarr(path)
+            if 'zarr' in path:
+                data = xr.open_zarr(path)
+            else:
+                # Note that this is much slower
+                data = xr.open_mfdataset(
+                    os.path.join(path, "seed=*", "run*", "output.nc"),
+                    concat_dim="b",
+                    combine="nested",
+                    parallel=True,
+                )
+
 
             normstat = torch.load(os.path.join(path, "..", "normstats.pt"))
             # pres_mean = torch.from_numpy(data.pres.mean(("b", "time")).to_numpy())
@@ -150,27 +149,8 @@ class WeatherDatasetOpener(dp.iter.IterDataPipe):
                         vort = vort[4 :: self.sample_rate]
                     else:
                         vecf = vecf[4 :: self.sample_rate]
-                # normalize the velocity field?
-                # u = (u - normstat["u"]["mean"]) / normstat["u"]["std"]
-                # v = (v - normstat["v"]["mean"]) / normstat["v"]["std"]
-
-                # v = v.view(-1, *v.shape[-2:])
                 if self.usegrid:
                     raise NotImplementedError("Grid not implemented for weather data")
-                    # gridx = torch.linspace(0, 1, data["x"][idx].shape[0])
-                    # gridy = torch.linspace(0, 1, data["y"][idx].shape[0])
-                    # gridx = gridx.reshape(1, gridx.size(0), 1,).repeat(
-                    #     1,
-                    #     1,
-                    #     gridy.size(0),
-                    # )
-                    # gridy = gridy.reshape(1, 1, gridy.size(0),).repeat(
-                    #     1,
-                    #     gridx.size(1),
-                    #     1,
-                    # )
-                    # grid = torch.cat((gridx[:, None], gridy[:, None]), dim=1)
-                    # yield pres.unsqueeze(1).float(), vecf.float(), grid.float()
                 else:
                     if self.usevort:
                         yield torch.cat((pres, vort), dim=1).float(), None, None, None
@@ -234,21 +214,25 @@ class VortWeatherDatasetOpener1Day(WeatherDatasetOpener):
 
 
 class RandomTimeStepPDETrainData(dp.iter.IterDataPipe):
-    def __init__(self, dp, pde: PDEConfig) -> None:
+    def __init__(self, dp, pde: PDEConfig, reweigh=True) -> None:
         super().__init__()
         self.dp = dp
         self.pde = pde
+        self.reweigh = reweigh
 
     def __iter__(self):
         time_resolution = self.pde.trajlen
 
         for (u, v, cond, grid) in self.dp:
-            # end_time = torch.randint(low=1, high=time_resolution, size=(1,), dtype=torch.long)
-            # start_time = torch.randint(low=0, high=end_time.item(), size=(1,), dtype=torch.long)
-            end_time = random.choices(range(1, time_resolution), k=1)[0]
-            start_time = random.choices(
-                range(0, end_time), weights=1 / np.arange(1, end_time + 1), k=1
-            )[0]
+            if self.reweigh:
+                end_time = random.choices(range(1, time_resolution), k=1)[0]
+                start_time = random.choices(
+                    range(0, end_time), weights=1 / np.arange(1, end_time + 1), k=1
+                )[0]
+            else:
+                end_time = torch.randint(low=1, high=time_resolution, size=(1,), dtype=torch.long).item()
+                start_time = torch.randint(low=0, high=end_time.item(), size=(1,), dtype=torch.long).item()
+
             delta_t = end_time - start_time
             yield (
                 *datautils.create_time_conditioned_data(
@@ -284,9 +268,7 @@ class TimestepPDEEvalData(dp.iter.IterDataPipe):
                         0
                     )
                     if data.size(1) == 0:
-                        import pdb
-
-                        pdb.set_trace()
+                        raise ValueError("Data is empty. Likely indexing issue.")
                     yield data, label, torch.tensor([self.delta_t]), cond
 
 
@@ -326,8 +308,6 @@ class RandomizedPDETrainData(dp.iter.IterDataPipe):
                 self.pde,
                 u,
                 v,
-                # u.squeeze(1),
-                # v.view(-1, *v.shape[-2:]),
                 grid,
                 start_time[0],
                 self.time_history,
@@ -389,12 +369,6 @@ class PDEEvalTimeStepData(dp.iter.IterDataPipe):
 
                 # add batch dim
                 data = torch.cat((data_scalar, data_vector), dim=1).unsqueeze(0)
-
-                # Commented this with the idea that cond and grid should just be returned and
-                # model class should handle them.
-                # if not torch.isnan(grid):
-                #     raise NotImplementedError("Grid not implemented")
-                #     data = torch.cat((data, grid), dim=1)
 
                 # add batch dim
                 labels = torch.cat((labels_scalar, labels_vector), dim=1).unsqueeze(0)
