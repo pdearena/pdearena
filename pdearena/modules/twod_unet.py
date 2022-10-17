@@ -521,7 +521,7 @@ class Unet(nn.Module):
         return x
 
 
-class FourierUnet(nn.Module):
+class AltFourierUnet(nn.Module):
     def __init__(
         self,
         pde,
@@ -698,7 +698,7 @@ class FourierUnet(nn.Module):
         return x.reshape(orig_shape[0], -1, *orig_shape[2:])
 
 
-class AltFourierUnet(nn.Module):
+class FourierUnet(nn.Module):
     def __init__(
         self,
         pde,
