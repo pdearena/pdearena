@@ -7,7 +7,6 @@ import torch
 from pdearena import utils
 from pdearena.modules.loss import CustomMSELoss, ScaledLpLoss
 from pdearena.modules.twod import BasicBlock, FourierBasicBlock, ResNet
-from pdearena.modules.twod_ckconv import CKResNet, CKBasicBlock
 from pdearena.modules.twod_oldunet import OldUnet
 from pdearena.modules.twod_unet import FourierUnet, Unet, AltFourierUnet
 from pdearena.modules.twod_uno import UNO
@@ -579,63 +578,3 @@ class PDEModel(LightningModule):
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.model.parameters(), lr=self.hparams.lr)
         return optimizer
-
-
-def compute_unrolled_loss(
-    model,
-    criterion,
-    u,
-    v,
-    grid,
-    start,
-    data,
-    pred,
-    pde,
-    time_history,
-    time_gap,
-    time_future,
-):
-    batch_size = u.shape[0]
-    end_time = start + time_history
-    target_start_time = end_time + time_gap
-    target_end_time = target_start_time + time_future
-    if start == pde.skip_nt:
-        # fmt: off
-        if pde.n_scalar_components > 0:
-            data_scalar = u[:, start * pde.n_scalar_components : end_time * pde.n_scalar_components, ]
-        if pde.n_vector_components > 0:
-            data_vector = v[:, start * pde.n_vector_components * 2 : end_time * pde.n_vector_components * 2, ]
-        # fmt: on
-        data_scalar = data_scalar.to(u.device)
-        data_vector = data_vector.to(u.device)
-        data = torch.cat((data_scalar, data_vector), 1)
-    else:
-        # fmt: off
-        data = torch.cat([data, pred], 1)
-        data = data[:, -time_history * (pde.n_scalar_components + pde.n_vector_components * 2) :, ]
-        # fmt: on
-
-    if grid is not None:
-        data = torch.cat((data, grid), dim=1)
-
-    # fmt: off
-    if pde.n_scalar_components > 0:
-        labels_scalar = u[:, target_start_time * pde.n_scalar_components : target_end_time * pde.n_scalar_components, ]
-    if pde.n_vector_components > 0:
-        labels_vector = v[:, target_start_time * pde.n_vector_components * 2 : target_end_time * pde.n_vector_components * 2, ]
-    # fmt: on
-    labels_scalar = labels_scalar.to(u.device)
-    labels_vector = labels_vector.to(u.device)
-
-    labels = torch.cat((labels_scalar, labels_vector), 1)
-
-    pred = model(data)
-    loss = criterion(pred, labels.float())
-    nlabels = torch.mean(labels**2, dim=-1, keepdim=True).mean(dim=-2, keepdim=True)
-    nloss = loss / nlabels
-    loss, nloss = loss.sum(), nloss.sum()
-    loss, nloss = (
-        loss / pde.nx / pde.ny / batch_size,
-        nloss / pde.nx / pde.ny / batch_size,
-    )
-    return loss, nloss, data, pred
