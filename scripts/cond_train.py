@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
 import os
 from pytorch_lightning.utilities.cli import LightningCLI
 from pdearena.models.cond_pdemodel import CondPDEModel

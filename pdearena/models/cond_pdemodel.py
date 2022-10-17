@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
 from collections import defaultdict
 from typing import Any, List, Dict
 import time

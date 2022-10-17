@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
 from importlib import import_module
 from typing import Dict, Tuple, Any
 

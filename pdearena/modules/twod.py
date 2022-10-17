@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
 import torch
 
 from torch import nn
@@ -59,7 +61,7 @@ class BasicBlock(nn.Module):
                 nn.Conv2d(
                     in_planes, self.expansion * planes, kernel_size=1, stride=stride, bias=False
                 ),
-                nn.GroupNorm2d(num_groups, self.expansion * planes) if norm else nn.Identity(),
+                nn.GroupNorm(num_groups, self.expansion * planes) if norm else nn.Identity(),
             )
         if activation == "gelu":
             self.activation = F.gelu
@@ -73,7 +75,7 @@ class BasicBlock(nn.Module):
         # out = self.bn2(self.conv2(out))
         out = self.conv1(self.activation(self.bn1(x)))
         out = self.conv2(self.activation(self.bn2(out)))
-        out += self.shortcut(x)
+        out = out + self.shortcut(x)
         # out = self.activation(out)
         return out
 
