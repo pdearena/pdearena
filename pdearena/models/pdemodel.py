@@ -295,6 +295,52 @@ def get_model(args, pde):
             mid_attn=True,
             n_fourier_layers=4,
         )
+    elif args.name == "ResNet":
+        model = ResNet(
+            pde=pde,
+            block=BasicBlock,
+            num_blocks=[2, 2, 2, 2],
+            time_history=args.time_history,
+            time_future=args.time_future,
+            hidden_channels=args.hidden_channels,
+            activation=args.activation,
+            norm=args.norm,
+            diffmode=args.diffmode,
+            usegrid=args.usegrid,
+        )
+    elif args.name == "FourierResNet":
+        model = ResNet(
+            pde=pde,
+            block=utils.partialclass(
+                "CustomFourierBasicBlock", FourierBasicBlock, modes1=args.modes1, modes2=args.modes2
+            ),
+            num_blocks=[1, 1, 1, 1],
+            time_history=args.time_history,
+            time_future=args.time_future,
+            hidden_channels=args.hidden_channels,
+            activation=args.activation,
+            norm=args.norm,
+            diffmode=args.diffmode,
+            usegrid=args.usegrid,
+        )
+    elif args.name == "FourierResNetSmall":
+        model = ResNet(
+            pde=pde,
+            block=utils.partialclass(
+                "CustomFourierBasicBlock", FourierBasicBlock, modes1=args.modes1, modes2=args.modes2
+            ),
+            num_blocks=[
+                1,
+                1,
+            ],
+            time_history=args.time_history,
+            time_future=args.time_future,
+            hidden_channels=args.hidden_channels,
+            activation=args.activation,
+            norm=args.norm,
+            diffmode=args.diffmode,
+            usegrid=args.usegrid,
+        )
     else:
         raise Exception(f"Wrong model specified {args.name}")
 
