@@ -754,32 +754,17 @@ class FourierUnet(nn.Module):
         for i in reversed(range(n_resolutions)):
             # `n_blocks` at the same resolution
             out_channels = in_channels
-            if i < n_fourier_layers:
-                for _ in range(n_blocks):
-                    up.append(
-                        FourierUpBlock(
-                            in_channels,
-                            out_channels,
-                            time_embed_dim,
-                            modes1=max(modes1 // 2**i, 4) if mode_scaling else modes1,
-                            modes2=max(modes2 // 2**i, 4) if mode_scaling else modes2,
-                            has_attn=is_attn[i],
-                            activation=activation,
-                            norm=norm,
-                        )
+            for _ in range(n_blocks):
+                up.append(
+                    UpBlock(
+                        in_channels,
+                        out_channels,
+                        time_embed_dim,
+                        has_attn=is_attn[i],
+                        activation=activation,
+                        norm=norm,
                     )
-            else:
-                for _ in range(n_blocks):
-                    up.append(
-                        UpBlock(
-                            in_channels,
-                            out_channels,
-                            time_embed_dim,
-                            has_attn=is_attn[i],
-                            activation=activation,
-                            norm=norm,
-                        )
-                    )
+                )
             # Final block to reduce the number of channels
             out_channels = in_channels // ch_mults[i]
             up.append(
