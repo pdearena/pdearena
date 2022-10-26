@@ -1,0 +1,16 @@
+site_name: PDEArena
+repo_url: https://github.com/microsoft/pdearena
+markdown_extensions:
+  - attr_list
+  - tables
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences  
+theme:
+  name: material
+  palette:
+    primary: teal
+  icon:
+      repo: fontawesome/brands/github
