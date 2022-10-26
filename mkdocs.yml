@@ -15,5 +15,6 @@ theme:
   name: material
   palette:
     primary: teal
+    accent: teal
   icon:
       repo: fontawesome/brands/github
