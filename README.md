@@ -3,11 +3,10 @@
 [![Documentation](https://img.shields.io/badge/docs-passing-brightgreen)](https://microsoft.github.io/pdearena)
 [![Paper](https://img.shields.io/badge/arXiv-2209.15616-blue)](https://arxiv.org/abs/2209.15616)
 
-Tested on PyTorch 1.12.
+While this repository contains code to accompany the paper: "Towards multi-spatiotemporal-scale generalized PDE modeling", we hope this can be a starting point for future PDE surrogate learning research. We hope to soon have models from "Clifford neural layers for PDE modeling" as well. 
 
-- `scripts/generate.py` for generating Navier Stokes 2D data
-- `scripts/train.py` for training non conditioned models
-- `scripts/cond_train.py` for training conditioned models
+For details about usage please see [documentation](https://microsoft.github.io/pdearena). 
+If you have any questions or suggestions please open a [discussion](). If you notice a bug, please open an [issue](https://github.com/microsoft/pdearena/issues). 
 
 
 ## Contributing
