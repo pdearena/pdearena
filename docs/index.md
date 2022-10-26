@@ -49,4 +49,13 @@ docker run --gpus all -it -v $(pwd):/code -v /mnt/data:/data
 
 ## Citation
 
+```
+@article{gupta2022towards,
+  title={Towards Multi-spatiotemporal-scale Generalized PDE Modeling},
+  author={Gupta, Jayesh K and Brandstetter, Johannes},
+  journal={arXiv preprint arXiv:2209.15616},
+  year={2022}
+}
+```
+
 ## Other Projects of Interest
