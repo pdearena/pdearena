@@ -59,3 +59,5 @@ docker run --gpus all -it -v $(pwd):/code -v /mnt/data:/data
 ```
 
 ## Other Projects of Interest
+
+- [PDEBench](https://github.com/pdebench/PDEBench)
