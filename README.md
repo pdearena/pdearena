@@ -1,6 +1,7 @@
 # PDEArena
 
 [![Documentation](https://img.shields.io/badge/docs-passing-brightgreen)](https://microsoft.github.io/pdearena)
+[![Paper](https://img.shields.io/badge/arXiv-2209.15616-blue)](https://arxiv.org/abs/2209.15616)
 
 Tested on PyTorch 1.12.
 
