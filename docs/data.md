@@ -47,5 +47,6 @@ python scripts/generate_data.py base=pdedatagen/configs/shallowwater.yaml \
 ### Data normalization
 
 ```bash
-python scripts/compute_normalization.py --dataset shallowwater /mnt/data/shallowwater
+python scripts/compute_normalization.py \
+    --dataset shallowwater /mnt/data/shallowwater
 ```
