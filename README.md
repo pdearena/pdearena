@@ -1,5 +1,7 @@
 # PDEArena
 
+[![Documentation](https://img.shields.io/badge/docs-passing-brightgreen)](https://microsoft.github.io/pdearena)
+
 Tested on PyTorch 1.12.
 
 - `scripts/generate.py` for generating Navier Stokes 2D data
