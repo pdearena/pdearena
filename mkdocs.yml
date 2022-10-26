@@ -3,6 +3,9 @@ repo_url: https://github.com/microsoft/pdearena
 markdown_extensions:
   - attr_list
   - tables
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
