@@ -22,6 +22,10 @@ python scripts/generate_data.py base=pdedatagen/configs/navierstokes2dsmoke.yaml
     dirname=/mnt/data/navierstokes;
 ```
 
+### Data normalization
+
+The data was reasonably bounded that we didn't need any normalization.
+
 ## Shallow water 2D
 
 ```bash
@@ -38,4 +42,10 @@ python scripts/generate_data.py base=pdedatagen/configs/shallowwater.yaml \
 python scripts/generate_data.py base=pdedatagen/configs/shallowwater.yaml \         
     experiment=shallowwater mode=test samples=32 seed=$seed \
     dirname=/mnt/data/shallowwater;
+```
+
+### Data normalization
+
+```bash
+python scripts/compute_normalization.py --dataset shallowwater /mnt/data/shallowwater
 ```

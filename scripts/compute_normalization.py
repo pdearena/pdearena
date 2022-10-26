@@ -45,9 +45,9 @@ def compute_normstats_weather(datapath):
 
 @click.command()
 @click.argument("datapath", type=click.Path(exists=True))
-@click.option("--dataset", type=str, default="weather")
+@click.option("--dataset", type=str, default="shallowwater")
 def main(datapath, dataset):
-    if dataset == "weather":
+    if dataset == "shallowwater":
         stats = compute_normstats_weather(datapath)
     else:
         raise NotImplementedError(f"Dataset {dataset} not implemented.")
