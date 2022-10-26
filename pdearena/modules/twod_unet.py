@@ -8,6 +8,7 @@ from .fourier import SpectralConv2d
 
 # Largely based on https://github.com/labmlai/annotated_deep_learning_paper_implementations/blob/master/labml_nn/diffusion/ddpm/unet.py
 # MIT License
+# Copyright (c) 2020 Varuna Jayasiri
 
 
 class ResidualBlock(nn.Module):
