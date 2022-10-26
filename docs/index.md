@@ -6,6 +6,8 @@
 
 ### Using `conda`
 
+#### Setup dependencies
+
 ```bash
 # clone the repo
 git clone https://github.com/microsoft/pdearena
@@ -14,9 +16,19 @@ git clone https://github.com/microsoft/pdearena
 cd pdearena
 conda env create --file docker/environment.yml
 conda activate pdearena
+```
 
+#### Install this package
+
+```bash
 # install so the project is in PYTHONPATH
 pip install -e .
+```
+
+If you also want to do data generation:
+
+```bash
+pip install -e ".[datagen]"
 ```
 
 ### Using `docker`
