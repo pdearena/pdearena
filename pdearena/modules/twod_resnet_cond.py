@@ -4,8 +4,8 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 
-from .fourier import SpectralConv2d
-from .condition_utils import fourier_embedding, ConditionedBlock
+from .fourier_cond import SpectralConv2d
+from .condition_utils import fourier_embedding, ConditionedBlock, EmbedSequential
 
 
 
@@ -33,25 +33,25 @@ class FourierBasicBlock(ConditionedBlock):
         else:
             raise NotImplementedError(f"Activation {activation} not implemented")
         assert not norm
-        self.fourier1 = SpectralConv2d(in_planes, planes, modes1=self.modes1, modes2=self.modes2)
+        self.fourier1 = SpectralConv2d(in_planes, planes, cond_channels, modes1=self.modes1, modes2=self.modes2)
         self.conv1 = nn.Conv2d(
             in_planes, planes, kernel_size=1, padding=0, padding_mode="zeros", bias=True
         )
-        self.fourier2 = SpectralConv2d(planes, planes, modes1=self.modes1, modes2=self.modes2)
+        self.fourier2 = SpectralConv2d(planes, planes, cond_channels, modes1=self.modes1, modes2=self.modes2)
         self.conv2 = nn.Conv2d(
             planes, planes, kernel_size=1, padding=0, padding_mode="zeros", bias=True
         )
         self.cond_emb = nn.Linear(cond_channels, planes)
 
     def forward(self, x: torch.Tensor, emb: torch.Tensor):
-        x1 = self.fourier1(x)
+        x1 = self.fourier1(x, emb)
         x2 = self.conv1(x)
         emb_out = self.cond_emb(emb)
         while len(emb_out.shape) < len(x2.shape):
             emb_out = emb_out[..., None]
 
         out = self.activation(x1 + x2 + emb_out)
-        x1 = self.fourier2(out)
+        x1 = self.fourier2(out, emb)
         x2 = self.conv2(out)
         out = x1 + x2
         out = self.activation(out)

@@ -63,7 +63,7 @@ class CondPDEDataModule(LightningDataModule):
         train_limit_trajectories: int,
         valid_limit_trajectories: int,
         test_limit_trajectories: int,
-        eval_dts: List[int] = [1, 2, 4],
+        eval_dts: List[int] = [1, 2, 4, 8, 16],
         datapipe: bool = True,
         usegrid: bool = False,
     ):

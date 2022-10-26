@@ -5,7 +5,7 @@ import torch
 from torch import nn
 
 from .condition_utils import ConditionedBlock, fourier_embedding, zero_module
-from .fourier import SpectralConv2d
+from .fourier_cond import SpectralConv2d
 
 
 
@@ -106,13 +106,13 @@ class FourierResidualBlock(ConditionedBlock):
         self.modes2 = modes2
 
         self.fourier1 = SpectralConv2d(
-            in_channels, out_channels, modes1=self.modes1, modes2=self.modes2
+            in_channels, out_channels, cond_channels, modes1=self.modes1, modes2=self.modes2
         )
         self.conv1 = nn.Conv2d(
             in_channels, out_channels, kernel_size=1, padding=0, padding_mode="zeros"
         )
         self.fourier2 = SpectralConv2d(
-            out_channels, out_channels, modes1=self.modes1, modes2=self.modes2
+            out_channels, out_channels, cond_channels, modes1=self.modes1, modes2=self.modes2
         )
         self.conv2 = nn.Conv2d(
             out_channels, out_channels, kernel_size=1, padding=0, padding_mode="zeros"
@@ -157,23 +157,28 @@ class FourierResidualBlock(ConditionedBlock):
         # # out += self.shortcut(x)
         # out = self.activation(out)
         # out = out + self.shortcut(x)
+
         h = self.activation(self.norm1(x))
-        x1 = self.fourier1(h)
+        
+        x1 = self.fourier1(h, emb)
         x2 = self.conv1(h)
         out = x1 + x2
+
         emb_out = self.cond_emb(emb)
         while len(emb_out.shape) < len(h.shape):
             emb_out = emb_out[..., None]
+
+
         if self.use_scale_shift_norm:
             scale, shift = torch.chunk(emb_out, 2, dim=1)
             h = self.norm2(out) * (1 + scale) + shift  # where we do -1 or +1 doesn't matter
             h = self.activation(h)
-            x1 = self.fourier2(h)
+            x1 = self.fourier2(h, emb)
             x2 = self.conv2(h)
         else:
             out = out + emb_out
             out = self.activation(self.norm2(out))
-            x1 = self.fourier2(out)
+            x1 = self.fourier2(out, emb)
             x2 = self.conv2(out)
 
         out = x1 + x2 + self.shortcut(x)
