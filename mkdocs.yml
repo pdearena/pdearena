@@ -1,5 +1,7 @@
 site_name: PDEArena
+repo_name: microsoft/pdearena
 repo_url: https://github.com/microsoft/pdearena
+edit_uri: edit/main/docs/
 markdown_extensions:
   - attr_list
   - tables
