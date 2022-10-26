@@ -18,3 +18,4 @@ theme:
     accent: teal
   icon:
       repo: fontawesome/brands/github
+      logo: material/stadium
