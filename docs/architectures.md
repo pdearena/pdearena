@@ -11,6 +11,7 @@
 | U-Net-base   |            |  Original U-Net Implementation but with an extra layer           |          |
 | U-Net-modern |            | Modern U-Nets as used in various diffusion modeling applications            |          |
 | UF-Net       |            | Modern U-Nets with Fourier layer based downsampling            |          |
+| UNO          |            |              |          |
 
 
 ## Conditioned
