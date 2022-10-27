@@ -1,8 +1,8 @@
 # Data Generation
 
-!!! tip ""
+!!! tip
 
-    Make sure that the number of shards is divisible by the number of GPUs. 8 is usually a safe number.
+    For multi-gpu training, make sure that the number of shards is divisible by the number of GPUs. 8 is usually a safe number.
 
 ## Navier Stokes 2D
 
