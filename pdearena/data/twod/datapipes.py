@@ -14,11 +14,8 @@ from pdearena.pde import PDEConfig
 import pdearena.data.utils as datautils
 
 
-
 class NavierStokesDatasetOpener(dp.iter.IterDataPipe):
-    def __init__(
-        self, dp, mode: str, limit_trajectories: Optional[int] = None, usegrid: bool = False
-    ) -> None:
+    def __init__(self, dp, mode: str, limit_trajectories: Optional[int] = None, usegrid: bool = False) -> None:
         super().__init__()
         self.dp = dp
         self.mode = mode
@@ -67,7 +64,6 @@ class NavierStokesDatasetOpener(dp.iter.IterDataPipe):
                     yield u.unsqueeze(1).float(), v.float(), cond, grid
 
 
-
 class WeatherDatasetOpener(dp.iter.IterDataPipe):
     def __init__(
         self,
@@ -88,7 +84,7 @@ class WeatherDatasetOpener(dp.iter.IterDataPipe):
 
     def __iter__(self):
         for path in self.dp:
-            if 'zarr' in path:
+            if "zarr" in path:
                 data = xr.open_zarr(path)
             else:
                 # Note that this is much slower
@@ -98,7 +94,6 @@ class WeatherDatasetOpener(dp.iter.IterDataPipe):
                     combine="nested",
                     parallel=True,
                 )
-
 
             normstat = torch.load(os.path.join(path, "..", "normstats.pt"))
             if self.limit_trajectories is None or self.limit_trajectories == -1:
@@ -158,9 +153,7 @@ class WeatherDatasetOpener(dp.iter.IterDataPipe):
 
 
 class VortWeatherDatasetOpener(WeatherDatasetOpener):
-    def __init__(
-        self, dp, mode: str, limit_trajectories: Optional[int] = None, usegrid: bool = False
-    ) -> None:
+    def __init__(self, dp, mode: str, limit_trajectories: Optional[int] = None, usegrid: bool = False) -> None:
         super().__init__(dp, mode, limit_trajectories, usevort=True, usegrid=usegrid)
 
 
@@ -172,9 +165,7 @@ class WeatherDatasetOpener2Day(WeatherDatasetOpener):
         limit_trajectories: Optional[int] = None,
         usegrid: bool = False,
     ) -> None:
-        super().__init__(
-            dp, mode, limit_trajectories, usevort=False, usegrid=usegrid, sample_rate=8
-        )
+        super().__init__(dp, mode, limit_trajectories, usevort=False, usegrid=usegrid, sample_rate=8)
 
 
 class VortWeatherDatasetOpener2Day(WeatherDatasetOpener):
@@ -196,9 +187,7 @@ class WeatherDatasetOpener1Day(WeatherDatasetOpener):
         limit_trajectories: Optional[int] = None,
         usegrid: bool = False,
     ) -> None:
-        super().__init__(
-            dp, mode, limit_trajectories, usevort=False, usegrid=usegrid, sample_rate=4
-        )
+        super().__init__(dp, mode, limit_trajectories, usevort=False, usegrid=usegrid, sample_rate=4)
 
 
 class VortWeatherDatasetOpener1Day(WeatherDatasetOpener):
@@ -225,9 +214,7 @@ class RandomTimeStepPDETrainData(dp.iter.IterDataPipe):
         for (u, v, cond, grid) in self.dp:
             if self.reweigh:
                 end_time = random.choices(range(1, time_resolution), k=1)[0]
-                start_time = random.choices(
-                    range(0, end_time), weights=1 / np.arange(1, end_time + 1), k=1
-                )[0]
+                start_time = random.choices(range(0, end_time), weights=1 / np.arange(1, end_time + 1), k=1)[0]
             else:
                 end_time = torch.randint(low=1, high=time_resolution, size=(1,), dtype=torch.long).item()
                 start_time = torch.randint(low=0, high=end_time.item(), size=(1,), dtype=torch.long).item()
@@ -258,23 +245,17 @@ class TimestepPDEEvalData(dp.iter.IterDataPipe):
                 max_start_time = newu.size(0)
                 for start in range(max_start_time - 1):
                     end = start + 1
-                    data = torch.cat(
-                        (newu[start : start + 1], newv[start : start + 1]), dim=1
-                    ).unsqueeze(0)
+                    data = torch.cat((newu[start : start + 1], newv[start : start + 1]), dim=1).unsqueeze(0)
                     if grid is not None:
                         data = torch.cat((data, grid), dim=1)
-                    label = torch.cat((newu[end : end + 1], newv[end : end + 1]), dim=1).unsqueeze(
-                        0
-                    )
+                    label = torch.cat((newu[end : end + 1], newv[end : end + 1]), dim=1).unsqueeze(0)
                     if data.size(1) == 0:
                         raise ValueError("Data is empty. Likely indexing issue.")
                     yield data, label, torch.tensor([self.delta_t]), cond
 
 
 class RandomizedPDETrainData(dp.iter.IterDataPipe):
-    def __init__(
-        self, dp, pde: PDEConfig, time_history: int, time_future: int, time_gap: int
-    ) -> None:
+    def __init__(self, dp, pde: PDEConfig, time_history: int, time_future: int, time_gap: int) -> None:
         super().__init__()
         self.dp = dp
         self.pde = pde
@@ -300,9 +281,7 @@ class RandomizedPDETrainData(dp.iter.IterDataPipe):
                 raise ValueError(f"Unknown batch length of {len(batch)}.")
 
             # Choose initial random time point at the PDE solution manifold
-            start_time = random.choices(
-                [t for t in range(self.pde.skip_nt, max_start_time + 1)], k=1
-            )
+            start_time = random.choices([t for t in range(self.pde.skip_nt, max_start_time + 1)], k=1)
             yield datautils.create_data(
                 self.pde,
                 u,
@@ -316,9 +295,7 @@ class RandomizedPDETrainData(dp.iter.IterDataPipe):
 
 
 class PDEEvalTimeStepData(dp.iter.IterDataPipe):
-    def __init__(
-        self, dp, pde: PDEConfig, time_history: int, time_future: int, time_gap: int
-    ) -> None:
+    def __init__(self, dp, pde: PDEConfig, time_history: int, time_future: int, time_gap: int) -> None:
         super().__init__()
         self.dp = dp
         self.pde = pde
@@ -334,9 +311,7 @@ class PDEEvalTimeStepData(dp.iter.IterDataPipe):
         # Number of future points to predict
         max_start_time = reduced_time_resolution - self.time_future - self.time_gap
         # We ignore these timesteps in the testing
-        start_time = [
-            t for t in range(self.pde.skip_nt, max_start_time + 1, self.time_gap + self.time_future)
-        ]
+        start_time = [t for t in range(self.pde.skip_nt, max_start_time + 1, self.time_gap + self.time_future)]
         for start in start_time:
             for (u, v, cond, grid) in self.dp:
 

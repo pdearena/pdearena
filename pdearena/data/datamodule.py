@@ -22,7 +22,6 @@ from pdearena.data.twod.datapipes import (
 )
 
 
-
 def collate_fn_cat(batch):
     # Assuming pairs
     b1 = torch.cat([b[0] for b in batch], dim=0)
@@ -154,9 +153,7 @@ class PDEDataModule(LightningDataModule):
 
         self.train_dp = self.randomized_traindatapipe(
             self.dataset_opener(
-                self.sharder(
-                    self.lister(self.data_dir).filter(filter_fn=self.train_filter).shuffle()
-                ),
+                self.sharder(self.lister(self.data_dir).filter(filter_fn=self.train_filter).shuffle()),
                 mode="train",
                 limit_trajectories=self.hparams.train_limit_trajectories,
                 usegrid=self.hparams.usegrid,

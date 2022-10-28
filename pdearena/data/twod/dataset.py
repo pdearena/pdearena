@@ -13,9 +13,7 @@ import pdearena.data.utils as datautils
 
 
 class PDEDataset(data.Dataset):
-    def __init__(
-        self, path, mode, limit_trajectories: Optional[int] = None, usegrid: bool = False
-    ) -> None:
+    def __init__(self, path, mode, limit_trajectories: Optional[int] = None, usegrid: bool = False) -> None:
         super().__init__()
         self.path = path
         self.mode = mode
@@ -73,9 +71,7 @@ class PDEDataset(data.Dataset):
 
 
 class RandomizedPDETimeStepDataset(data.Dataset):
-    def __init__(
-        self, pdedataset, pde: PDEConfig, time_history: int, time_future: int, time_gap: int
-    ) -> None:
+    def __init__(self, pdedataset, pde: PDEConfig, time_history: int, time_future: int, time_gap: int) -> None:
         super().__init__()
         self.pdedataset = pdedataset
         self.pde = pde

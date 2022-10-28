@@ -55,9 +55,7 @@ def create_data(
     return data, targets
 
 
-def create_time_conditioned_data(
-    pde, scalar_fields, vector_fields, grid, start_time: int, end_time: int, delta_t
-):
+def create_time_conditioned_data(pde, scalar_fields, vector_fields, grid, start_time: int, end_time: int, delta_t):
     assert pde.n_scalar_components > 0 or pde.n_vector_components > 0
     if pde.n_scalar_components > 0:
         data_scalar = scalar_fields[start_time : start_time + 1]

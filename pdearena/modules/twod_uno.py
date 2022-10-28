@@ -68,12 +68,10 @@ class SpectralConv2d_Uno(nn.Module):
             self.modes2 = dim2 // 2
         self.scale = (1 / (2 * in_codim)) ** (1.0 / 2.0)
         self.weights1 = nn.Parameter(
-            self.scale
-            * (torch.randn(in_codim, out_codim, self.modes1, self.modes2, 2, dtype=torch.float32))
+            self.scale * (torch.randn(in_codim, out_codim, self.modes1, self.modes2, 2, dtype=torch.float32))
         )
         self.weights2 = nn.Parameter(
-            self.scale
-            * (torch.randn(in_codim, out_codim, self.modes1, self.modes2, 2, dtype=torch.float32))
+            self.scale * (torch.randn(in_codim, out_codim, self.modes1, self.modes2, 2, dtype=torch.float32))
         )
 
     # Complex multiplication
@@ -134,9 +132,7 @@ class Pointwise_op_2D(nn.Module):
             dim2 = self.dim2
         x_out = self.conv(x)
 
-        x_out = F.interpolate(
-            x_out, size=(dim1, dim2), mode="bicubic", align_corners=True, antialias=True
-        )
+        x_out = F.interpolate(x_out, size=(dim1, dim2), mode="bicubic", align_corners=True, antialias=True)
         return x_out
 
 
@@ -219,9 +215,7 @@ class UNO(nn.Module):
 
         self.L5 = OperatorBlock_2D(8 * factor * self.width, 2 * factor * self.width, 48, 48, 14, 14)
 
-        self.L6 = OperatorBlock_2D(
-            4 * factor * self.width, self.width, 64, 64, 18, 18
-        )  # will be reshaped
+        self.L6 = OperatorBlock_2D(4 * factor * self.width, self.width, 64, 64, 18, 18)  # will be reshaped
 
         self.fc1 = nn.Linear(2 * self.width, 4 * self.width)
         self.fc2 = nn.Linear(4 * self.width, out_width)

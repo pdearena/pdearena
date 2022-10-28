@@ -19,7 +19,8 @@ from pytorch_lightning.utilities.cli import instantiate_class
 def get_model(args, pde):
     if args.name == "Unet2015":
         model = UNet2015(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -27,7 +28,8 @@ def get_model(args, pde):
         )
     elif args.name == "OldUnet":
         model = OldUnet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -35,7 +37,8 @@ def get_model(args, pde):
         )
     elif args.name == "UNO":
         model = UNO(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -43,7 +46,8 @@ def get_model(args, pde):
         )
     elif args.name == "Unet":
         model = Unet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -52,7 +56,8 @@ def get_model(args, pde):
         )
     elif args.name == "Unet1x1":
         model = Unet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -63,7 +68,8 @@ def get_model(args, pde):
 
     elif args.name == "UnetAttn":
         model = Unet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -74,7 +80,8 @@ def get_model(args, pde):
         )
     elif args.name == "UnetMidAttn":
         model = Unet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -84,7 +91,8 @@ def get_model(args, pde):
         )
     elif args.name == "UnetMidAttn1x1":
         model = Unet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -96,7 +104,8 @@ def get_model(args, pde):
 
     elif args.name == "FourierUnet":
         model = FourierUnet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -107,7 +116,8 @@ def get_model(args, pde):
         )
     elif args.name == "FourierUnetConstMode":
         model = FourierUnet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -119,7 +129,8 @@ def get_model(args, pde):
         )
     elif args.name == "Fourier1Unet":
         model = FourierUnet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -131,7 +142,8 @@ def get_model(args, pde):
         )
     elif args.name == "Fourier1UnetMidAttn":
         model = FourierUnet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -144,7 +156,8 @@ def get_model(args, pde):
         )
     elif args.name == "FourierUnetMidAttnConstMode":
         model = FourierUnet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -158,7 +171,8 @@ def get_model(args, pde):
 
     elif args.name == "AltFourierUnet":
         model = AltFourierUnet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -169,7 +183,8 @@ def get_model(args, pde):
         )
     elif args.name == "AltFourierUnetConstMode":
         model = AltFourierUnet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -181,7 +196,8 @@ def get_model(args, pde):
         )
     elif args.name == "AltFourier1Unet":
         model = AltFourierUnet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -193,7 +209,8 @@ def get_model(args, pde):
         )
     elif args.name == "AltFourier1UnetMidAttn":
         model = AltFourierUnet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -207,7 +224,8 @@ def get_model(args, pde):
 
     elif args.name == "FourierUnet1x1":
         model = FourierUnet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -219,7 +237,8 @@ def get_model(args, pde):
         )
     elif args.name == "FourierUnetConstMode1x1":
         model = FourierUnet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -232,7 +251,8 @@ def get_model(args, pde):
         )
     elif args.name == "Fourier1Unet1x1":
         model = FourierUnet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -245,7 +265,8 @@ def get_model(args, pde):
         )
     elif args.name == "Fourier1UnetMidAttn1x1":
         model = FourierUnet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -260,7 +281,8 @@ def get_model(args, pde):
 
     elif args.name == "FourierUnetMidAttn":
         model = FourierUnet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -272,7 +294,8 @@ def get_model(args, pde):
         )
     elif args.name == "FullFourierUnet":
         model = FourierUnet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -284,7 +307,8 @@ def get_model(args, pde):
         )
     elif args.name == "FullFourierUnetMidAttn":
         model = FourierUnet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             time_history=args.time_history,
             time_future=args.time_future,
             hidden_channels=args.hidden_channels,
@@ -297,7 +321,8 @@ def get_model(args, pde):
         )
     elif args.name == "ResNet":
         model = ResNet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             block=BasicBlock,
             num_blocks=[2, 2, 2, 2],
             time_history=args.time_history,
@@ -310,7 +335,8 @@ def get_model(args, pde):
         )
     elif args.name == "FourierResNet":
         model = ResNet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             block=utils.partialclass(
                 "CustomFourierBasicBlock", FourierBasicBlock, modes1=args.modes1, modes2=args.modes2
             ),
@@ -325,7 +351,8 @@ def get_model(args, pde):
         )
     elif args.name == "FourierResNetSmall":
         model = ResNet(
-            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,
             block=utils.partialclass(
                 "CustomFourierBasicBlock", FourierBasicBlock, modes1=args.modes1, modes2=args.modes2
             ),
@@ -395,9 +422,7 @@ class PDEModel(LightningModule):
         reduced_time_resolution = time_resolution - self.hparams.time_history
         # Number of future points to predict
         self.max_start_time = (
-            reduced_time_resolution
-            - self.hparams.time_future * self.hparams.max_num_steps
-            - self.hparams.time_gap
+            reduced_time_resolution - self.hparams.time_future * self.hparams.max_num_steps - self.hparams.time_gap
         )
         assert self.pde.skip_nt < self.max_start_time
 
@@ -465,10 +490,7 @@ class PDEModel(LightningModule):
 
             end_time = start + self.hparams.time_history
             target_start_time = end_time + self.hparams.time_gap
-            target_end_time = (
-                target_start_time
-                + self.hparams.time_future * self.hparams.max_num_steps
-            )
+            target_end_time = target_start_time + self.hparams.time_future * self.hparams.max_num_steps
 
             init_u = u[:, start:end_time, ...]
             if self.pde.n_vector_components > 0:
@@ -524,9 +546,7 @@ class PDEModel(LightningModule):
             # summing across "time axis"
             loss = loss_vec.sum()
             loss_t = loss_vec.cumsum(0)
-            chan_avg_loss = loss / (
-                self.pde.n_scalar_components + self.pde.n_vector_components
-            )
+            chan_avg_loss = loss / (self.pde.n_scalar_components + self.pde.n_vector_components)
             self.log("valid/unrolled_loss", loss)
             return {
                 "unrolled_loss": loss,
@@ -539,20 +559,14 @@ class PDEModel(LightningModule):
             if len(outputs[0]) > 0:
                 for key in outputs[0][0].keys():
                     if "loss" in key:
-                        loss_vec = torch.stack(
-                            [outputs[0][i][key] for i in range(len(outputs[0]))]
-                        )
+                        loss_vec = torch.stack([outputs[0][i][key] for i in range(len(outputs[0]))])
                         mean, std = utils.bootstrap(loss_vec, 64, 1)
                         self.log(f"valid/{key}_mean", mean)
                         self.log(f"valid/{key}_std", std)
 
             if len(outputs[1]) > 0:
-                unrolled_loss = torch.stack(
-                    [outputs[1][i]["unrolled_loss"] for i in range(len(outputs[1]))]
-                )
-                loss_timesteps_B = torch.stack(
-                    [outputs[1][i]["loss_timesteps"] for i in range(len(outputs[1]))]
-                )
+                unrolled_loss = torch.stack([outputs[1][i]["unrolled_loss"] for i in range(len(outputs[1]))])
+                loss_timesteps_B = torch.stack([outputs[1][i]["loss_timesteps"] for i in range(len(outputs[1]))])
                 loss_timesteps = loss_timesteps_B.mean(0)
 
                 for i in range(self.hparams.max_num_steps):
@@ -600,19 +614,13 @@ class PDEModel(LightningModule):
         if len(outputs[0]) > 0:
             for key in outputs[0][0].keys():
                 if "loss" in key:
-                    loss_vec = torch.stack(
-                        [outputs[0][i][key] for i in range(len(outputs[0]))]
-                    )
+                    loss_vec = torch.stack([outputs[0][i][key] for i in range(len(outputs[0]))])
                     mean, std = utils.bootstrap(loss_vec, 64, 1)
                     self.log(f"test/{key}_mean", mean)
                     self.log(f"test/{key}_std", std)
         if len(outputs[1]) > 0:
-            unrolled_loss = torch.stack(
-                [outputs[1][i]["unrolled_loss"] for i in range(len(outputs[1]))]
-            )
-            loss_timesteps_B = torch.stack(
-                [outputs[1][i]["loss_timesteps"] for i in range(len(outputs[1]))]
-            )
+            unrolled_loss = torch.stack([outputs[1][i]["unrolled_loss"] for i in range(len(outputs[1]))])
+            loss_timesteps_B = torch.stack([outputs[1][i]["loss_timesteps"] for i in range(len(outputs[1]))])
             loss_timesteps = loss_timesteps_B.mean(0)
             for i in range(self.hparams.max_num_steps):
                 self.log(f"test/intime_{i}_loss", loss_timesteps[i])

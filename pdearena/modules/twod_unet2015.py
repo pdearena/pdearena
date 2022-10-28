@@ -24,13 +24,15 @@ from torch import nn
 
 
 class UNet2015(nn.Module):
-    def __init__(self,
+    def __init__(
+        self,
         n_scalar_components,
-        n_vector_components, 
+        n_vector_components,
         time_history: int,
-        time_future: int, 
-        hidden_channels: int, 
-        activation: str) -> None:
+        time_future: int,
+        hidden_channels: int,
+        activation: str,
+    ) -> None:
         super().__init__()
         self.n_scalar_components = n_scalar_components
         self.n_vector_components = n_vector_components
@@ -49,51 +51,29 @@ class UNet2015(nn.Module):
         else:
             raise NotImplementedError(f"Activation {activation} not implemented")
 
-        in_channels = time_history * (
-            self.n_scalar_components + self.n_vector_components * 2
-        )
-        out_channels = time_future * (
-            self.n_scalar_components + self.n_vector_components * 2
-        )
+        in_channels = time_history * (self.n_scalar_components + self.n_vector_components * 2)
+        out_channels = time_future * (self.n_scalar_components + self.n_vector_components * 2)
 
         features = hidden_channels
-        self.encoder1 = UNet2015._block(
-            in_channels, features, name="enc1", activation=self.activation
-        )
+        self.encoder1 = UNet2015._block(in_channels, features, name="enc1", activation=self.activation)
         self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2)
-        self.encoder2 = UNet2015._block(
-            features, features * 2, name="enc2", activation=self.activation
-        )
+        self.encoder2 = UNet2015._block(features, features * 2, name="enc2", activation=self.activation)
         self.pool2 = nn.MaxPool2d(kernel_size=2, stride=2)
-        self.encoder3 = UNet2015._block(
-            features * 2, features * 4, name="enc3", activation=self.activation
-        )
+        self.encoder3 = UNet2015._block(features * 2, features * 4, name="enc3", activation=self.activation)
         self.pool3 = nn.MaxPool2d(kernel_size=2, stride=2)
-        self.encoder4 = UNet2015._block(
-            features * 4, features * 8, name="enc4", activation=self.activation
-        )
+        self.encoder4 = UNet2015._block(features * 4, features * 8, name="enc4", activation=self.activation)
         self.pool4 = nn.MaxPool2d(kernel_size=2, stride=2)
 
-        self.bottleneck = UNet2015._block(
-            features * 8, features * 16, name="bottleneck", activation=self.activation
-        )
+        self.bottleneck = UNet2015._block(features * 8, features * 16, name="bottleneck", activation=self.activation)
 
         self.upconv4 = nn.ConvTranspose2d(features * 16, features * 8, kernel_size=2, stride=2)
-        self.decoder4 = UNet2015._block(
-            (features * 8) * 2, features * 8, name="dec4", activation=self.activation
-        )
+        self.decoder4 = UNet2015._block((features * 8) * 2, features * 8, name="dec4", activation=self.activation)
         self.upconv3 = nn.ConvTranspose2d(features * 8, features * 4, kernel_size=2, stride=2)
-        self.decoder3 = UNet2015._block(
-            (features * 4) * 2, features * 4, name="dec3", activation=self.activation
-        )
+        self.decoder3 = UNet2015._block((features * 4) * 2, features * 4, name="dec3", activation=self.activation)
         self.upconv2 = nn.ConvTranspose2d(features * 4, features * 2, kernel_size=2, stride=2)
-        self.decoder2 = UNet2015._block(
-            (features * 2) * 2, features * 2, name="dec2", activation=self.activation
-        )
+        self.decoder2 = UNet2015._block((features * 2) * 2, features * 2, name="dec2", activation=self.activation)
         self.upconv1 = nn.ConvTranspose2d(features * 2, features, kernel_size=2, stride=2)
-        self.decoder1 = UNet2015._block(
-            features * 2, features, name="dec1", activation=self.activation
-        )
+        self.decoder1 = UNet2015._block(features * 2, features, name="dec1", activation=self.activation)
 
         self.conv = nn.Conv2d(in_channels=features, out_channels=out_channels, kernel_size=1)
 

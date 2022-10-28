@@ -308,9 +308,7 @@ class CondPDEModel(LightningModule):
             if len(outputs[idx]) > 0:
                 for key in outputs[idx][0].keys():
                     if "loss" in key:
-                        loss_vec = torch.stack(
-                            [outputs[idx][i][key] for i in range(len(outputs[idx]))]
-                        )
+                        loss_vec = torch.stack([outputs[idx][i][key] for i in range(len(outputs[idx]))])
                         mean, std = utils.bootstrap(loss_vec, 64, 1)
                         all_vals[key].append(mean)
                         self.log(f"valid/{idx}/{key}_mean", mean)

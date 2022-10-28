@@ -95,4 +95,3 @@ class ShallowWaterWeather(PDEConfig):
     @property
     def dy(self):
         return self.Ly / (self.ny - 1)
-

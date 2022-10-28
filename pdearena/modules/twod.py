@@ -29,7 +29,6 @@ class ComplexGelu(nn.Module):
         return torch.view_as_complex(F.gelu(torch.view_as_real(x)))
 
 
-
 #######################################################################
 #######################################################################
 class BasicBlock(nn.Module):
@@ -45,9 +44,7 @@ class BasicBlock(nn.Module):
         num_groups: int = 1,
     ):
         super(BasicBlock, self).__init__()
-        self.conv1 = nn.Conv2d(
-            in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=True
-        )
+        self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=True)
 
         self.bn1 = nn.GroupNorm(num_groups, num_channels=planes) if norm else nn.Identity()
         self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=1, padding=1, bias=True)
@@ -57,9 +54,7 @@ class BasicBlock(nn.Module):
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != self.expansion * planes:
             self.shortcut = nn.Sequential(
-                nn.Conv2d(
-                    in_planes, self.expansion * planes, kernel_size=1, stride=stride, bias=False
-                ),
+                nn.Conv2d(in_planes, self.expansion * planes, kernel_size=1, stride=stride, bias=False),
                 nn.GroupNorm(num_groups, self.expansion * planes) if norm else nn.Identity(),
             )
         if activation == "gelu":
@@ -97,13 +92,9 @@ class FourierBasicBlock(nn.Module):
         self.modes2 = modes2
         assert not norm
         self.fourier1 = SpectralConv2d(in_planes, planes, modes1=self.modes1, modes2=self.modes2)
-        self.conv1 = nn.Conv2d(
-            in_planes, planes, kernel_size=1, padding=0, padding_mode="zeros", bias=True
-        )
+        self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=1, padding=0, padding_mode="zeros", bias=True)
         self.fourier2 = SpectralConv2d(planes, planes, modes1=self.modes1, modes2=self.modes2)
-        self.conv2 = nn.Conv2d(
-            planes, planes, kernel_size=1, padding=0, padding_mode="zeros", bias=True
-        )
+        self.conv2 = nn.Conv2d(planes, planes, kernel_size=1, padding=0, padding_mode="zeros", bias=True)
 
         # So far shortcut connections are not helping
         """

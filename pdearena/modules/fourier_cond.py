@@ -3,25 +3,28 @@
 import torch
 from torch import nn
 
+
 def batchmul2d(input, weights, emb):
     temp = input * emb.unsqueeze(1)
-    out = torch.einsum('bixy,ioxy->boxy', temp, weights)
+    out = torch.einsum("bixy,ioxy->boxy", temp, weights)
     return out
+
 
 class FreqLinear(nn.Module):
     def __init__(self, in_channel, modes1, modes2):
         super().__init__()
         self.modes1 = modes1
         self.modes2 = modes2
-        scale = 1/(in_channel + 4 * modes1 * modes2)
-        self.weights = nn.Parameter(scale * torch.randn(in_channel, 4*modes1*modes2, dtype=torch.float32))
-        self.bias = nn.Parameter(torch.zeros(1, 4*modes1*modes2, dtype=torch.float32))
+        scale = 1 / (in_channel + 4 * modes1 * modes2)
+        self.weights = nn.Parameter(scale * torch.randn(in_channel, 4 * modes1 * modes2, dtype=torch.float32))
+        self.bias = nn.Parameter(torch.zeros(1, 4 * modes1 * modes2, dtype=torch.float32))
 
     def forward(self, x):
         B = x.shape[0]
-        h = torch.einsum('tc,cm->tm', x, self.weights) + self.bias
-        h = h.reshape(B, self.modes1,self.modes2, 2, 2)
+        h = torch.einsum("tc,cm->tm", x, self.weights) + self.bias
+        h = h.reshape(B, self.modes1, self.modes2, 2, 2)
         return torch.view_as_complex(h)
+
 
 class SpectralConv2d(nn.Module):
     def __init__(self, in_channels, out_channels, cond_channels, modes1, modes2):
@@ -39,16 +42,10 @@ class SpectralConv2d(nn.Module):
 
         self.scale = 1 / (in_channels * out_channels)
         self.weights1 = nn.Parameter(
-            self.scale
-            * torch.rand(
-                in_channels, out_channels, self.modes1, self.modes2, 2, dtype=torch.float32
-            )
+            self.scale * torch.rand(in_channels, out_channels, self.modes1, self.modes2, 2, dtype=torch.float32)
         )
         self.weights2 = nn.Parameter(
-            self.scale
-            * torch.rand(
-                in_channels, out_channels, self.modes1, self.modes2, 2, dtype=torch.float32
-            )
+            self.scale * torch.rand(in_channels, out_channels, self.modes1, self.modes2, 2, dtype=torch.float32)
         )
         self.cond_emb = FreqLinear(cond_channels, self.modes1, self.modes2)
 

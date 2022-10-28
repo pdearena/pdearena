@@ -79,18 +79,10 @@ class FourierResidualBlock(nn.Module):
         self.modes1 = modes1
         self.modes2 = modes2
 
-        self.fourier1 = SpectralConv2d(
-            in_channels, out_channels, modes1=self.modes1, modes2=self.modes2
-        )
-        self.conv1 = nn.Conv2d(
-            in_channels, out_channels, kernel_size=1, padding=0, padding_mode="zeros"
-        )
-        self.fourier2 = SpectralConv2d(
-            out_channels, out_channels, modes1=self.modes1, modes2=self.modes2
-        )
-        self.conv2 = nn.Conv2d(
-            out_channels, out_channels, kernel_size=1, padding=0, padding_mode="zeros"
-        )
+        self.fourier1 = SpectralConv2d(in_channels, out_channels, modes1=self.modes1, modes2=self.modes2)
+        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=1, padding=0, padding_mode="zeros")
+        self.fourier2 = SpectralConv2d(out_channels, out_channels, modes1=self.modes1, modes2=self.modes2)
+        self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=1, padding=0, padding_mode="zeros")
         # self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=(3, 3), padding=(1, 1))
         # self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=(3, 3), padding=(1, 1))
         # If the number of input channels is not equal to the number of output channels we have to
@@ -276,9 +268,7 @@ class UpBlock(nn.Module):
         super().__init__()
         # The input has `in_channels + out_channels` because we concatenate the output of the same resolution
         # from the first half of the U-Net
-        self.res = ResidualBlock(
-            in_channels + out_channels, out_channels, activation=activation, norm=norm
-        )
+        self.res = ResidualBlock(in_channels + out_channels, out_channels, activation=activation, norm=norm)
         if has_attn:
             self.attn = AttentionBlock(out_channels)
         else:
@@ -335,9 +325,7 @@ class MiddleBlock(nn.Module):
     This block is applied at the lowest resolution of the U-Net.
     """
 
-    def __init__(
-        self, n_channels: int, has_attn: bool = False, activation: str = "gelu", norm: bool = False
-    ):
+    def __init__(self, n_channels: int, has_attn: bool = False, activation: str = "gelu", norm: bool = False):
         super().__init__()
         self.res1 = ResidualBlock(n_channels, n_channels, activation=activation, norm=norm)
         self.attn = AttentionBlock(n_channels) if has_attn else nn.Identity()
@@ -461,11 +449,7 @@ class Unet(nn.Module):
                 )
             # Final block to reduce the number of channels
             out_channels = in_channels // ch_mults[i]
-            up.append(
-                UpBlock(
-                    in_channels, out_channels, has_attn=is_attn[i], activation=activation, norm=norm
-                )
-            )
+            up.append(UpBlock(in_channels, out_channels, has_attn=is_attn[i], activation=activation, norm=norm))
             in_channels = out_channels
             # Up sample at all resolutions except last
             if i > 0:
@@ -487,9 +471,7 @@ class Unet(nn.Module):
             self.norm = nn.GroupNorm(8, n_channels)
         else:
             self.norm = nn.Identity()
-        out_channels = time_future * (
-            self.n_scalar_components + self.n_vector_components * 2
-        )
+        out_channels = time_future * (self.n_scalar_components + self.n_vector_components * 2)
         #
         if use1x1:
             self.final = nn.Conv2d(in_channels, out_channels, kernel_size=1)
@@ -642,11 +624,7 @@ class AltFourierUnet(nn.Module):
                     )
             # Final block to reduce the number of channels
             out_channels = in_channels // ch_mults[i]
-            up.append(
-                UpBlock(
-                    in_channels, out_channels, has_attn=is_attn[i], activation=activation, norm=norm
-                )
-            )
+            up.append(UpBlock(in_channels, out_channels, has_attn=is_attn[i], activation=activation, norm=norm))
             in_channels = out_channels
             # Up sample at all resolutions except last
             if i > 0:
@@ -668,9 +646,7 @@ class AltFourierUnet(nn.Module):
             self.norm = nn.GroupNorm(8, n_channels)
         else:
             self.norm = nn.Identity()
-        out_channels = time_future * (
-            self.n_scalar_components + self.n_vector_components * 2
-        )
+        out_channels = time_future * (self.n_scalar_components + self.n_vector_components * 2)
         if use1x1:
             self.final = nn.Conv2d(n_channels, out_channels, kernel_size=1)
         else:
@@ -710,7 +686,7 @@ class FourierUnet(nn.Module):
         n_vector_components: int,
         time_history: int,
         time_future: int,
-        hidden_channels:int ,
+        hidden_channels: int,
         activation: str,
         modes1=12,
         modes2=12,
@@ -807,11 +783,7 @@ class FourierUnet(nn.Module):
                 )
             # Final block to reduce the number of channels
             out_channels = in_channels // ch_mults[i]
-            up.append(
-                UpBlock(
-                    in_channels, out_channels, has_attn=is_attn[i], activation=activation, norm=norm
-                )
-            )
+            up.append(UpBlock(in_channels, out_channels, has_attn=is_attn[i], activation=activation, norm=norm))
             in_channels = out_channels
             # Up sample at all resolutions except last
             if i > 0:
@@ -833,9 +805,7 @@ class FourierUnet(nn.Module):
             self.norm = nn.GroupNorm(8, n_channels)
         else:
             self.norm = nn.Identity()
-        out_channels = time_future * (
-            self.n_scalar_components + self.n_vector_components * 2
-        )
+        out_channels = time_future * (self.n_scalar_components + self.n_vector_components * 2)
         if use1x1:
             self.final = nn.Conv2d(n_channels, out_channels, kernel_size=1)
         else:

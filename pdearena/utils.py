@@ -118,4 +118,3 @@ class PDECLI(LightningCLI):
         parser.link_arguments("data.time_future", "model.time_future")
         parser.link_arguments("data.pde", "model.pdeconfig")
         parser.link_arguments("data.usegrid", "model.usegrid")
-

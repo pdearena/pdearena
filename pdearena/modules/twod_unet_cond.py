@@ -8,12 +8,8 @@ from .condition_utils import ConditionedBlock, fourier_embedding, zero_module
 from .fourier_cond import SpectralConv2d
 
 
-
-
 # Largely based on https://github.com/labmlai/annotated_deep_learning_paper_implementations/blob/master/labml_nn/diffusion/ddpm/unet.py
 # MIT License
-
-
 
 
 class ResidualBlock(ConditionedBlock):
@@ -39,9 +35,7 @@ class ResidualBlock(ConditionedBlock):
             raise NotImplementedError(f"Activation {activation} not implemented")
 
         self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=(3, 3), padding=(1, 1))
-        self.conv2 = zero_module(
-            nn.Conv2d(out_channels, out_channels, kernel_size=(3, 3), padding=(1, 1))
-        )
+        self.conv2 = zero_module(nn.Conv2d(out_channels, out_channels, kernel_size=(3, 3), padding=(1, 1)))
         # If the number of input channels is not equal to the number of output channels we have to
         # project the shortcut connection
         if in_channels != out_channels:
@@ -56,9 +50,7 @@ class ResidualBlock(ConditionedBlock):
             self.norm1 = nn.Identity()
             self.norm2 = nn.Identity()
 
-        self.cond_emb = nn.Linear(
-            cond_channels, 2 * out_channels if use_scale_shift_norm else out_channels
-        )
+        self.cond_emb = nn.Linear(cond_channels, 2 * out_channels if use_scale_shift_norm else out_channels)
 
     def forward(self, x: torch.Tensor, emb: torch.Tensor):
         # First convolution layer
@@ -105,18 +97,12 @@ class FourierResidualBlock(ConditionedBlock):
         self.modes1 = modes1
         self.modes2 = modes2
 
-        self.fourier1 = SpectralConv2d(
-            in_channels, out_channels, cond_channels, modes1=self.modes1, modes2=self.modes2
-        )
-        self.conv1 = nn.Conv2d(
-            in_channels, out_channels, kernel_size=1, padding=0, padding_mode="zeros"
-        )
+        self.fourier1 = SpectralConv2d(in_channels, out_channels, cond_channels, modes1=self.modes1, modes2=self.modes2)
+        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=1, padding=0, padding_mode="zeros")
         self.fourier2 = SpectralConv2d(
             out_channels, out_channels, cond_channels, modes1=self.modes1, modes2=self.modes2
         )
-        self.conv2 = nn.Conv2d(
-            out_channels, out_channels, kernel_size=1, padding=0, padding_mode="zeros"
-        )
+        self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=1, padding=0, padding_mode="zeros")
         # self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=(3, 3), padding=(1, 1))
         # self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=(3, 3), padding=(1, 1))
         # If the number of input channels is not equal to the number of output channels we have to
@@ -133,9 +119,7 @@ class FourierResidualBlock(ConditionedBlock):
             self.norm1 = nn.Identity()
             self.norm2 = nn.Identity()
 
-        self.cond_emb = nn.Linear(
-            cond_channels, 2 * out_channels if use_scale_shift_norm else out_channels
-        )
+        self.cond_emb = nn.Linear(cond_channels, 2 * out_channels if use_scale_shift_norm else out_channels)
 
     def forward(self, x: torch.Tensor, emb: torch.Tensor):
         # # First convolution layer
@@ -159,7 +143,7 @@ class FourierResidualBlock(ConditionedBlock):
         # out = out + self.shortcut(x)
 
         h = self.activation(self.norm1(x))
-        
+
         x1 = self.fourier1(h, emb)
         x2 = self.conv1(h)
         out = x1 + x2
@@ -167,7 +151,6 @@ class FourierResidualBlock(ConditionedBlock):
         emb_out = self.cond_emb(emb)
         while len(emb_out.shape) < len(h.shape):
             emb_out = emb_out[..., None]
-
 
         if self.use_scale_shift_norm:
             scale, shift = torch.chunk(emb_out, 2, dim=1)
@@ -604,12 +587,8 @@ class Unet(nn.Module):
             self.norm = nn.GroupNorm(8, n_channels)
         else:
             self.norm = nn.Identity()
-        out_channels = time_future * (
-            self.pde.n_scalar_components + self.pde.n_vector_components * 2
-        )
-        self.final = zero_module(
-            nn.Conv2d(in_channels, out_channels, kernel_size=(3, 3), padding=(1, 1))
-        )
+        out_channels = time_future * (self.pde.n_scalar_components + self.pde.n_vector_components * 2)
+        self.final = zero_module(nn.Conv2d(in_channels, out_channels, kernel_size=(3, 3), padding=(1, 1)))
 
     def forward(self, x: torch.Tensor, time, z=None):
         assert x.dim() == 5
@@ -747,9 +726,7 @@ class FourierUnet(nn.Module):
         self.down = nn.ModuleList(down)
 
         # Middle block
-        self.middle = MiddleBlock(
-            out_channels, time_embed_dim, has_attn=mid_attn, activation=activation, norm=norm
-        )
+        self.middle = MiddleBlock(out_channels, time_embed_dim, has_attn=mid_attn, activation=activation, norm=norm)
 
         # #### Second half of U-Net - increasing resolution
         up = []
@@ -794,9 +771,7 @@ class FourierUnet(nn.Module):
             self.norm = nn.GroupNorm(8, n_channels)
         else:
             self.norm = nn.Identity()
-        out_channels = time_future * (
-            self.pde.n_scalar_components + self.pde.n_vector_components * 2
-        )
+        out_channels = time_future * (self.pde.n_scalar_components + self.pde.n_vector_components * 2)
         self.final = nn.Conv2d(in_channels, out_channels, kernel_size=(3, 3), padding=(1, 1))
 
     def forward(self, x: torch.Tensor, time, z=None):

@@ -10,8 +10,6 @@ def batchmul2d(input, weights):
     return torch.einsum("bixy,ioxy->boxy", input, weights)
 
 
-
-
 ################################################################
 # fourier layer
 ################################################################
@@ -33,16 +31,10 @@ class SpectralConv2d(nn.Module):
 
         self.scale = 1 / (in_channels * out_channels)
         self.weights1 = nn.Parameter(
-            self.scale
-            * torch.rand(
-                in_channels, out_channels, self.modes1, self.modes2, 2, dtype=torch.float32
-            )
+            self.scale * torch.rand(in_channels, out_channels, self.modes1, self.modes2, 2, dtype=torch.float32)
         )
         self.weights2 = nn.Parameter(
-            self.scale
-            * torch.rand(
-                in_channels, out_channels, self.modes1, self.modes2, 2, dtype=torch.float32
-            )
+            self.scale * torch.rand(in_channels, out_channels, self.modes1, self.modes2, 2, dtype=torch.float32)
         )
 
     def forward(self, x, x_dim=None, y_dim=None):
@@ -69,5 +61,3 @@ class SpectralConv2d(nn.Module):
         # Return to physical space
         x = torch.fft.irfft2(out_ft, s=(x.size(-2), x.size(-1)))
         return x
-
-

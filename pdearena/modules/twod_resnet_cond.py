@@ -8,7 +8,6 @@ from .fourier_cond import SpectralConv2d
 from .condition_utils import fourier_embedding, ConditionedBlock, EmbedSequential
 
 
-
 class FourierBasicBlock(ConditionedBlock):
     expansion: int = 1
 
@@ -34,13 +33,9 @@ class FourierBasicBlock(ConditionedBlock):
             raise NotImplementedError(f"Activation {activation} not implemented")
         assert not norm
         self.fourier1 = SpectralConv2d(in_planes, planes, cond_channels, modes1=self.modes1, modes2=self.modes2)
-        self.conv1 = nn.Conv2d(
-            in_planes, planes, kernel_size=1, padding=0, padding_mode="zeros", bias=True
-        )
+        self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=1, padding=0, padding_mode="zeros", bias=True)
         self.fourier2 = SpectralConv2d(planes, planes, cond_channels, modes1=self.modes1, modes2=self.modes2)
-        self.conv2 = nn.Conv2d(
-            planes, planes, kernel_size=1, padding=0, padding_mode="zeros", bias=True
-        )
+        self.conv2 = nn.Conv2d(planes, planes, kernel_size=1, padding=0, padding_mode="zeros", bias=True)
         self.cond_emb = nn.Linear(cond_channels, planes)
 
     def forward(self, x: torch.Tensor, emb: torch.Tensor):

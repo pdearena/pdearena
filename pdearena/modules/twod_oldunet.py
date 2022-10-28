@@ -5,9 +5,7 @@ from torch import nn
 
 
 class ConvBlock(nn.Module):
-    def __init__(
-        self, in_channels, out_channels, num_groups=1, norm: bool = True, activation="gelu"
-    ) -> None:
+    def __init__(self, in_channels, out_channels, num_groups=1, norm: bool = True, activation="gelu") -> None:
         super().__init__()
         if activation == "gelu":
             self.activation = nn.GELU()
@@ -35,9 +33,7 @@ class ConvBlock(nn.Module):
 
 
 class Down(nn.Module):
-    def __init__(
-        self, in_channels, out_channels, num_groups=1, norm: bool = True, activation="gelu"
-    ) -> None:
+    def __init__(self, in_channels, out_channels, num_groups=1, norm: bool = True, activation="gelu") -> None:
         super().__init__()
         self.conv = ConvBlock(in_channels, out_channels, num_groups, norm, activation)
         self.pool = nn.MaxPool2d(2)
@@ -49,9 +45,7 @@ class Down(nn.Module):
 
 
 class Up(nn.Module):
-    def __init__(
-        self, in_channels, out_channels, num_groups=1, norm: bool = True, activation="gelu"
-    ) -> None:
+    def __init__(self, in_channels, out_channels, num_groups=1, norm: bool = True, activation="gelu") -> None:
         super().__init__()
         self.up = nn.ConvTranspose2d(in_channels, in_channels // 2, kernel_size=2, stride=2)
         self.conv = ConvBlock(in_channels, out_channels, num_groups, norm, activation)
@@ -64,7 +58,9 @@ class Up(nn.Module):
 
 
 class OldUnet(nn.Module):
-    def __init__(self, n_scalar_components, n_vector_components, time_history, time_future, hidden_channels, activation="gelu") -> None:
+    def __init__(
+        self, n_scalar_components, n_vector_components, time_history, time_future, hidden_channels, activation="gelu"
+    ) -> None:
         super().__init__()
         self.n_scalar_components = n_scalar_components
         self.n_vector_components = n_vector_components
@@ -101,9 +97,7 @@ class OldUnet(nn.Module):
                 Up(n_channels * 2, n_channels, activation=activation),
             ]
         )
-        out_channels = time_future * (
-            self.n_scalar_components + self.n_vector_components * 2
-        )
+        out_channels = time_future * (self.n_scalar_components + self.n_vector_components * 2)
         # should there be a final norm too? but we aren't doing "prenorm" in the original
         self.final = nn.Conv2d(n_channels, out_channels, kernel_size=(3, 3), padding=(1, 1))
 

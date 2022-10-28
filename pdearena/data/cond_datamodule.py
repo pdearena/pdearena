@@ -102,9 +102,7 @@ class CondPDEDataModule(LightningDataModule):
     def setup(self, stage=None):
         self.train_dp = self.randomized_traindatapipe(
             self.dataset_opener(
-                self.sharder(
-                    self.lister(self.data_dir).filter(filter_fn=self.train_filter).shuffle()
-                ),
+                self.sharder(self.lister(self.data_dir).filter(filter_fn=self.train_filter).shuffle()),
                 mode="train",
                 limit_trajectories=self.hparams.train_limit_trajectories,
                 usegrid=self.hparams.usegrid,
