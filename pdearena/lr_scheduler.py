@@ -6,10 +6,7 @@ import math
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import _LRScheduler
 
-from pytorch_lightning.utilities.cli import LR_SCHEDULER_REGISTRY
 
-
-@LR_SCHEDULER_REGISTRY
 class LinearWarmupCosineAnnealingLR(_LRScheduler):
     """Sets the learning rate of each parameter group to follow a linear warmup schedule between warmup_start_lr
     and base_lr followed by a cosine annealing schedule between base_lr and eta_min.

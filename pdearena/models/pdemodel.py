@@ -13,7 +13,7 @@ from pdearena.modules.twod_uno import UNO
 from pdearena.modules.twod_unet2015 import UNet2015
 from pdearena.rollout import rollout2d
 from pytorch_lightning import LightningModule
-from pytorch_lightning.utilities.cli import instantiate_class
+from pytorch_lightning.cli import instantiate_class
 
 
 def get_model(args, pde):

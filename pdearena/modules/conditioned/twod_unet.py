@@ -453,7 +453,8 @@ class Downsample(nn.Module):
 class Unet(nn.Module):
     def __init__(
         self,
-        pde,
+        n_scalar_components: int,
+        n_vector_components: int,
         time_history,
         time_future,
         hidden_channels,
@@ -467,7 +468,8 @@ class Unet(nn.Module):
         use_scale_shift_norm: bool = False,
     ) -> None:
         super().__init__()
-        self.pde = pde
+        self.n_scalar_components = n_scalar_components
+        self.n_vector_components = n_vector_components
         self.time_history = time_history
         self.time_future = time_future
         self.hidden_channels = hidden_channels
@@ -485,7 +487,7 @@ class Unet(nn.Module):
         # Number of resolutions
         n_resolutions = len(ch_mults)
 
-        insize = time_history * (self.pde.n_scalar_components + self.pde.n_vector_components * 2)
+        insize = time_history * (self.n_scalar_components + self.n_vector_components * 2)
         n_channels = hidden_channels
         time_embed_dim = hidden_channels * 4
         self.time_embed = nn.Sequential(
@@ -587,7 +589,7 @@ class Unet(nn.Module):
             self.norm = nn.GroupNorm(8, n_channels)
         else:
             self.norm = nn.Identity()
-        out_channels = time_future * (self.pde.n_scalar_components + self.pde.n_vector_components * 2)
+        out_channels = time_future * (self.n_scalar_components + self.n_vector_components * 2)
         self.final = zero_module(nn.Conv2d(in_channels, out_channels, kernel_size=(3, 3), padding=(1, 1)))
 
     def forward(self, x: torch.Tensor, time, z=None):
@@ -628,11 +630,12 @@ class Unet(nn.Module):
 class FourierUnet(nn.Module):
     def __init__(
         self,
-        pde,
-        time_history,
-        time_future,
-        hidden_channels,
-        activation,
+        n_scalar_components: int,
+        n_vector_components: int,
+        time_history: int,
+        time_future: int,
+        hidden_channels: int,
+        activation: str,
         modes1=12,
         modes2=12,
         norm: bool = False,
@@ -646,16 +649,17 @@ class FourierUnet(nn.Module):
         use_scale_shift_norm: bool = False,
     ) -> None:
         super().__init__()
-        self.pde = pde
+        self.n_scalar_components = n_scalar_components
+        self.n_vector_components = n_vector_components
         self.time_history = time_history
         self.time_future = time_future
         self.hidden_channels = hidden_channels
-        self.activation = activation
+        
         self.mul_pdes = mul_pdes
         # Number of resolutions
         n_resolutions = len(ch_mults)
 
-        insize = time_history * (self.pde.n_scalar_components + self.pde.n_vector_components * 2)
+        insize = time_history * (self.n_scalar_components + self.n_vector_components * 2)
         n_channels = hidden_channels
         if activation == "gelu":
             self.activation = nn.GELU()
@@ -771,7 +775,7 @@ class FourierUnet(nn.Module):
             self.norm = nn.GroupNorm(8, n_channels)
         else:
             self.norm = nn.Identity()
-        out_channels = time_future * (self.pde.n_scalar_components + self.pde.n_vector_components * 2)
+        out_channels = time_future * (self.n_scalar_components + self.n_vector_components * 2)
         self.final = nn.Conv2d(in_channels, out_channels, kernel_size=(3, 3), padding=(1, 1))
 
     def forward(self, x: torch.Tensor, time, z=None):

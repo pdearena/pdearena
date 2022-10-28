@@ -9,7 +9,7 @@ import logging
 import timeit
 import torch
 from pytorch_lightning.utilities import rank_zero_only
-from pytorch_lightning.utilities.cli import LightningCLI
+from pytorch_lightning.cli import LightningCLI
 
 
 class Timer(object):

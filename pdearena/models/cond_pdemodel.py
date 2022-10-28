@@ -7,19 +7,19 @@ from pdearena.rollout import cond_rollout2d
 import torch
 
 from pytorch_lightning import LightningModule
-from pytorch_lightning.utilities.cli import instantiate_class
+from pytorch_lightning.cli import instantiate_class
 
 from pdearena.modules.loss import CustomMSELoss, ScaledLpLoss
 from pdearena import utils
 
-from pdearena.modules.twod_unet_cond import Unet, FourierUnet
-from pdearena.modules.twod_resnet_cond import ResNet, FourierBasicBlock
+from pdearena.modules.conditioned.twod_unet import Unet, FourierUnet
+from pdearena.modules.conditioned.twod_resnet import ResNet, FourierBasicBlock
 
 
 def get_model(args, pde):
     if args.name == "FourierResNet":
         model = ResNet(
-            pde=pde,
+            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
             block=utils.partialclass(
                 "CustomFourierBasicBlock", FourierBasicBlock, modes1=args.modes1, modes2=args.modes2
             ),
@@ -38,7 +38,7 @@ def get_model(args, pde):
         )
     elif args.name == "Unet":
         model = Unet(
-            pde=pde,
+            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
             time_history=1,
             time_future=1,
             hidden_channels=args.hidden_channels,
@@ -49,7 +49,7 @@ def get_model(args, pde):
         )
     elif args.name == "UnetAttn":
         model = Unet(
-            pde=pde,
+            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
             time_history=1,
             time_future=1,
             hidden_channels=args.hidden_channels,
@@ -62,7 +62,7 @@ def get_model(args, pde):
         )
     elif args.name == "UnetMidAttn":
         model = Unet(
-            pde=pde,
+            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
             time_history=1,
             time_future=1,
             hidden_channels=args.hidden_channels,
@@ -74,7 +74,7 @@ def get_model(args, pde):
         )
     elif args.name == "FourierUnet":
         model = FourierUnet(
-            pde=pde,
+            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
             time_history=1,
             time_future=1,
             hidden_channels=args.hidden_channels,
@@ -87,7 +87,7 @@ def get_model(args, pde):
         )
     elif args.name == "Fourier1Unet":
         model = FourierUnet(
-            pde=pde,
+            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
             time_history=1,
             time_future=1,
             hidden_channels=args.hidden_channels,
@@ -101,7 +101,7 @@ def get_model(args, pde):
         )
     elif args.name == "Fourier1UnetMidAttn":
         model = FourierUnet(
-            pde=pde,
+            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
             time_history=1,
             time_future=1,
             hidden_channels=args.hidden_channels,
@@ -116,7 +116,7 @@ def get_model(args, pde):
         )
     elif args.name == "FourierUnetMidAttn":
         model = FourierUnet(
-            pde=pde,
+            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
             time_history=1,
             time_future=1,
             hidden_channels=args.hidden_channels,
@@ -130,7 +130,7 @@ def get_model(args, pde):
         )
     elif args.name == "FourierUnetAttn":
         model = FourierUnet(
-            pde=pde,
+            n_scalar_components=pde.n_scalar_components, n_vector_components=pde.n_vector_components,
             time_history=1,
             time_future=1,
             hidden_channels=args.hidden_channels,
