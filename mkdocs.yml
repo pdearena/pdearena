@@ -1,4 +1,5 @@
 site_name: PDEArena
+site_description: Documentation for PDEArena
 repo_name: microsoft/pdearena
 repo_url: https://github.com/microsoft/pdearena
 edit_uri: edit/main/docs/

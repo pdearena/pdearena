@@ -1,8 +1,12 @@
-# Welcome to PDEArena
+# Introduction
+
+Welcome to the documentation of PDEArena. 
+This repo came about as a part of the following paper: 
 
 [arXiv](https://arxiv.org/abs/2209.15616){ .md-button }
 
-## Installation
+## Installation Guide
+
 
 ### Using `conda`
 
@@ -49,7 +53,9 @@ docker run --gpus all -it -v $(pwd):/code -v /mnt/data:/data
 
 ## Citation
 
-```
+If you find this repository useful in your work, please cite:
+
+```bibtex
 @article{gupta2022towards,
   title={Towards Multi-spatiotemporal-scale Generalized PDE Modeling},
   author={Gupta, Jayesh K and Brandstetter, Johannes},
@@ -57,6 +63,7 @@ docker run --gpus all -it -v $(pwd):/code -v /mnt/data:/data
   year={2022}
 }
 ```
+Also consider starring [the github repo](https://github.com/microsoft/pdearena).
 
 ## Other Projects of Interest
 
