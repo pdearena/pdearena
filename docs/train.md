@@ -1,6 +1,10 @@
 # Training PDE surrogates
 
-Thanks to [PyTorch Lightning](https://github.com/Lightning-AI/lightning) setting up scalable training experiments should be fairly simple.
+Thanks to [PyTorch Lightning](https://github.com/Lightning-AI/lightning), whether it's a single GPU experiment or multiple GPUs (even multiple nodes), setting up scalable training experiments should be fairly simple. 
+
+!!! tip
+
+    We recommend a warmup learning rate schedule for distributed training.
 
 ## Standard Operator Learning
 
@@ -36,5 +40,5 @@ python scripts/cond_train.py -c <path/to/config>
 
 ## Dataloading philosophy
 
-- Use modern `torchdata` iterable datapipes as they scale better with cloud storage.
+- Use modern [`torchdata`](https://pytorch.org/data/) [iterable datapipes](https://pytorch.org/data/beta/torchdata.datapipes.iter.html#torchdata.datapipes.iter.IterDataPipe) as they scale better with cloud storage.
 - Use equally sized shards for simpler scaling with PyTorch DDP.
