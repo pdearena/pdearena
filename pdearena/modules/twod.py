@@ -4,7 +4,6 @@ import torch
 
 from torch import nn
 from torch.nn import functional as F
-from pdearena.pde import PDEConfig
 from .fourier import (
     SpectralConv2d,
 )
@@ -139,7 +138,8 @@ class ResNet(nn.Module):
 
     def __init__(
         self,
-        pde: PDEConfig,
+        n_scalar_components: int,
+        n_vector_components: int,
         block: nn.Module,
         num_blocks: list,
         time_history: int,
@@ -150,12 +150,13 @@ class ResNet(nn.Module):
         diffmode: bool = False,
         usegrid: bool = False,
     ):
-        super(ResNet, self).__init__()
-        self.pde = pde
+        super().__init__()
+        self.n_scalar_components = n_scalar_components
+        self.n_vector_components = n_vector_components
         self.diffmode = diffmode
         self.usegrid = usegrid
         self.in_planes = hidden_channels
-        insize = time_history * (self.pde.n_scalar_components + self.pde.n_vector_components * 2)
+        insize = time_history * (self.n_scalar_components + self.n_vector_components * 2)
         if self.usegrid:
             insize += 2
         self.conv_in1 = nn.Conv2d(
@@ -178,7 +179,7 @@ class ResNet(nn.Module):
         )
         self.conv_out2 = nn.Conv2d(
             self.in_planes,
-            time_future * (self.pde.n_scalar_components + self.pde.n_vector_components * 2),
+            time_future * (self.n_scalar_components + self.n_vector_components * 2),
             kernel_size=1,
             bias=True,
         )

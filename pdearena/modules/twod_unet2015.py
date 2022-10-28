@@ -24,9 +24,16 @@ from torch import nn
 
 
 class UNet2015(nn.Module):
-    def __init__(self, pde, time_history, time_future, hidden_channels, activation) -> None:
+    def __init__(self,
+        n_scalar_components,
+        n_vector_components, 
+        time_history: int,
+        time_future: int, 
+        hidden_channels: int, 
+        activation: str) -> None:
         super().__init__()
-        self.pde = pde
+        self.n_scalar_components = n_scalar_components
+        self.n_vector_components = n_vector_components
         self.time_history = time_history
         self.time_future = time_future
         self.hidden_channels = hidden_channels
@@ -43,10 +50,10 @@ class UNet2015(nn.Module):
             raise NotImplementedError(f"Activation {activation} not implemented")
 
         in_channels = time_history * (
-            self.pde.n_scalar_components + self.pde.n_vector_components * 2
+            self.n_scalar_components + self.n_vector_components * 2
         )
         out_channels = time_future * (
-            self.pde.n_scalar_components + self.pde.n_vector_components * 2
+            self.n_scalar_components + self.n_vector_components * 2
         )
 
         features = hidden_channels

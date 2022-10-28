@@ -64,9 +64,10 @@ class Up(nn.Module):
 
 
 class OldUnet(nn.Module):
-    def __init__(self, pde, time_history, time_future, hidden_channels, activation="gelu") -> None:
+    def __init__(self, n_scalar_components, n_vector_components, time_history, time_future, hidden_channels, activation="gelu") -> None:
         super().__init__()
-        self.pde = pde
+        self.n_scalar_components = n_scalar_components
+        self.n_vector_components = n_vector_components
         self.time_history = time_history
         self.time_future = time_future
         self.hidden_channels = hidden_channels
@@ -80,7 +81,7 @@ class OldUnet(nn.Module):
         else:
             raise NotImplementedError(f"Activation {activation} not implemented")
 
-        insize = time_history * (self.pde.n_scalar_components + self.pde.n_vector_components * 2)
+        insize = time_history * (self.n_scalar_components + self.n_vector_components * 2)
         n_channels = hidden_channels
         self.image_proj = ConvBlock(insize, n_channels, activation=activation)
 
@@ -101,7 +102,7 @@ class OldUnet(nn.Module):
             ]
         )
         out_channels = time_future * (
-            self.pde.n_scalar_components + self.pde.n_vector_components * 2
+            self.n_scalar_components + self.n_vector_components * 2
         )
         # should there be a final norm too? but we aren't doing "prenorm" in the original
         self.final = nn.Conv2d(n_channels, out_channels, kernel_size=(3, 3), padding=(1, 1))

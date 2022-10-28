@@ -174,17 +174,19 @@ class OperatorBlock_2D(nn.Module):
 class UNO(nn.Module):
     def __init__(
         self,
-        pde,
-        time_history,
-        time_future,
-        hidden_channels,
+        n_scalar_components: int,
+        n_vector_components: int,
+        time_history: int,
+        time_future: int,
+        hidden_channels: int,
         pad=0,
         factor=3 / 4,
         activation="gelu",
     ):
-        super(UNO, self).__init__()
+        super().__init__()
 
-        self.pde = pde
+        self.n_scalar_components = n_scalar_components
+        self.n_vector_components = n_vector_components
 
         self.width = hidden_channels
         self.factor = factor
@@ -199,8 +201,8 @@ class UNO(nn.Module):
         else:
             raise NotImplementedError(f"Activation {activation} not implemented")
 
-        in_width = time_history * (self.pde.n_scalar_components + self.pde.n_vector_components * 2)
-        out_width = time_future * (self.pde.n_scalar_components + self.pde.n_vector_components * 2)
+        in_width = time_history * (self.n_scalar_components + self.n_vector_components * 2)
+        out_width = time_future * (self.n_scalar_components + self.n_vector_components * 2)
         self.fc = nn.Linear(in_width, self.width // 2)
 
         self.fc0 = nn.Linear(self.width // 2, self.width)  # input channel is 3: (a(x, y), x, y)
