@@ -46,8 +46,14 @@ docker build -t pdearena .
 - Next 
 ```bash
 cd pdearena
-docker run --gpus all -it -v $(pwd):/code -v /mnt/data:/data
+docker run --gpus all -it --rm --user $(id -u):$(id -g) \
+    -v $(pwd):/code -v /mnt/data:/data --workdir /code \
+    pdearena:latest
 ```
+!!! note 
+
+    - `--gpus all -it --rm --user $(id -u):$(id -g)`: enables using all GPUs and runs an interactive session with current user's UID/GUID to avoid `docker` writing files as root.
+    - `-v $(pwd):/code -v /mnt/data:/data --workdir /code`: mounts current directory and data directory (i.e. the cloned git repo) to `/code` and `/data` respectively, and use the `code` directory as the current working directory.
 
 ## Downloading data from Azure
 
