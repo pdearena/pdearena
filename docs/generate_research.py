@@ -23,16 +23,16 @@ def snippet(paper):
 
     paper_snippet = f"""
 
-    <!-- Large font: -->
-    <h2>
-    <a href="{link}">{title}</a>
-    </h2>
-    <center>
-    {authors}
-        
-    <small>{affiliations}</small>
-    </center>
-    **Abstract:** {abstract}\n\n
+<!-- Large font: -->
+<h2>
+<a href="{link}">{title}</a>
+</h2>
+<center>
+{authors}
+    
+<small>{affiliations}</small>
+</center>
+**Abstract:** {abstract}\n\n
 
     """
     return paper_snippet
