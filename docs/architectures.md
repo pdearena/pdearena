@@ -11,8 +11,9 @@ If you would like your architecture added, please submit a [pull request](https:
 | Dilated-ResNet |  `DilatedResNet`         |             |    [:simple-arxiv:](https://arxiv.org/abs/2112.15275)      |
 | U-Net~2015~   |  `Unet2015`          |  Original U-Net Implementation          |  [:simple-github:](https://github.com/pdebench/PDEBench/blob/main/pdebench/models/unet/unet.py)    [:simple-arxiv:](https://openreview.net/forum?id=dh_MkX0QfrK)    |
 | U-Net~base~   |  `OldUnet`          |  Our interpretation of original U-Net Implementation without bottleneck layer and using `GroupNorm`           |  [:simple-github:]()        |
-| U-Net~mod~ |  `Unet`          | Modern U-Nets with Wide ResNet blocks, as used in various diffusion modeling applications            |  [:simple-github:](https://github.com/labmlai/annotated_deep_learning_paper_implementations/blob/master/labml_nn/diffusion/ddpm/unet.py) [:simple-arxiv:](https://arxiv.org/abs/2006.11239)   [:simple-arxiv:](https://arxiv.org/abs/2102.09672)   |
-| UF-Net       |   `FourierUnet`         | Modern U-Nets with Fourier layer based downsampling            |   [:simple-arxiv:](https://arxiv.org/abs/2209.15616)       |
+| U-Net~mod~ |  `Unet`, `Unet1x1`, `UnetAttn`, `UnetMidAttn`, `UnetMidAttn1x1`          | Modern U-Nets with Wide ResNet blocks, as used in various diffusion modeling applications            |  [:simple-github:](https://github.com/labmlai/annotated_deep_learning_paper_implementations/blob/master/labml_nn/diffusion/ddpm/unet.py) [:simple-arxiv:](https://arxiv.org/abs/2006.11239)   [:simple-arxiv:](https://arxiv.org/abs/2102.09672)   |
+| U-F2Net       |   `FourierUnet`, `FourierUnetConstMode`, `FourierUnetMidAttnConstMode`, `FourierUnet1x1`, `FourierUnetConstMode1x1`, `FourierUnetMidAttn`         | Modern U-Nets with two layers of Fourier layer based downsampling            |   [:simple-arxiv:](https://arxiv.org/abs/2209.15616)       |
+| U-F1Net       | `Fourier1Unet`, `Fourier1UnetMidAttn`, `Fourier1Unet1x1`, `Fourier1UnetMidAttn1x1` | Moder U-Nets with one layer of Fourier layer based downsampling |    |
 | UNO          |   `UNO`         |  Original U-shaped Neural Operator Implementation            | [:simple-github:](https://github.com/ashiq24/UNO) [:simple-arxiv:](https://arxiv.org/abs/2204.11127)         |
 
 
