@@ -6,19 +6,37 @@
 
 ## Navier Stokes 2D
 
+### Standard
+
 ```bash
 export seed=42;
 
 python scripts/generate_data.py base=pdedatagen/configs/navierstokes2dsmoke.yaml \ 
-    experiment=smoke mode=train samples=256 seed=$seed \  
+    experiment=smoke mode=train samples=256 seed=$seed pdeconfig.sample_rate=4 \  
     dirname=/mnt/data/navierstokes;
 
 python scripts/generate_data.py base=pdedatagen/configs/navierstokes2dsmoke.yaml \ 
-    experiment=smoke mode=valid samples=32 seed=$seed \ 
+    experiment=smoke mode=valid samples=32 seed=$seed pdeconfig.sample_rate=4 \ 
     dirname=/mnt/data/navierstokes;
 
 python scripts/generate_data.py base=pdedatagen/configs/navierstokes2dsmoke.yaml \         
-    experiment=smoke mode=test samples=32 seed=$seed \
+    experiment=smoke mode=test samples=32 seed=$seed pdeconfig.sample_rate=4 \
+    dirname=/mnt/data/navierstokes;
+```
+
+### Conditioned
+
+```bash
+python scripts/generate_data.py base=pdedatagen/configs/navierstokes2dsmoke.yaml \ 
+    experiment=smoke_cond mode=train samples=256 seed=$seed \  
+    dirname=/mnt/data/navierstokes;
+
+python scripts/generate_data.py base=pdedatagen/configs/navierstokes2dsmoke.yaml \ 
+    experiment=smoke_cond mode=valid samples=32 seed=$seed \ 
+    dirname=/mnt/data/navierstokes;
+
+python scripts/generate_data.py base=pdedatagen/configs/navierstokes2dsmoke.yaml \         
+    experiment=smoke_cond mode=test samples=32 seed=$seed \
     dirname=/mnt/data/navierstokes;
 ```
 
