@@ -31,9 +31,6 @@ RUN apt-get update && apt-get install -y --allow-downgrades --allow-change-held-
     libgl1-mesa-glx &&\
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Set default shell to /bin/bash
-SHELL ["/bin/bash", "--login", "-c"]
-
 COPY environment.yml /tmp/environment.yml
 
 # Create environment
