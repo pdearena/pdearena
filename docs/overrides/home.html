@@ -1,0 +1,557 @@
+{% extends "main.html" %}
+
+<!-- Render hero under tabs -->
+{% block tabs %}
+{{ super() }}
+
+<!-- Additional styles for landing page -->
+<!-- Place this tag in your head or just before your close body tag. -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<style>
+
+    .md-header {
+        position: initial
+    }
+
+    .md-main__inner {
+        margin: 0
+    }
+
+    .md-footer-copyright {
+        display: none
+    }
+
+    .md-footer-nav__inner {
+        display: none
+    }
+
+    .md-content {
+        display: none
+    }
+
+    .md-footer-meta__inner {
+        align-content: center;
+        display: flex;
+        align-items: center;
+        justify-content: center
+    }
+
+    /*
+     Table of content font color
+    */
+    a.md-nav__link {
+        color: #303C55;
+        text-decoration: none;
+    }
+
+    .tx-container {
+        --md-primary-fg-color: #0a192f;
+        height: fit-content;
+        padding-top: 0rem;
+        background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1123 258'><path d='M1124,2c0,0 0,256 0,256l-1125,0l0,-48c0,0 16,5 55,5c116,0 197,-92 325,-92c121,0 114,46 254,46c140,0 214,-167 572,-166Z' style='fill: white' /></svg>") no-repeat bottom, linear-gradient(167deg, #2a978d 40%,  var(--md-primary-fg-color), #fff 99%)
+    }
+
+    .tx-hero {
+        color: var(--md-primary-bg-color);
+        justify-content: right;
+    }
+
+    .tx-hero h1 {
+        margin-bottom: 0rem;
+        color: currentColor;
+        font-weight: 700
+    }
+
+    .tx-hero__content {
+        padding-bottom: 9rem;
+        justify-content: left;
+        padding-right: 3rem;
+    }
+
+    .tx-hero__content_small {
+        justify-content: left;
+        padding-right: 3rem;
+    }
+
+    .tx-hero__image {
+        max-width: 100%;
+        max-height: 100%;
+        order: 1;
+        padding-right: 2.5rem;
+    }
+
+    .tx-hero .md-button {
+        margin-top: .5rem;
+        margin-right: .5rem;
+        color: var(--md-primary-bg-color)
+    }
+
+    .tx-hero .md-button--primary {
+        background-color: var(--md-primary-bg-color);
+        color: hsla(280deg, 37%, 48%, 1);
+        border-color: var(--md-primary-bg-color)
+    }
+
+    .tx-hero .md-button:focus,
+    .tx-hero .md-button:hover {
+        background-color: var(--md-accent-fg-color);
+        color: var(--md-default-bg-color);
+        border-color: var(--md-accent-fg-color)
+    }
+
+    .tx-container-2 {
+        padding: 0rem;
+        background-color: white;
+        margin-bottom: 0px;
+    }
+
+    .tx-hero__image-2 {
+        max-width: 100%;
+        max-height: 100%;
+        order: 1;
+        padding-right: 0.5rem;
+        padding-left: 0rem;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        float: left;
+    }
+
+    .tx-hero__content-2 {
+        margin-left: 50px;
+        justify-content: left;
+        color: #2a978d;
+        font-weight: 300;
+        padding: 0 0px;
+        padding-bottom: 40px;
+        word-break: break-word;
+        float: right;
+    }
+
+    .tx-hero__content-2 h1 {
+        margin-top: 50px;
+        color: #2a978d;
+        font-weight: 600;
+        font-size: 36px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: normal;
+        /*font-family: inherit;*/
+    }
+
+    .tx-hero__content-2 p {
+        font-size: 17px;
+        line-height: 1.8em;
+        text-rendering: optimizeLegibility;
+        color: black;
+        display: block;
+    }
+
+    .tx-hero__content-2 a:link {
+        color: #2a978d;
+    }
+
+    .tx-hero__content-2 a:visited {
+        color: #2a978d;
+    }
+
+    .tx-container-3 {
+        --md-primary-fg-color: #0a192f;
+        height: auto;
+        background: linear-gradient(to bottom, var(--md-primary-fg-color), #02162f 100%, #fff 99%);
+    }
+
+    .tx-container-4 {
+        height: auto;
+        background: linear-gradient(to bottom, #2a978d, #02162f 99%, #fff 99%);
+    }
+
+    .tx-container-testimonial {
+        height: auto;
+        background: #EDEFF0;
+    }
+
+    .tx-hero__image-3 {
+        max-width: 100%;
+        max-height: 100%;
+        order: 1;
+        padding-right: 2.5rem;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    .tx-hero__image-4 {
+        max-width: 100%;
+        max-height: 100%;
+        order: 1;
+        padding-right: 2.5rem;
+        padding-top: 5px;
+        padding-bottom: 15px;
+    }
+
+    .tx-footer {
+        margin: 0px 0rem;
+        background-color: white;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .tx-hero__content-footer {
+        justify-content: left;
+        color: #2a978d;
+        font-weight: 300;
+        padding: 0 0px;
+        word-break: break-word;
+        float: left;
+    }
+
+    .tx-footer p {
+        font-size: 12px;
+        line-height: 1.8em;
+        text-rendering: optimizeLegibility;
+        color: black;
+        display: block;
+        font-family: inherit;
+    }
+
+    /**/
+    /*Adjusting Mobile UI */
+    /**/
+    @media screen and (max-width: 30em) {
+        .tx-hero h1 {
+            font-size: 1.4rem
+        }
+
+        .tx-hero__content {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .tx-hero__content_small {
+            margin-bottom: 50px;
+            margin-left: 20px;
+            margin-right: 20px;
+            font-size: 1.1rem;
+        }
+
+        .tx-hero__content-2 {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .tx-hero__content-3 {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .md-typeset .md-button {
+            font-size: 14px;
+        }
+    }
+
+    @media screen and (min-width: 60em) {
+        .md-sidebar--secondary {
+            display: none
+        }
+
+        .tx-hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tx-hero__content {
+            max-width: 28rem;
+            margin-top: 3.5rem;
+            margin-bottom: 3.5rem;
+            margin-left: 1.0rem;
+            margin-right: 4.0rem;
+            align-items: center;
+        }
+    }
+
+    @media screen and (min-width: 76.25em) {
+        .md-sidebar--primary {
+            display: none
+        }
+
+        .top-hr {
+            width: 100%;
+            display: flex;
+            max-width: 61rem;
+            margin-right: auto;
+            margin-left: auto;
+            padding: 0 .2rem;
+        }
+
+        .bottom-hr {
+            margin-top: 10px;
+            width: 100%;
+            display: flex;
+            max-width: 61rem;
+            margin-right: auto;
+            margin-left: auto;
+            padding: 0 .2rem;
+        }
+    }
+
+    .text-center {
+        text-align: center;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 15px;
+        font-size: 23px;
+        font-weight: 300;
+        padding-bottom: 10px;
+    }
+
+    .logos {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-flow: row wrap;
+        margin: 0 auto;
+    }
+
+    .logos img {
+        flex: 1 1 auto;
+        padding: 25px;
+        max-height: 130px;
+        vertical-align: middle;
+    }
+</style>
+
+<!-- Table Style -->
+<style>
+    .table-wrapper{
+        margin: 10px 70px 70px;
+        box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );
+    }
+
+    .fl-table {
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: normal;
+        border: none;
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 100%;
+        white-space: nowrap;
+        background-color: white;
+    }
+
+    .fl-table td, .fl-table th {
+        text-align: left;
+        padding: 8px;
+    }
+
+    .fl-table td {
+        border-right: 1px solid #f8f8f8;
+        font-size: 16px;
+    }
+
+    .fl-table thead th {
+        color: #ffffff;
+        background: #4FC3A1;
+    }
+
+
+    .fl-table thead th:nth-child(odd) {
+        color: #ffffff;
+        background: #324960;
+    }
+
+    .fl-table tr:nth-child(even) {
+        background: #F8F8F8;
+    }
+
+    /* Responsive */
+
+    @media (max-width: 767px) {
+        .fl-table {
+            display: block;
+            width: 100%;
+        }
+        .table-wrapper:before{
+            content: "Scroll horizontally >";
+            display: block;
+            text-align: right;
+            font-size: 10px;
+            color: white;
+            padding: 0 0 10px;
+        }
+        .fl-table thead, .fl-table tbody, .fl-table thead th {
+            display: block;
+        }
+        .fl-table thead th:last-child{
+            border-bottom: none;
+        }
+        .fl-table thead {
+            float: left;
+        }
+        .fl-table tbody {
+            width: auto;
+            position: relative;
+            overflow-x: auto;
+        }
+        .fl-table td, .fl-table th {
+            padding: 20px .625em .625em .625em;
+            height: 90px;
+            vertical-align: middle;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            overflow-y: auto;
+            width: 110px;
+            font-size: 8px;
+            text-overflow: ellipsis;
+        }
+        .fl-table thead th {
+            text-align: left;
+            border-bottom: 1px solid #f7f7f9;
+        }
+        .fl-table tbody tr {
+            display: table-cell;
+        }
+        .fl-table tbody tr:nth-child(odd) {
+            background: none;
+        }
+        .fl-table tr:nth-child(even) {
+            background: transparent;
+        }
+        .fl-table tr td:nth-child(odd) {
+            background: #F8F8F8;
+            border-right: 1px solid #E6E4E4;
+        }
+        .fl-table tr td:nth-child(even) {
+            border-right: 1px solid #E6E4E4;
+        }
+        .fl-table tbody td {
+            display: block;
+            text-align: center;
+        }
+    }
+
+</style>
+
+
+<!-- Hero for landing page -->
+<!-- 1st Section -->
+<section class="tx-container">
+    <div class="md-grid md-typeset">
+        <div class="tx-hero">
+
+            <!-- Hero image -->
+            <div class="tx-hero__image">
+                <img
+                        src="assets/images/illustrations/home.png"
+                        alt=""
+                        width="600"
+                        draggable="false"
+                >
+            </div>
+
+            <!-- Hero content -->
+            <div class="tx-hero__content">
+                <h1  id="leverage-architecture">PDEArena</h1>
+                <p>
+                    Any easy to use PDE Surrogate Benchmarking Framework. <br><br>
+
+                    Based on the
+                    <strong>
+                        <a href="https://www.pytorchlightning.ai/">
+                            PyTorch Lightning Framework
+                        </a>.
+                    </strong>
+                </p><br>
+
+                <a
+                href="{{ page.next_page.url | url }}"
+                title="{{ page.next_page.title | e }}"
+                class="md-button md-button--primary"
+                >
+                Get started
+                </a><br>
+
+                <a
+                href="https://github.com/microsoft/pdearena"
+                title="{{ lang.t('source.link.title') }}"
+                class="md-button">
+                Contribute on GitHub
+                <img
+                    class = icon
+                    src="assets/images/icons/github-white.svg"
+                    alt=""
+                    width="24"
+                    draggable="false"
+                >
+                </a>
+                <!-- <a class="github-button" href="https://github.com/microsoft/pdearena" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star microsoft/pdearena on GitHub">Star</a> -->
+                <br>
+
+                <a
+                href="https://arxiv.org/abs/2209.15616"
+                title="{{ lang.t('source.link.title') }}"
+                class="md-button md-button--primary">
+                Paper
+                <img
+                    class = icon
+                    src="assets/images/icons/"
+                    alt=""
+                    width="24"
+                    draggable="false"
+                >
+                </a><br>
+
+
+            </div>
+        </div>
+    </div>
+</section>        
+
+<!-- 2nd Section -->
+<!-- What is PDEArena -->
+<section class="tx-container-2">
+    <div class="md-grid md-typeset">
+        <div class="tx-hero__image-2" style="margin-top: 50px">
+            <img
+                    src="assets/images/illustrations/home-section-2.png"
+                    alt=""
+                    width="800"
+                    draggable="false"
+                    align="left"
+            >
+        </div>        
+        <div class="tx-hero">
+            <!-- Hero content -->
+            <div class="tx-hero__content-2">
+                <h1 id="what-is-pdearena">What is PDEArena?</h1><br>
+
+                <p>
+                    Our focus is on creating an easy-to-use, yet scalable framework for evaluating various PDE Surrogate learning techniques, following deep learning best practices:<br>
+                    ▶️
+                    <strong>
+                        TODO
+                    </strong><br>
+                    ▶️
+                    <strong>
+                        TODO
+                    </strong><br>
+                    ▶️
+                    <strong>
+                        TODO
+                    </strong><br><br>
+
+
+                </p><br>        
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+<!-- Footer Section -->
+{% block footer %}{% endblock %}

@@ -27,3 +27,21 @@ If you would like your architecture added, please submit a [pull request](https:
 ## Model Architecture Registry Philosophy
 
 While in principle we can make every architecture fully configurable via configuration files, we find it can affect the readability of the code quite a bit. Feel free to open issues or pull-requests for further configuration ability or any other suggestions for managing the configurability-readability tradeoffs.  
+
+## Citation
+
+If you find this repository useful in your work, please cite:
+
+```bibtex
+@article{gupta2022towards,
+  title={Towards Multi-spatiotemporal-scale Generalized PDE Modeling},
+  author={Gupta, Jayesh K and Brandstetter, Johannes},
+  journal={arXiv preprint arXiv:2209.15616},
+  year={2022}
+}
+```
+Also consider starring [the github repo](https://github.com/microsoft/pdearena).
+
+## Other Projects of Interest
+
+- [PDEBench](https://github.com/pdebench/PDEBench)

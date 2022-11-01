@@ -71,12 +71,7 @@ python scripts/compute_normalization.py \
 
 ## PDEBench
 
-[`PDEBench`](https://github.com/pdebench/PDEBench) data can be downloaded with the included [`download_pdebenchdata.py`]() script:
-
-For example to download the Incompressible Navier Stokes dataset:
-```bash
-DATAVERSE_URL=https://darus.uni-stuttgart.de python scripts/download_pdebenchdata.py --outdir /mnt/data/PDEBench/ --limit ns_incom
-```
+### Generating
 
 ### Resharding for multi-gpu experiments
 Coming soon...
@@ -87,3 +82,4 @@ Coming soon...
 ## Your PDE
 
 Please submit a [pull request](https://github.com/microsoft/pdearena) to add a data loading pipeline for your PDE dataset.
+

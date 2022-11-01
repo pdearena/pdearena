@@ -24,6 +24,7 @@ markdown_extensions:
       emoji_generator: !!python/name:materialx.emoji.to_svg   
 theme:
   name: material
+  custom_dir: docs/overrides
   font: 
     text: Lato
     code: Noto Sans Mono
@@ -33,3 +34,13 @@ theme:
   icon:
       repo: fontawesome/brands/github
       logo: material/stadium
+
+nav:
+  - Home: "index.md"
+  - Installation: "install.md"
+  - Architectures: "architectures.md"
+  - Data: 
+    - Generation: "data.md"
+    - Download: "datadownload.md"
+  - Training PDE Surrogates: "train.md"
+  - Research: "research.md"
