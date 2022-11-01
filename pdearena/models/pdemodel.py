@@ -1,12 +1,11 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 from typing import Any, Dict, List
-from omegaconf import OmegaConf
 
 import torch
 from pdearena import utils
 from pdearena.modules.loss import CustomMSELoss, ScaledLpLoss
-from pdearena.modules.twod import BasicBlock, FourierBasicBlock, ResNet
+from pdearena.modules.twod import BasicBlock, DilatedBasicBlock, FourierBasicBlock, ResNet
 from pdearena.modules.twod_oldunet import OldUnet
 from pdearena.modules.twod_unet import FourierUnet, Unet, AltFourierUnet
 from pdearena.modules.twod_uno import UNO
@@ -368,6 +367,20 @@ def get_model(args, pde):
             diffmode=args.diffmode,
             usegrid=args.usegrid,
         )
+    elif args.name == "DilatedResNet":
+        model = ResNet(
+            n_scalar_components=pde.n_scalar_components,
+            n_vector_components=pde.n_vector_components,            
+            block=utils.partialclass("CustomDilatedBasicBlock", DilatedBasicBlock),
+            num_blocks=[1, 1, 1, 1],
+            time_history=args.time_history,
+            time_future=args.time_future,
+            hidden_channels=args.hidden_channels,
+            activation=args.activation,
+            norm=args.norm,
+            diffmode=args.diffmode,
+            usegrid=args.usegrid,
+        )        
     else:
         raise Exception(f"Wrong model specified {args.name}")
 

@@ -9,26 +9,6 @@ from .fourier import (
 )
 
 
-class ComplexRelu(nn.Module):
-    def __init__(self):
-        super(ComplexRelu, self).__init__()
-
-    def forward(self, x):
-        # a, b = F.relu(x.real), F.relu(x.imag)
-        # return torch.complex(a, b)
-        return torch.view_as_complex(F.relu(torch.view_as_real(x)))
-
-
-class ComplexGelu(nn.Module):
-    def __init__(self):
-        super(ComplexGelu, self).__init__()
-
-    def forward(self, x):
-        # a, b = F.gelu(x.real), F.gelu(x.imag)
-        # return torch.complex(a, b)
-        return torch.view_as_complex(F.gelu(torch.view_as_real(x)))
-
-
 #######################################################################
 #######################################################################
 class BasicBlock(nn.Module):
@@ -43,7 +23,7 @@ class BasicBlock(nn.Module):
         norm: bool = True,
         num_groups: int = 1,
     ):
-        super(BasicBlock, self).__init__()
+        super().__init__()
         self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=True)
 
         self.bn1 = nn.GroupNorm(num_groups, num_channels=planes) if norm else nn.Identity()
@@ -74,6 +54,55 @@ class BasicBlock(nn.Module):
         return out
 
 
+class DilatedBasicBlock(nn.Module):
+
+    expansion = 1
+
+    def __init__(
+        self,
+        in_planes: int,
+        planes: int,
+        stride: int = 1,
+        activation: str = "relu",
+        norm: bool = True,
+        num_groups: int = 1,
+    ):
+        super().__init__()
+
+        self.dilation = [1, 2, 4, 8, 4, 2, 1]
+        dilation_layers = []
+        for dil in self.dilation:
+            dilation_layers.append(
+                nn.Conv2d(
+                    in_planes,
+                    planes,
+                    kernel_size=3,
+                    stride=stride,
+                    dilation=dil,
+                    padding=dil,
+                    bias=True,
+                )
+            )
+        self.dilation_layers = nn.ModuleList(dilation_layers)
+        self.norm_layers = nn.ModuleList(
+            nn.GroupNorm(num_groups, num_channels=planes) if norm else nn.Identity()
+            for dil in self.dilation
+        )
+
+        if activation == "gelu":
+            self.activation = nn.GELU()
+        elif activation == "relu":
+            self.activation = nn.ReLU()
+        else:
+            raise NotImplementedError(f"Activation {activation} not implemented")
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        out = x
+        for layer, norm in zip(self.dilation_layers, self.norm_layers):
+            out = self.activation(layer(norm(out)))
+        return out + x
+
+
 class FourierBasicBlock(nn.Module):
     expansion: int = 1
 
@@ -87,7 +116,7 @@ class FourierBasicBlock(nn.Module):
         activation: str = "gelu",
         norm: bool = False,
     ):
-        super(FourierBasicBlock, self).__init__()
+        super().__init__()
         self.modes1 = modes1
         self.modes2 = modes2
         assert not norm
@@ -131,7 +160,7 @@ class ResNet(nn.Module):
         self,
         n_scalar_components: int,
         n_vector_components: int,
-        block: nn.Module,
+        block,
         num_blocks: list,
         time_history: int,
         time_future: int,
