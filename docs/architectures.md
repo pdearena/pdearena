@@ -23,3 +23,7 @@ If you would like your architecture added, please submit a [pull request](https:
 | FNO          |  `FourierResNet`          |             |
 | U-Net-modern |  `Unet`          |             |
 | UF-Net       |  `FourierUnet`          |             |
+
+## Model Architecture Registry Philosophy
+
+While in principle we can make every architecture fully configurable via configuration files, we find it can affect the readability of the code quite a bit. Feel free to open issues or pull-requests for further configuration ability or any other suggestions for managing the configurability-readability tradeoffs.  
