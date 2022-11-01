@@ -7,7 +7,7 @@ header = """
 
 Following is a list of research papers that have been published using the PDEArena framework.
 
-If you have used PDEArena in your research, and would like it listed here, please send a pull request to the [PDEArena repository](https://github.com/microsoft/pdearena).
+If you have used PDEArena in your research, and would like it listed here, please add your paper to [this file](https://github.com/microsoft/pdearena/blob/main/docs/research.yml) by sending a pull request to the [PDEArena repository](https://github.com/microsoft/pdearena).
 """
 
 def snippet(paper):
