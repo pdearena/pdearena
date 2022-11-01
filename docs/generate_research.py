@@ -20,13 +20,19 @@ def snippet(paper):
     )
     link = paper["link"]
     abstract = paper["abstract"]
+    image_file = paper["image"]
 
     paper_snippet = f"""
 
+<figure markdown>
+![](assets/images/research/{image_file}){{ width="500"}}
+<figcaption>
 <!-- Large font: -->
 <h2>
 <a href="{link}">{title}</a>
 </h2>
+</figcaption>
+</figure>
 <center>
 {authors}
     

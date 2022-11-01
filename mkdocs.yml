@@ -7,6 +7,7 @@ markdown_extensions:
   - attr_list
   - tables
   - admonition
+  - md_in_html
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.highlight:

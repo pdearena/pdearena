@@ -6,10 +6,15 @@ Following is a list of research papers that have been published using the PDEAre
 If you have used PDEArena in your research, and would like it listed here, please add your paper to [this file](https://github.com/microsoft/pdearena/blob/main/docs/research.yml) by sending a pull request to the [PDEArena repository](https://github.com/microsoft/pdearena).
 
 
+<figure markdown>
+![](assets/images/research/unet-results.png){ width="500"}
+<figcaption>
 <!-- Large font: -->
 <h2>
 <a href="https://arxiv.org/abs/2209.15616">Towards Multi-spatiotemporal-scale Generalized PDE Modeling</a>
 </h2>
+</figcaption>
+</figure>
 <center>
 Jayesh K. Gupta <sup>1</sup>, Johannes Brandstetter <sup>2</sup>
     
@@ -25,10 +30,15 @@ Jayesh K. Gupta <sup>1</sup>, Johannes Brandstetter <sup>2</sup>
 
 
 
+<figure markdown>
+![](assets/images/research/clifford-fno.png){ width="500"}
+<figcaption>
 <!-- Large font: -->
 <h2>
 <a href="https://arxiv.org/abs/2209.04934">Clifford Neural Layers for PDE Modeling</a>
 </h2>
+</figcaption>
+</figure>
 <center>
 Johannes Brandstetter <sup>1</sup>, Rianne van den Berg <sup>1</sup>, Max Welling <sup>1</sup>, Jayesh K. Gupta <sup>2</sup>
     
