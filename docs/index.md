@@ -1,9 +1,7 @@
 # Introduction
 
 Welcome to the documentation of PDEArena. 
-This repo came about as a part of the following paper: 
-
-[arXiv](https://arxiv.org/abs/2209.15616){ .md-button }
+This repository aims to provide a PDE surrogate learning framework and benchmark while following deep learning best practices.
 
 ## Installation Guide
 
@@ -47,7 +45,7 @@ docker build -t pdearena .
 ```bash
 cd pdearena
 docker run --gpus all -it --rm --user $(id -u):$(id -g) \
-    -v $(pwd):/code -v /mnt/data:/data --workdir /code \
+    -v $(pwd):/code -v /mnt/data:/data --workdir /code -e PYTHONPATH=/code \
     pdearena:latest
 ```
 !!! note 
