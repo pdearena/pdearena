@@ -48,7 +48,7 @@
         --md-primary-fg-color: #0a192f;
         height: fit-content;
         padding-top: 0rem;
-        background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1123 258'><path d='M1124,2c0,0 0,256 0,256l-1125,0l0,-48c0,0 16,5 55,5c116,0 197,-92 325,-92c121,0 114,46 254,46c140,0 214,-167 572,-166Z' style='fill: white' /></svg>") no-repeat bottom, linear-gradient(167deg, #2a978d 40%,  var(--md-primary-fg-color), #fff 99%)
+        background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1123 258'><path d='M1124,2c0,0 0,256 0,256l-1125,0l0,-48c0,0 16,5 55,5c116,0 197,-92 325,-92c121,0 114,46 254,46c140,0 214,-167 572,-166Z' style='fill: white' /></svg>") no-repeat bottom, linear-gradient(167deg, #009485 40%,  var(--md-primary-fg-color), #fff 99%)
     }
 
     .tx-hero {
@@ -77,7 +77,8 @@
         max-width: 100%;
         max-height: 100%;
         order: 1;
-        padding-right: 2.5rem;
+        padding-right: 1.5rem;
+        padding-bottom: 2.5rem;
     }
 
     .tx-hero .md-button {
@@ -447,9 +448,9 @@
             <!-- Hero image -->
             <div class="tx-hero__image">
                 <img
-                        src="assets/images/illustrations/home.png"
+                        src="assets/images/logo.svg"
                         alt=""
-                        width="600"
+                        width="480"
                         draggable="false"
                 >
             </div>
@@ -460,12 +461,12 @@
                 <p>
                     Any easy to use PDE Surrogate Benchmarking Framework. <br><br>
 
-                    Based on the
+                    <!-- Based on the
                     <strong>
                         <a href="https://www.pytorchlightning.ai/">
                             PyTorch Lightning Framework
                         </a>.
-                    </strong>
+                    </strong> -->
                 </p><br>
 
                 <a
@@ -517,13 +518,15 @@
 <section class="tx-container-2">
     <div class="md-grid md-typeset">
         <div class="tx-hero__image-2" style="margin-top: 50px">
+            <object data="assets/images/home-section-2.svg" type="image/svg+xml">
             <img
-                    src="assets/images/illustrations/home-section-2.png"
+                    src="assets/images/home-section-2.png"
                     alt=""
-                    width="800"
+                    width="600"
                     draggable="false"
                     align="left"
             >
+            </object>
         </div>        
         <div class="tx-hero">
             <!-- Hero content -->
@@ -531,24 +534,57 @@
                 <h1 id="what-is-pdearena">What is PDEArena?</h1><br>
 
                 <p>
-                    Our focus is on creating an easy-to-use, yet scalable framework for evaluating various PDE Surrogate learning techniques, following deep learning best practices:<br>
+                    An easy-to-use, scalable framework for PDE Surrogate learning:<br>
                     ▶️
                     <strong>
-                        TODO
+                        Simple and flexible codebase
                     </strong><br>
                     ▶️
                     <strong>
-                        TODO
+                        Rapid implementation and evaluation of research ideas
                     </strong><br>
                     ▶️
                     <strong>
-                        TODO
-                    </strong><br><br>
+                        Large collection of <a href="">baseline results</a> and <a href="./architectures/">associated implementations</a>
+                    </strong><br>
+                    ▶️
+                    <strong>
+                        Supports efficient scalable distributed training, powered by <a href="https://www.pytorchlightning.ai/">PyTorch Lightning</a>
+                    </strong><br>
+                    
+                    <br>
 
 
-                </p><br>        
+                </p><br>       
             </div>
         </div>
+
+
+    </div>    
+
+</section>
+
+<section class="tx-container-2">
+    <div class="md-grid md-typeset">
+        <div class="tx-hero">
+            <!-- Hero content -->
+            <div class="tx-hero__content-2">
+
+            <h1 id="citation">Citation</h1>
+            <p>If you find this repository useful in your work, please cite:</p>
+            <p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nc">@article</span><span class="p">{</span><span class="nl">gupta2022towards</span><span class="p">,</span><span class="w"></span>
+            <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="na">title</span><span class="p">=</span><span class="s">{Towards Multi-spatiotemporal-scale Generalized PDE Modeling}</span><span class="p">,</span><span class="w"></span>
+            <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="na">author</span><span class="p">=</span><span class="s">{Gupta, Jayesh K and Brandstetter, Johannes}</span><span class="p">,</span><span class="w"></span>
+            <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="na">journal</span><span class="p">=</span><span class="s">{arXiv preprint arXiv:2209.15616}</span><span class="p">,</span><span class="w"></span>
+            <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="na">year</span><span class="p">=</span><span class="s">{2022}</span><span class="w"></span>
+            <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">}</span><span class="w"></span>
+            </code></pre></div>                    
+
+            <p>Also consider starring <a href="https://github.com/microsoft/pdearena">the github repo</a>.
+                <a class="github-button" href="https://github.com/microsoft/pdearena" data-icon="octicon-star" data-show-count="true" aria-label="Star microsoft/pdearena on GitHub">Star</a>         </p>
+            </div>
+        </div>
+
     </div>
 </section>
 

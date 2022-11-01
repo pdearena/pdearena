@@ -9,8 +9,8 @@ If you would like your architecture added, please submit a [pull request](https:
 | FNO          |    `FourierResNet`, `FourierResNetSmall`        |   Fourier Neural Operator Implementation with support for deeper architectures (8 and 4 layers)          |     [:simple-github:](https://github.com/zongyi-li/fourier_neural_operator) [:simple-arxiv:](https://arxiv.org/abs/2010.08895)     |
 | ResNet       |    `ResNet`        |             |          |
 | Dilated-ResNet |  `DilatedResNet`         |             |    [:simple-arxiv:](https://arxiv.org/abs/2112.15275)      |
-| U-Net~2015~   |  `Unet2015`          |  Original U-Net Implementation           |  [:simple-github:](https://github.com/pdebench/PDEBench/blob/main/pdebench/models/unet/unet.py)    [:simple-arxiv:](https://openreview.net/forum?id=dh_MkX0QfrK)    |
-| U-Net~base~   |  `OldUnet`          |  Original U-Net Implementation but with an extra layer           |  [:simple-github:]()        |
+| U-Net~2015~   |  `Unet2015`          |  Original U-Net Implementation          |  [:simple-github:](https://github.com/pdebench/PDEBench/blob/main/pdebench/models/unet/unet.py)    [:simple-arxiv:](https://openreview.net/forum?id=dh_MkX0QfrK)    |
+| U-Net~base~   |  `OldUnet`          |  Our interpretation of original U-Net Implementation without bottleneck layer and using `GroupNorm`           |  [:simple-github:]()        |
 | U-Net~mod~ |  `Unet`          | Modern U-Nets with Wide ResNet blocks, as used in various diffusion modeling applications            |  [:simple-github:](https://github.com/labmlai/annotated_deep_learning_paper_implementations/blob/master/labml_nn/diffusion/ddpm/unet.py) [:simple-arxiv:](https://arxiv.org/abs/2006.11239)   [:simple-arxiv:](https://arxiv.org/abs/2102.09672)   |
 | UF-Net       |   `FourierUnet`         | Modern U-Nets with Fourier layer based downsampling            |   [:simple-arxiv:](https://arxiv.org/abs/2209.15616)       |
 | UNO          |   `UNO`         |  Original U-shaped Neural Operator Implementation            | [:simple-github:](https://github.com/ashiq24/UNO) [:simple-arxiv:](https://arxiv.org/abs/2204.11127)         |
@@ -28,19 +28,7 @@ If you would like your architecture added, please submit a [pull request](https:
 
 While in principle we can make every architecture fully configurable via configuration files, we find it can affect the readability of the code quite a bit. Feel free to open issues or pull-requests for further configuration ability or any other suggestions for managing the configurability-readability tradeoffs.  
 
-## Citation
 
-If you find this repository useful in your work, please cite:
-
-```bibtex
-@article{gupta2022towards,
-  title={Towards Multi-spatiotemporal-scale Generalized PDE Modeling},
-  author={Gupta, Jayesh K and Brandstetter, Johannes},
-  journal={arXiv preprint arXiv:2209.15616},
-  year={2022}
-}
-```
-Also consider starring [the github repo](https://github.com/microsoft/pdearena).
 
 ## Other Projects of Interest
 
