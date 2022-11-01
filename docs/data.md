@@ -68,3 +68,11 @@ python scripts/generate_data.py base=pdedatagen/configs/shallowwater.yaml \
 python scripts/compute_normalization.py \
     --dataset shallowwater /mnt/data/shallowwater
 ```
+
+## PDEBench
+
+Coming soon...
+
+## Your PDE
+
+Please submit a [pull request](https://github.com/microsoft/pdearena) to add a data loading pipeline for your PDE dataset.

@@ -6,7 +6,7 @@ Thanks to [PyTorch Lightning](https://github.com/Lightning-AI/lightning), whethe
 
     We recommend a warmup learning rate schedule for distributed training.
 
-## Standard Operator Learning
+## Standard PDE Surrogate Learning
 
 
 ```bash
@@ -31,7 +31,7 @@ python scripts/train.py -c configs/navierstokes2d.yaml \
 
 
 
-## Conditioned Operator Learning
+## Conditioned PDE Surrogate Learning
 
 ```bash
 python scripts/cond_train.py -c <path/to/config>
