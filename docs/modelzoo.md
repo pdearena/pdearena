@@ -7,7 +7,7 @@ The tables below provide results and useful statistics about training and infere
 
 
 | Model | Num. Params | Model Size (MB) | Forward Time | Forward+Backward Time |
-| --- | --- | --- | --- | --- |
+| --- | ---: | ---: | --- | --- |
 | DilatedResNet128 | 4.2 M | 16.7 | 0.118 | 0.341 |
 | DilatedResNet128-norm | 4.2 M | 16.7 | 0.183 | 0.423 |
 | FNO-16m | 134 M | 537.5 | 0.059 | 0.171 |
