@@ -1,4 +1,7 @@
-# PDEArena
+<p align="center">
+  <img src="https://raw.githubusercontent.com/microsoft/pdearena/main/docs/assets/images/logo.png">
+</p>
+<h1 align="center">PDEArena</h1>
 
 [![Documentation](https://img.shields.io/badge/docs-passing-brightgreen)](https://microsoft.github.io/pdearena)
 [![Paper](https://img.shields.io/badge/arXiv-2209.15616-blue)](https://arxiv.org/abs/2209.15616)
