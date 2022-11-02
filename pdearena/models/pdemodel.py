@@ -3,16 +3,22 @@
 from typing import Any, Dict, List
 
 import torch
-from pdearena import utils
-from pdearena.modules.loss import CustomMSELoss, ScaledLpLoss
-from pdearena.modules.twod import BasicBlock, DilatedBasicBlock, FourierBasicBlock, ResNet
-from pdearena.modules.twod_oldunet import OldUnet
-from pdearena.modules.twod_unet import FourierUnet, Unet, AltFourierUnet
-from pdearena.modules.twod_uno import UNO
-from pdearena.modules.twod_unet2015 import UNet2015
-from pdearena.rollout import rollout2d
 from pytorch_lightning import LightningModule
 from pytorch_lightning.cli import instantiate_class
+
+from pdearena import utils
+from pdearena.modules.loss import CustomMSELoss, ScaledLpLoss
+from pdearena.modules.twod import (
+    BasicBlock,
+    DilatedBasicBlock,
+    FourierBasicBlock,
+    ResNet,
+)
+from pdearena.modules.twod_oldunet import OldUnet
+from pdearena.modules.twod_unet import AltFourierUnet, FourierUnet, Unet
+from pdearena.modules.twod_unet2015 import UNet2015
+from pdearena.modules.twod_uno import UNO
+from pdearena.rollout import rollout2d
 
 
 def get_model(args, pde):
@@ -370,7 +376,7 @@ def get_model(args, pde):
     elif args.name == "DilatedResNet":
         model = ResNet(
             n_scalar_components=pde.n_scalar_components,
-            n_vector_components=pde.n_vector_components,            
+            n_vector_components=pde.n_vector_components,
             block=utils.partialclass("CustomDilatedBasicBlock", DilatedBasicBlock),
             num_blocks=[1, 1, 1, 1],
             time_history=args.time_history,
@@ -380,7 +386,7 @@ def get_model(args, pde):
             norm=args.norm,
             diffmode=args.diffmode,
             usegrid=args.usegrid,
-        )        
+        )
     else:
         raise Exception(f"Wrong model specified {args.name}")
 

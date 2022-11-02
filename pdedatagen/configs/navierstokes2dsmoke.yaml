@@ -7,12 +7,12 @@ pdeconfig:
   tmax: 102.0
   Lx: 32.0
   Ly: 32.0
-  nt: 56      # number of timesteps at minimum dt
-  nx: 128     # spatial resolution on x-axis
-  ny: 128     # spatial resolution on y-axis
-  skip_nt: 8  # initial timesteps to ignore
-  sample_rate: 1  # sampling rate of data as a multiple of minumum dt
-  nu: 0.01    # viscosity
+  nt: 56 # number of timesteps at minimum dt
+  nx: 128 # spatial resolution on x-axis
+  ny: 128 # spatial resolution on y-axis
+  skip_nt: 8 # initial timesteps to ignore
+  sample_rate: 1 # sampling rate of data as a multiple of minumum dt
+  nu: 0.01 # viscosity
   buoyancy_y: 0.5 # bouyancy force in vertical direction
   correction_strength: 1.0
   force_strength: 1.0

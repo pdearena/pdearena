@@ -4,16 +4,14 @@ import glob
 import os
 import sys
 
-from omegaconf import OmegaConf
 import numpy as np
 import torch
+from omegaconf import OmegaConf
 from pytorch_lightning import seed_everything
 
-from pdedatagen.navier_stokes import (
-    generate_trajectories_smoke,
-)
-from pdedatagen.shallowwater import generate_trajectories_shallowwater
 from pdearena import utils
+from pdedatagen.navier_stokes import generate_trajectories_smoke
+from pdedatagen.shallowwater import generate_trajectories_shallowwater
 
 
 def _safe_cpucount() -> int:
@@ -39,9 +37,7 @@ def main(cfg):
 
     seed_everything(seed)
     os.makedirs(cfg.dirname, exist_ok=True)
-    existing_files = glob.glob(
-        os.path.join(cfg.dirname, f"*{cfg.mode}_seed_{cfg.seed}*.h5")
-    )
+    existing_files = glob.glob(os.path.join(cfg.dirname, f"*{cfg.mode}_seed_{cfg.seed}*.h5"))
     if cfg.overwrite:
         for file in existing_files:
             os.remove(file)
@@ -49,9 +45,7 @@ def main(cfg):
         print("Existing files:", len(existing_files))
 
     print(cfg)
-    with open(
-        os.path.join(cfg.dirname, f"pde_{cfg.mode}_seed_{cfg.seed}.yaml"), "w"
-    ) as f:
+    with open(os.path.join(cfg.dirname, f"pde_{cfg.mode}_seed_{cfg.seed}.yaml"), "w") as f:
         f.write(OmegaConf.to_yaml(cfg.pdeconfig))
 
     if cfg.experiment == "smoke":

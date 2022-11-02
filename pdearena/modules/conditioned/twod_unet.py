@@ -1,12 +1,12 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
-from typing import Tuple, List, Union
+from typing import List, Tuple, Union
+
 import torch
 from torch import nn
 
 from .condition_utils import ConditionedBlock, fourier_embedding, zero_module
 from .fourier_cond import SpectralConv2d
-
 
 # Largely based on https://github.com/labmlai/annotated_deep_learning_paper_implementations/blob/master/labml_nn/diffusion/ddpm/unet.py
 # MIT License
@@ -169,10 +169,8 @@ class FourierResidualBlock(ConditionedBlock):
 
 
 class AttentionBlock(nn.Module):
-    """
-    ### Attention block
-    This is similar to [transformer multi-head attention](../../transformers/mha.html).
-    """
+    """### Attention block This is similar to [transformer multi-head
+    attention](../../transformers/mha.html)."""
 
     def __init__(self, n_channels: int, n_heads: int = 1, d_k: int = None, n_groups: int = 1):
         """
@@ -227,9 +225,9 @@ class AttentionBlock(nn.Module):
 
 
 class DownBlock(ConditionedBlock):
-    """
-    ### Down block
-    This combines `ResidualBlock` and `AttentionBlock`. These are used in the first half of U-Net at each resolution.
+    """### Down block This combines `ResidualBlock` and `AttentionBlock`.
+
+    These are used in the first half of U-Net at each resolution.
     """
 
     def __init__(
@@ -263,9 +261,9 @@ class DownBlock(ConditionedBlock):
 
 
 class FourierDownBlock(ConditionedBlock):
-    """
-    ### Down block
-    This combines `ResidualBlock` and `AttentionBlock`. These are used in the first half of U-Net at each resolution.
+    """### Down block This combines `ResidualBlock` and `AttentionBlock`.
+
+    These are used in the first half of U-Net at each resolution.
     """
 
     def __init__(
@@ -303,9 +301,9 @@ class FourierDownBlock(ConditionedBlock):
 
 
 class UpBlock(ConditionedBlock):
-    """
-    ### Up block
-    This combines `ResidualBlock` and `AttentionBlock`. These are used in the second half of U-Net at each resolution.
+    """### Up block This combines `ResidualBlock` and `AttentionBlock`.
+
+    These are used in the second half of U-Net at each resolution.
     """
 
     def __init__(
@@ -341,9 +339,9 @@ class UpBlock(ConditionedBlock):
 
 
 class FourierUpBlock(ConditionedBlock):
-    """
-    ### Up block
-    This combines `ResidualBlock` and `AttentionBlock`. These are used in the second half of U-Net at each resolution.
+    """### Up block This combines `ResidualBlock` and `AttentionBlock`.
+
+    These are used in the second half of U-Net at each resolution.
     """
 
     def __init__(
@@ -383,9 +381,9 @@ class FourierUpBlock(ConditionedBlock):
 
 
 class MiddleBlock(ConditionedBlock):
-    """
-    ### Middle block
-    It combines a `ResidualBlock`, `AttentionBlock`, followed by another `ResidualBlock`.
+    """### Middle block It combines a `ResidualBlock`, `AttentionBlock`, followed by another
+    `ResidualBlock`.
+
     This block is applied at the lowest resolution of the U-Net.
     """
 
@@ -425,9 +423,7 @@ class MiddleBlock(ConditionedBlock):
 
 
 class Upsample(nn.Module):
-    """
-    ### Scale up the feature map by $2 \times$
-    """
+    """### Scale up the feature map by $2 \times$"""
 
     def __init__(self, n_channels: int):
         super().__init__()
@@ -438,9 +434,7 @@ class Upsample(nn.Module):
 
 
 class Downsample(nn.Module):
-    """
-    ### Scale down the feature map by $\frac{1}{2} \times$
-    """
+    """### Scale down the feature map by $\frac{1}{2} \times$"""
 
     def __init__(self, n_channels):
         super().__init__()
@@ -654,7 +648,7 @@ class FourierUnet(nn.Module):
         self.time_history = time_history
         self.time_future = time_future
         self.hidden_channels = hidden_channels
-        
+
         self.mul_pdes = mul_pdes
         # Number of resolutions
         n_resolutions = len(ch_mults)

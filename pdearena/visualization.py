@@ -1,15 +1,14 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
-import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import numpy as np
 from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
 
 
 def tab30():
-    """Create a discrete colormap with 30 unique colors.
-    This colormap combines `matplotlib`'s `tab20b` and `tab20c` colormaps,
-    removing the lightest color of each hue.
+    """Create a discrete colormap with 30 unique colors. This colormap combines `matplotlib`'s
+    `tab20b` and `tab20c` colormaps, removing the lightest color of each hue.
 
     Returns
     - cmap : `matplotlib.colors.ListedColormap`

@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
 import torch
 
@@ -49,9 +49,7 @@ def create_data(
     #     data = torch.cat((data, grid), dim=1)
 
     if targets.size(1) == 0:
-        import pdb
-
-        pdb.set_trace()
+        raise ValueError("No targets")
     return data, targets
 
 

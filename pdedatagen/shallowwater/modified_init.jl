@@ -45,7 +45,7 @@ function SpeedyWeather.initial_conditions(M::ShallowWaterModel)
 
         # make it less symmetric
         progn.vor[15,1:14,1,:] .+= 5e-6*randn(Complex{P.NF},14,nlev)
-    
+
     elseif initial_conditions == :barotropic_divergence
         progn = initialize_from_rest(M)
 
@@ -59,7 +59,7 @@ function SpeedyWeather.initial_conditions(M::ShallowWaterModel)
         progn.div[5,4,1,1] = 2e-5
         progn.vor[15,1:14,1,:] .+= 3e-6*randn(ComplexF64,14,nlev)
 
-    
+
     elseif initial_conditions == :random2
         progn = initialize_from_rest(M)
 
@@ -68,11 +68,11 @@ function SpeedyWeather.initial_conditions(M::ShallowWaterModel)
 
         @unpack nlon, nlat, nlev = G.geometry
         @unpack latd, lon, coslat, sinlat, radius_earth = G.geometry
-        @unpack lmax, mmax = G.spectral_transform  
+        @unpack lmax, mmax = G.spectral_transform
 
         offset = rand(80:120)
-        coeffs = (rand(-20:30), rand(-20:40), rand(-20:40))        
-        
+        coeffs = (rand(-20:30), rand(-20:40), rand(-20:40))
+
         # zonal wind
         #u_grid1 = @. (coeffs[1]*coslat - coeffs[2]*coslat^3 + coeffs[3]*sinlat^2*coslat^6)/coslat+offset
         #u_grid1 = coeffs[1] * rand(P.NF, length(coslat)) .* coslat  .+ offset
@@ -98,7 +98,7 @@ function SpeedyWeather.initial_conditions(M::ShallowWaterModel)
         end
 
         # make it less symmetric
-        progn.vor[15,1:14,1,:] .+= 5e-6*randn(Complex{P.NF},14,nlev)    
+        progn.vor[15,1:14,1,:] .+= 5e-6*randn(Complex{P.NF},14,nlev)
 
     elseif initial_conditions == :random3
         progn = initialize_from_rest(M)
@@ -108,10 +108,10 @@ function SpeedyWeather.initial_conditions(M::ShallowWaterModel)
 
         @unpack nlon, nlat, nlev = G.geometry
         @unpack latd, lon, coslat, sinlat, radius_earth = G.geometry
-        @unpack lmax, mmax = G.spectral_transform  
+        @unpack lmax, mmax = G.spectral_transform
 
         offset = rand(80:120)
-        coeffs = (rand(-20:30), rand(-20:40), rand(-20:40))        
+        coeffs = (rand(-20:30), rand(-20:40), rand(-20:40))
         powers = (rand(2:4), rand(1:4))
         # zonal wind
         #u_grid1 = @. (coeffs[1]*coslat - coeffs[2]*coslat^3 + coeffs[3]*sinlat^2*coslat^6)/coslat+offset
@@ -138,7 +138,7 @@ function SpeedyWeather.initial_conditions(M::ShallowWaterModel)
         end
 
         # make it less symmetric
-        progn.vor[15,1:14,1,:] .+= 5e-6*randn(Complex{P.NF},14,nlev)  
+        progn.vor[15,1:14,1,:] .+= 5e-6*randn(Complex{P.NF},14,nlev)
     elseif initial_conditions == :restart
         progn = initialize_from_file(M)         # TODO this is not implemented yet
     else

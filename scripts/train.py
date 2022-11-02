@@ -2,10 +2,10 @@
 # Licensed under the MIT license.
 import os
 
-from pdearena.models.pdemodel import PDEModel
+from pdearena import utils
 from pdearena.data.datamodule import PDEDataModule
 from pdearena.lr_scheduler import LinearWarmupCosineAnnealingLR  # noqa: F401
-from pdearena import utils
+from pdearena.models.pdemodel import PDEModel
 
 logger = utils.get_logger(__name__)
 

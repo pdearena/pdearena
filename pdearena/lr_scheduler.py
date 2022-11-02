@@ -1,16 +1,17 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
-from typing import List
-import warnings
 import math
+import warnings
+from typing import List
+
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import _LRScheduler
 
 
 class LinearWarmupCosineAnnealingLR(_LRScheduler):
-    """Sets the learning rate of each parameter group to follow a linear warmup schedule between warmup_start_lr
-    and base_lr followed by a cosine annealing schedule between base_lr and eta_min.
-    """
+    """Sets the learning rate of each parameter group to follow a linear warmup schedule between
+    warmup_start_lr and base_lr followed by a cosine annealing schedule between base_lr and
+    eta_min."""
 
     def __init__(
         self,

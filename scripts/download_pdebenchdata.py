@@ -2,14 +2,20 @@
 # Licensed under the MIT license.
 
 import click
+from easyDataverse import Dataset
 from pyDataverse.api import NativeApi
-from easyDataverse import Dataset 
+
 
 @click.command()
 @click.option("--dataset_id", type=str, default="doi:10.18419/darus-2986")
 @click.option("--dataverse_url", type=str, default="https://darus.uni-stuttgart.de")
 @click.option("--outdir", type=str)
-@click.option("--limit", type=str, default=None, help="Limit the number of files to download to only those that contain this string")
+@click.option(
+    "--limit",
+    type=str,
+    default=None,
+    help="Limit the number of files to download to only those that contain this string",
+)
 def main(dataset_id, dataverse_url, outdir, limit):
     dataset = Dataset()
     dataset.p_id = dataset_id
@@ -30,7 +36,7 @@ def main(dataset_id, dataverse_url, outdir, limit):
         filenames=files,
         filedir=outdir,
     )
-    
+
 
 if __name__ == "__main__":
     main()

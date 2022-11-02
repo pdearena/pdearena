@@ -9,7 +9,7 @@ trainer:
       version: null
       log_graph: False
       default_hp_metric: True
-      prefix: ""      
+      prefix: ""
   enable_checkpointing: true
   callbacks:
     - class_path: pytorch_lightning.callbacks.Timer
@@ -30,7 +30,7 @@ trainer:
     #     save_dir: ${trainer.default_root_dir}/imgs
     # - class_path: cliffno.callbacks.OneStep2DPredsCallback
     #   init_args:
-    #     save_dir: ${trainer.default_root_dir}/imgs/onestep   
+    #     save_dir: ${trainer.default_root_dir}/imgs/onestep
     - class_path: pytorch_lightning.callbacks.ModelCheckpoint
       init_args:
         monitor: "valid/unrolled_loss_mean" # name of the logged metric which determines when model is improving
@@ -40,7 +40,7 @@ trainer:
         verbose: false
         dirpath: ${trainer.default_root_dir}/ckpts
         filename: "epoch_{epoch:03d}"
-        auto_insert_metric_name: False         
+        auto_insert_metric_name: False
 
   gradient_clip_val: null
   gradient_clip_algorithm: null
@@ -116,15 +116,15 @@ data:
       skip_nt: 0
       sample_rate: 4
       n_scalar_components: 1
-      n_vector_components: 1   
-  
+      n_vector_components: 1
+
   batch_size: 16
   pin_memory: True
   num_workers: 1
   train_limit_trajectories: -1
-  valid_limit_trajectories: -1   
-  test_limit_trajectories: -1   
-  datapipe: True 
+  valid_limit_trajectories: -1
+  test_limit_trajectories: -1
+  datapipe: True
 
 optimizer:
   class_path: torch.optim.AdamW

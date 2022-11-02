@@ -11,48 +11,48 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.tabbed:
-      alternate_style: true   
+      alternate_style: true
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
-  - pymdownx.superfences 
+  - pymdownx.superfences
   - pymdownx.critic
   - pymdownx.caret
   - pymdownx.keys
   - pymdownx.mark
-  - pymdownx.tilde  
+  - pymdownx.tilde
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg   
+      emoji_generator: !!python/name:materialx.emoji.to_svg
 theme:
   name: material
   custom_dir: docs/overrides
-  font: 
+  font:
     text: Lato
     code: Noto Sans Mono
   palette:
     primary: teal
     accent: teal
   icon:
-      repo: fontawesome/brands/github
-      logo: material/stadium
+    repo: fontawesome/brands/github
+    logo: material/stadium
 
 extra_javascript:
   - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
-  - javascripts/tablesort.js      
+  - javascripts/tablesort.js
 
 nav:
   - Home: "index.md"
   - Installation: "install.md"
   - Architectures: "architectures.md"
   - Model Zoo: "modelzoo.md"
-  - Data: 
-    - Generation: "data.md"
-    - Download: "datadownload.md"
+  - Data:
+      - Generation: "data.md"
+      - Download: "datadownload.md"
   - Training PDE Surrogates: "train.md"
   - Usage Scenarios:
-    - Beginner: "scenarios/beginner.md"
-    - Application: "scenarios/applied.md"
-    - PDE Surrogate Research: "scenarios/researcher.md"
+      - Beginner: "scenarios/beginner.md"
+      - Application: "scenarios/applied.md"
+      - PDE Surrogate Research: "scenarios/researcher.md"
   - Research: "research.md"

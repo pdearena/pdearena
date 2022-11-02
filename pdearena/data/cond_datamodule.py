@@ -2,16 +2,17 @@
 # Licensed under the MIT license.
 import os
 from typing import List
+
 import torch
-from torch.utils.data import DataLoader
 import torchdata.datapipes as dp
 from pytorch_lightning import LightningDataModule
 from pytorch_lightning.cli import instantiate_class
+from torch.utils.data import DataLoader
 
 from pdearena.data.twod.datapipes import (
+    NavierStokesDatasetOpener,
     RandomTimeStepPDETrainData,
     TimestepPDEEvalData,
-    NavierStokesDatasetOpener,
     WeatherDatasetOpener,
 )
 

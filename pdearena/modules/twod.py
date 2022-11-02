@@ -1,12 +1,10 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 import torch
-
 from torch import nn
 from torch.nn import functional as F
-from .fourier import (
-    SpectralConv2d,
-)
+
+from .fourier import SpectralConv2d
 
 
 #######################################################################
@@ -85,8 +83,7 @@ class DilatedBasicBlock(nn.Module):
             )
         self.dilation_layers = nn.ModuleList(dilation_layers)
         self.norm_layers = nn.ModuleList(
-            nn.GroupNorm(num_groups, num_channels=planes) if norm else nn.Identity()
-            for dil in self.dilation
+            nn.GroupNorm(num_groups, num_channels=planes) if norm else nn.Identity() for dil in self.dilation
         )
 
         if activation == "gelu":

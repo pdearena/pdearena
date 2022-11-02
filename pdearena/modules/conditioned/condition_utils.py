@@ -1,16 +1,14 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
+import math
 from abc import abstractmethod
 
-import math
 import torch
 from torch import nn
 
 
 def zero_module(module):
-    """
-    Zero out the parameters of a module and return it.
-    """
+    """Zero out the parameters of a module and return it."""
     for p in module.parameters():
         p.detach().zero_()
     return module
@@ -41,9 +39,7 @@ def fourier_embedding(timesteps, dim, max_period=10000):
 class ConditionedBlock(nn.Module):
     @abstractmethod
     def forward(self, x, emb):
-        """
-        Apply the module to `x` given `emb` embdding of time or others
-        """
+        """Apply the module to `x` given `emb` embdding of time or others."""
 
 
 class EmbedSequential(nn.Sequential, ConditionedBlock):

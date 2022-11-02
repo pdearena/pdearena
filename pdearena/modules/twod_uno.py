@@ -1,8 +1,8 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 import torch
-from torch import nn
 import torch.nn.functional as F
+from torch import nn
 
 # Based on https://github.com/ashiq24/UNO
 """

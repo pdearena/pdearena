@@ -17,7 +17,7 @@ def batchmul2d(input, weights):
 
 class SpectralConv2d(nn.Module):
     def __init__(self, in_channels, out_channels, modes1, modes2):
-        super(SpectralConv2d, self).__init__()
+        super().__init__()
         """
         2D Fourier layer. It does FFT, linear transform, and Inverse FFT.
         @author: Zongyi Li

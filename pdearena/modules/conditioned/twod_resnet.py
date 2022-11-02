@@ -1,11 +1,11 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 import torch
-from torch import nn
 import torch.nn.functional as F
+from torch import nn
 
+from .condition_utils import ConditionedBlock, EmbedSequential, fourier_embedding
 from .fourier_cond import SpectralConv2d
-from .condition_utils import fourier_embedding, ConditionedBlock, EmbedSequential
 
 
 class FourierBasicBlock(ConditionedBlock):

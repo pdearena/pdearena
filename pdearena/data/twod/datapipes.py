@@ -1,17 +1,19 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
-from typing import Optional
 import math
 import os.path
 import random
+from typing import Optional
+
 import h5py
-import xarray as xr
 import numpy as np
 import torch
 import torch.distributed as dist
 import torchdata.datapipes as dp
-from pdearena.pde import PDEConfig
+import xarray as xr
+
 import pdearena.data.utils as datautils
+from pdearena.pde import PDEConfig
 
 
 class NavierStokesDatasetOpener(dp.iter.IterDataPipe):

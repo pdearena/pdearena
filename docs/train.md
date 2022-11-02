@@ -1,19 +1,21 @@
 # Training PDE surrogates
 
-Thanks to [PyTorch Lightning](https://github.com/Lightning-AI/lightning), whether it's a single GPU experiment or multiple GPUs (even multiple nodes), setting up scalable training experiments should be fairly simple. 
+Thanks to [PyTorch Lightning](https://github.com/Lightning-AI/lightning), whether it's a single GPU experiment or multiple GPUs (even multiple nodes), setting up scalable training experiments should be fairly simple.
 
 !!! tip
 
-    We recommend a warmup learning rate schedule for distributed training.
+```
+We recommend a warmup learning rate schedule for distributed training.
+```
 
 ## Standard PDE Surrogate Learning
-
 
 ```bash
 python scripts/train.py -c <path/to/config>
 ```
 
 For example, to run modern U-Net on Navier Stokes dataset on 4 GPUs use:
+
 ```bash
 python scripts/train.py -c configs/navierstokes2d.yaml \
     --data.data_dir=/mnt/data/NavierStokes2D_smoke \
@@ -29,8 +31,6 @@ python scripts/train.py -c configs/navierstokes2d.yaml \
     --lr_scheduler.max_epochs=50 --lr_scheduler.eta_min=1e-7
 ```
 
-
-
 ## Conditioned PDE Surrogate Learning
 
 ```bash
@@ -38,6 +38,7 @@ python scripts/cond_train.py -c <path/to/config>
 ```
 
 For example, to run modern U-Net on Navier Stokes dataset on 4 GPUs use:
+
 ```bash
 python scripts/cond_train.py -c configs/cond_navierstokes2d.yaml \
     --data.data_dir=/mnt/data/NavierStokes2D_cond_smoke \
@@ -49,7 +50,7 @@ python scripts/cond_train.py -c configs/cond_navierstokes2d.yaml \
     --optimizer=AdamW --optimizer.lr=2e-4 --optimizer.weight_decay=1e-5 \
     --lr_scheduler=LinearWarmupCosineAnnealingLR \
     --lr_scheduler.warmup_epochs=5 \
-    --lr_scheduler.max_epochs=50 --lr_scheduler.eta_min=1e-7    
+    --lr_scheduler.max_epochs=50 --lr_scheduler.eta_min=1e-7
 ```
 
 ## Dataloading philosophy

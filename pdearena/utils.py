@@ -1,18 +1,18 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
-from importlib import import_module
-from typing import Dict, Tuple, Any
-
-from functools import partialmethod
-import sys
 import logging
+import sys
 import timeit
+from functools import partialmethod
+from importlib import import_module
+from typing import Any, Dict, Tuple
+
 import torch
-from pytorch_lightning.utilities import rank_zero_only
 from pytorch_lightning.cli import LightningCLI
+from pytorch_lightning.utilities import rank_zero_only
 
 
-class Timer(object):
+class Timer:
     def __enter__(self):
         self.t_start = timeit.default_timer()
         return self
@@ -24,6 +24,7 @@ class Timer(object):
 
 def instantiate_class(init: Dict[str, Any]) -> Any:
     """Instantiates a class with the given args and init.
+
     Args:
         todo
     Returns:
@@ -59,7 +60,7 @@ def get_logger(name=__name__) -> logging.Logger:
 
 
 def bootstrap(x: torch.Tensor, Nboot: int, binsize: int) -> Tuple[torch.Tensor, torch.Tensor]:
-    """Bootstrapping the mean of tensor
+    """Bootstrapping the mean of tensor.
 
     Args:
         x (torch.Tensor): _description_

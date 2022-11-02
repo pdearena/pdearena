@@ -9,10 +9,10 @@ trainer:
       version: null
       log_graph: False
       default_hp_metric: True
-      prefix: ""   
-  
+      prefix: ""
+
   enable_checkpointing: true
-  callbacks: 
+  callbacks:
     - class_path: pytorch_lightning.callbacks.Timer
       init_args:
         interval: "epoch"
@@ -24,11 +24,11 @@ trainer:
         logging_interval: "step"
     - class_path: pytorch_lightning.callbacks.TQDMProgressBar
       init_args:
-        refresh_rate: 1  
-  
+        refresh_rate: 1
+
   gradient_clip_val: null
   gradient_clip_algorithm: null
-  
+
   num_nodes: 1
   num_processes: null
   devices: null
@@ -94,7 +94,7 @@ model:
   use_scale_shift_norm: False
 data:
   data_dir: null
-  pde: 
+  pde:
     class_path: pdearena.pde.NavierStokes2D
     init_args:
       tmin: 18.0
@@ -114,7 +114,7 @@ data:
       force_frequency: 4
       n_scalar_components: 1
       n_vector_components: 1
-      device: cpu     
+      device: cpu
   batch_size: 16
   pin_memory: True
   num_workers: 1

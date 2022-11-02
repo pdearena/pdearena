@@ -1,24 +1,24 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 import os
-import glob
 from typing import Optional
+
 import torch
-from torch.utils.data import DataLoader
 import torchdata.datapipes as dp
 from pytorch_lightning import LightningDataModule
 from pytorch_lightning.cli import instantiate_class
+from torch.utils.data import DataLoader
 
 from pdearena.data.twod.datapipes import (
-    RandomizedPDETrainData,
     NavierStokesDatasetOpener,
     PDEEvalTimeStepData,
+    RandomizedPDETrainData,
+    VortWeatherDatasetOpener,
     VortWeatherDatasetOpener1Day,
     VortWeatherDatasetOpener2Day,
+    WeatherDatasetOpener,
     WeatherDatasetOpener1Day,
     WeatherDatasetOpener2Day,
-    WeatherDatasetOpener,
-    VortWeatherDatasetOpener,
 )
 
 
@@ -77,9 +77,7 @@ def _weathertest_filter(fname):
 
 
 class PDEDataModule(LightningDataModule):
-    """
-    Define the dataloading process for pde data
-    """
+    """Define the dataloading process for pde data."""
 
     def __init__(
         self,
@@ -103,6 +101,8 @@ class PDEDataModule(LightningDataModule):
             self.pde = instantiate_class(args=tuple(), init=pde)  # TODO
         else:
             self.pde = pde
+        # TODO: make this more general
+        # Best to associate this with the pde object somehow?
         if "Weather" in pde["class_path"]:
             if self.pde.n_vector_components == 0:
                 if self.pde.sample_rate != 1:

@@ -6,11 +6,11 @@
 [![Documentation](https://img.shields.io/badge/docs-passing-brightgreen)](https://microsoft.github.io/pdearena)
 [![Paper](https://img.shields.io/badge/arXiv-2209.15616-blue)](https://arxiv.org/abs/2209.15616)
 
-While this repository contains code to accompany the paper: **Towards multi-spatiotemporal-scale generalized PDE modeling**, we hope this can be a starting point for future PDE surrogate learning research. 
-We will soon have models from **Clifford neural layers for PDE modeling** as well. 
+While this repository contains code to accompany the paper: **Towards multi-spatiotemporal-scale generalized PDE modeling**, we hope this can be a starting point for future PDE surrogate learning research.
+We will soon have models from **Clifford neural layers for PDE modeling** as well.
 
-For details about usage please see [documentation](https://microsoft.github.io/pdearena). 
-If you have any questions or suggestions please open a [discussion](). If you notice a bug, please open an [issue](https://github.com/microsoft/pdearena/issues). 
+For details about usage please see [documentation](https://microsoft.github.io/pdearena).
+If you have any questions or suggestions please open a [discussion](<>). If you notice a bug, please open an [issue](https://github.com/microsoft/pdearena/issues).
 
 ## Citation
 
@@ -41,9 +41,8 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 
 ## Trademarks
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
+This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft
+trademarks or logos is subject to and must follow
 [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
 Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
 Any use of third-party trademarks or logos are subject to those third-party's policies.
-

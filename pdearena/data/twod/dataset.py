@@ -1,15 +1,14 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
+import random
 from typing import Optional
 
-import random
 import h5py
 import torch
-
 from torch.utils import data
 
-from pdearena.pde import PDEConfig
 import pdearena.data.utils as datautils
+from pdearena.pde import PDEConfig
 
 
 class PDEDataset(data.Dataset):

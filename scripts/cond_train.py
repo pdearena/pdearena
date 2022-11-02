@@ -1,11 +1,13 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 import os
+
 from pytorch_lightning.cli import LightningCLI
-from pdearena.models.cond_pdemodel import CondPDEModel
+
+from pdearena import utils
 from pdearena.data.cond_datamodule import CondPDEDataModule
 from pdearena.lr_scheduler import LinearWarmupCosineAnnealingLR  # noqa: F401
-from pdearena import utils
+from pdearena.models.cond_pdemodel import CondPDEModel
 
 logger = utils.get_logger(__name__)
 

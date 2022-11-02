@@ -4,34 +4,25 @@ import logging
 import os
 
 import h5py
-from joblib import Parallel, delayed
 import numpy as np
-
-import math
 import torch
-from tqdm import tqdm
-
-import phi
-from phi.flow import (
-    extrapolation,
-    CenteredGrid,
-    # SoftGeometryMask,
-    advect,
-    fluid,
-    # Sphere,
-    # batch,
-    spatial,
-    channel,
+from joblib import Parallel, delayed
+from phi.flow import (  # SoftGeometryMask,; Sphere,; batch,; tensor,
     Box,
-    StaggeredGrid,
-    # tensor,
-    diffuse,
+    CenteredGrid,
     Noise,
+    StaggeredGrid,
+    advect,
+    diffuse,
+    extrapolation,
+    fluid,
 )
 from phi.math import reshaped_native
 from phi.math import seed as phi_seed
-from pdearena.pde import PDEConfig
+from tqdm import tqdm
+
 from pdearena import utils
+from pdearena.pde import PDEConfig
 
 logger = logging.getLogger(__name__)
 
@@ -63,9 +54,7 @@ def generate_trajectories_smoke(
     logger.info(f"Mode: {mode}")
     logger.info(f"Number of samples: {num_samples}")
 
-    save_name = os.path.join(
-        dirname, "_".join([pde_string, mode, str(seed), f"{pde.buoyancy_y:.5f}"])
-    )
+    save_name = os.path.join(dirname, "_".join([pde_string, mode, str(seed), f"{pde.buoyancy_y:.5f}"]))
     if mode == "train":
         save_name = save_name + "_" + str(num_samples)
     h5f = h5py.File("".join([save_name, ".h5"]), "a")
@@ -106,15 +95,11 @@ def generate_trajectories_smoke(
         velocity_ = []
         for i in range(0, pde.nt + pde.skip_nt):
             smoke = advect.semi_lagrangian(smoke, velocity, pde.dt)
-            buoyancy_force = (smoke * (0, pde.buoyancy_y)).at(
-                velocity
-            )  # resamples smoke to velocity sample points
+            buoyancy_force = (smoke * (0, pde.buoyancy_y)).at(velocity)  # resamples smoke to velocity sample points
             velocity = advect.semi_lagrangian(velocity, velocity, pde.dt) + pde.dt * buoyancy_force
             velocity = diffuse.explicit(velocity, pde.nu, pde.dt)
             velocity, _ = fluid.make_incompressible(velocity)
-            fluid_field_.append(
-                reshaped_native(smoke.values, groups=("x", "y", "vector"), to_numpy=True)
-            )
+            fluid_field_.append(reshaped_native(smoke.values, groups=("x", "y", "vector"), to_numpy=True))
             velocity_.append(
                 reshaped_native(
                     velocity.staggered_tensor(),
@@ -131,9 +116,7 @@ def generate_trajectories_smoke(
     with utils.Timer() as gentime:
         rngs = np.random.randint(np.iinfo(np.int32).max, size=num_samples)
         fluid_field, velocity_corrected = zip(
-            *Parallel(n_jobs=n_parallel)(
-                delayed(genfunc)(idx, rngs[idx]) for idx in tqdm(range(num_samples))
-            )
+            *Parallel(n_jobs=n_parallel)(delayed(genfunc)(idx, rngs[idx]) for idx in tqdm(range(num_samples)))
         )
 
     logger.info(f"Took {gentime.dt:.3f} seconds")
@@ -150,9 +133,7 @@ def generate_trajectories_smoke(
             dx[idx : (idx + 1)] = pde.dx
             ycoord[idx : (idx + 1), ...] = np.asarray([np.linspace(0, pde.Ly, pde.ny)])
             dy[idx : (idx + 1)] = pde.dy
-            tcoord[idx : (idx + 1), ...] = np.asarray(
-                [np.linspace(pde.tmin, pde.tmax, pde.trajlen)]
-            )
+            tcoord[idx : (idx + 1), ...] = np.asarray([np.linspace(pde.tmin, pde.tmax, pde.trajlen)])
             dt[idx : (idx + 1)] = pde.dt * pde.sample_rate
             buo_y[idx : (idx + 1)] = pde.buoyancy_y
 
@@ -163,5 +144,3 @@ def generate_trajectories_smoke(
     print()
     print()
     h5f.close()
-
-

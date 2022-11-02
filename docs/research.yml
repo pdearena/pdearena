@@ -14,7 +14,7 @@ papers:
     image: unet-results.png
 
   - title: Clifford Neural Layers for PDE Modeling
-    authors: 
+    authors:
       - Johannes Brandstetter (1)
       - Rianne van den Berg (1)
       - Max Welling (1)

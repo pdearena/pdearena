@@ -1,13 +1,10 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 import os
-import glob
-import xarray as xr
-import torch
+
 import click
-import h5py
-import numpy as np
-from tqdm import tqdm
+import torch
+import xarray as xr
 
 
 def compute_normstats_weather(datapath):
@@ -38,7 +35,7 @@ def compute_normstats_weather(datapath):
         "vor": {
             "mean": torch.tensor(vor_mean),
             "std": torch.tensor(vor_std),
-        }
+        },
     }
     return stats
 
