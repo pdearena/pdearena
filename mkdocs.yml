@@ -51,4 +51,8 @@ nav:
     - Generation: "data.md"
     - Download: "datadownload.md"
   - Training PDE Surrogates: "train.md"
+  - Usage Scenarios:
+    - Beginner: "scenarios/beginner.md"
+    - Application: "scenarios/application.md"
+    - PDE Surrogate Research: "scenarios/researcher.md"
   - Research: "research.md"
