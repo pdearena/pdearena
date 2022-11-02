@@ -22,7 +22,10 @@ azcopy copy "https://pdearenarelease.blob.core.windows.net/datasets/NavierStokes
 
 ### Conditioning dataset
 
-Coming soon...
+```bash
+azcopy copy "https://pdearenarelease.blob.core.windows.net/datasets/NavierStokes2D_cond_smoke_v1" "/mnt/data/" --recursive
+```
+
 
 ## Shallow water - 2D
 
