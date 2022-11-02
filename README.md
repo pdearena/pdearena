@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/1785175/199388258-4ca228d5-9f0b-463d-82dd-6c27015bc4ab.png">
+  <img src="https://user-images.githubusercontent.com/1785175/199388258-4ca228d5-9f0b-463d-82dd-6c27015bc4ab.png" width="400px">
 </p>
 <h1 align="center">PDEArena</h1>
 
