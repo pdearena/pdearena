@@ -21,6 +21,14 @@ class Timer(object):
         self.dt = self.t_end - self.t_start
 
 MODELS = {
+    "FNOs-96-32m": {
+        "name": "FourierResNetSmall",
+        "hidden_channels": 96,
+        "modes1": 32,
+        "modes2": 32,
+        "norm": False,
+    },     
+
     "ResNet128": {
         "name": "ResNet",
         "hidden_channels": 128,

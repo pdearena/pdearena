@@ -56,6 +56,13 @@ MODELS = {
         "modes2": 32,
         "norm": False,
     },    
+    "FNOs-96-32m": {
+        "name": "FourierResNetSmall",
+        "hidden_channels": 96,
+        "modes1": 32,
+        "modes2": 32,
+        "norm": False,
+    },     
     "UNO64": {
         "name": "UNO",
         "hidden_channels": 64,
@@ -181,7 +188,7 @@ def save_data(data):
         json.dump(data, f, sort_keys=True, indent=4)
 
 def main():
-
+    precision_megabytes = (32/8.0) * 1e-6
     pde = NavierStokes2D(
       tmin= 18.0,
       tmax= 102.0,
@@ -220,7 +227,12 @@ def main():
                     out = model(input)
                 torch.cuda.synchronize()
         print(f"{k} forward time: {ft.dt/n_repeats:.3f}")
-        results[k] = {"fwd_time": ft.dt/n_repeats}
+        trainable_params = sum(
+        	p.numel() for p in model.parameters() if p.requires_grad
+        )
+        total_parameters = sum(p.numel() for p in model.parameters())
+        model_size = total_parameters * precision_megabytes
+        results[k] = {"fwd_time": ft.dt/n_repeats, "num_params": trainable_params, "model_size": model_size}
         del model
         torch.cuda.empty_cache()
         time.sleep(1)

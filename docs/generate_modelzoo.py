@@ -1,6 +1,8 @@
 import json
 import os.path
 
+from pytorch_lightning.utilities.model_summary.model_summary import get_human_readable_count
+
 DOCS_DIR = os.path.dirname(__file__)
 
 header = """
@@ -19,9 +21,9 @@ def get_data_from_json(file):
     else:
         return {}
 
-def get_model_zoo_table_row(name, fwd_time, fwd_bwd_time):
-    "make modelzoo.md table row"
-    return f"| {name} | {fwd_time:.3f} | {fwd_bwd_time:.3f} |"
+def get_model_zoo_table_row(name, num_params, model_size, fwd_time, fwd_bwd_time):
+    """make modelzoo.md table row"""
+    return f"| {name} | {get_human_readable_count(num_params)} | {model_size:.3f} | {fwd_time:.3f} | {fwd_bwd_time:.3f} |"
 
 def main(outfile):
     """make modelzoo.md table"""
@@ -37,12 +39,12 @@ def main(outfile):
     with open(outfile, "w") as f:
         f.write(header)
         f.write("\n\n")
-        f.write(f"| Model | Forward Time | Forward+Backward Time |")
+        f.write(f"| Model | Num. Params | Model Size (MB) | Forward Time | Forward+Backward Time |")
         f.write("\n")
-        f.write("| --- | --- | --- |")
+        f.write("| --- | --- | --- | --- | --- |")
         f.write("\n")
-        for model in models:
-            row = get_model_zoo_table_row(model, fwd_time_data[model]["fwd_time"], fwd_bwd_time_data[model]["fwd_bwd_time"])
+        for model in sorted(models):
+            row = get_model_zoo_table_row(model, fwd_time_data[model]["num_params"], fwd_time_data[model]["model_size"], fwd_time_data[model]["fwd_time"], fwd_bwd_time_data[model]["fwd_bwd_time"])
             f.write(row + "\n")
 
         f.write(f"\n- **Date Created**: {date_created}")

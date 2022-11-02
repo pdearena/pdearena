@@ -1,0 +1,85 @@
+{
+    "DilatedResNet128": {
+        "fwd_bwd_time": 0.3414408809319138
+    },
+    "DilatedResNet128-norm": {
+        "fwd_bwd_time": 0.42280389737337826
+    },
+    "FNO-16m": {
+        "fwd_bwd_time": 0.17134162673726677
+    },
+    "FNO-8m": {
+        "fwd_bwd_time": 0.16097182819619774
+    },
+    "FNOs-128-16m": {
+        "fwd_bwd_time": 0.08916370211169124
+    },
+    "FNOs-32m": {
+        "fwd_bwd_time": 0.11774295344948768
+    },
+    "FNOs-64-32m": {
+        "fwd_bwd_time": 0.049889852833002804
+    },
+    "FNOs-96-32m": {
+        "fwd_bwd_time": 0.08000365853309631
+    },
+    "ResNet128": {
+        "fwd_bwd_time": 0.179149350207299
+    },
+    "ResNet256": {
+        "fwd_bwd_time": 0.5013163826800883
+    },
+    "U-FNet1-16m": {
+        "fwd_bwd_time": 0.1956377268023789
+    },
+    "U-FNet1-8m": {
+        "fwd_bwd_time": 0.19434639010578394
+    },
+    "U-FNet2-16m": {
+        "fwd_bwd_time": 0.20002987841144204
+    },
+    "U-FNet2-16mc": {
+        "fwd_bwd_time": 0.20416680397465825
+    },
+    "U-FNet2-8m": {
+        "fwd_bwd_time": 0.19753642262890936
+    },
+    "U-FNet2-8mc": {
+        "fwd_bwd_time": 0.19878671986982227
+    },
+    "U-FNet2attn-16m": {
+        "fwd_bwd_time": 0.20634790800511837
+    },
+    "UNO128": {
+        "fwd_bwd_time": 0.3409840666502714
+    },
+    "UNO64": {
+        "fwd_bwd_time": 0.13378849223256112
+    },
+    "Unet2015-128": {
+        "fwd_bwd_time": 0.1171835912950337
+    },
+    "Unet2015-128-tanh": {
+        "fwd_bwd_time": 0.11759196858853102
+    },
+    "Unet2015-64": {
+        "fwd_bwd_time": 0.03711360201239586
+    },
+    "Unet2015-64-tanh": {
+        "fwd_bwd_time": 0.037119560800492765
+    },
+    "Unetbase128": {
+        "fwd_bwd_time": 0.13416995545849203
+    },
+    "Unetbase64": {
+        "fwd_bwd_time": 0.04618877686560154
+    },
+    "Unetmod64": {
+        "fwd_bwd_time": 0.18551657516509296
+    },
+    "Unetmodattn64": {
+        "fwd_bwd_time": 0.19216696724295615
+    },
+    "date-created": "2022-11-02 02:56:11.493788",
+    "gpu-name": "Tesla V100-PCIE-16GB"
+}
