@@ -23,7 +23,7 @@ def get_data_from_json(file):
 
 def get_model_zoo_table_row(name, num_params, model_size, fwd_time, fwd_bwd_time):
     """make modelzoo.md table row"""
-    return f"| {name} | {get_human_readable_count(num_params)} | {model_size:.3f} | {fwd_time:.3f} | {fwd_bwd_time:.3f} |"
+    return f"| {name} | {get_human_readable_count(num_params)} | {model_size:.1f} | {fwd_time:.3f} | {fwd_bwd_time:.3f} |"
 
 def main(outfile):
     """make modelzoo.md table"""
