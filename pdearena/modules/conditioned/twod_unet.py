@@ -63,7 +63,7 @@ class ResidualBlock(ConditionedBlock):
             h = self.norm2(h) * (1 + scale) + shift  # where we do -1 or +1 doesn't matter
             h = self.conv2(self.activation(h))
         else:
-            h += emb_out
+            h = h + emb_out
             # Second convolution layer
             h = self.conv2(self.activation(self.norm2(h)))
         # Add the shortcut connection and return
