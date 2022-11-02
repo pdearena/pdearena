@@ -2,8 +2,12 @@
 # Licensed under the MIT license.
 from setuptools import setup, find_packages
 
+import os.path as osp
+
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
+
+exec(open(osp.join(osp.dirname(__file__), "version.py")).read())    
 
 extras = {
     "datagen": [
@@ -37,8 +41,8 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="MIT",
-    version="0.1.0",
-    author="Jayesh K. Gupta <jayesh.gupta@microsoft.com>, Johannes Brandstetter <johannesb@microsoft.com>",
+    version=__version__,
+    author="Jayesh K. Gupta, Johannes Brandstetter, and contributors",
     python_requires=">=3.6",
     zip_safe=True,
     project_urls={
