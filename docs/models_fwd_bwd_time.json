@@ -1,0 +1,82 @@
+{
+    "DilatedResNet128": {
+        "fwd_bwd_time": 0.3411630422063172
+    },
+    "DilatedResNet128-norm": {
+        "fwd_bwd_time": 0.4228135711699724
+    },
+    "FNO-16m": {
+        "fwd_bwd_time": 0.17135833777487278
+    },
+    "FNO-8m": {
+        "fwd_bwd_time": 0.1611516270413995
+    },
+    "FNOs-128-16m": {
+        "fwd_bwd_time": 0.08930777691304684
+    },
+    "FNOs-32m": {
+        "fwd_bwd_time": 0.11778892483562231
+    },
+    "FNOs-64-32m": {
+        "fwd_bwd_time": 0.049871404711157086
+    },
+    "ResNet128": {
+        "fwd_bwd_time": 0.17921222990378738
+    },
+    "ResNet256": {
+        "fwd_bwd_time": 0.5008972279727459
+    },
+    "U-FNet1-16m": {
+        "fwd_bwd_time": 0.19575675137341023
+    },
+    "U-FNet1-8m": {
+        "fwd_bwd_time": 0.1946256100013852
+    },
+    "U-FNet2-16m": {
+        "fwd_bwd_time": 0.19991875845938922
+    },
+    "U-FNet2-16mc": {
+        "fwd_bwd_time": 0.20424856340512634
+    },
+    "U-FNet2-8m": {
+        "fwd_bwd_time": 0.1977337913401425
+    },
+    "U-FNet2-8mc": {
+        "fwd_bwd_time": 0.1985148373246193
+    },
+    "U-FNet2attn-16m": {
+        "fwd_bwd_time": 0.2064205876737833
+    },
+    "UNO128": {
+        "fwd_bwd_time": 0.3410462819039822
+    },
+    "UNO64": {
+        "fwd_bwd_time": 0.1337901334092021
+    },
+    "Unet2015-128": {
+        "fwd_bwd_time": 0.11747581468895078
+    },
+    "Unet2015-128-tanh": {
+        "fwd_bwd_time": 0.1176499948836863
+    },
+    "Unet2015-64": {
+        "fwd_bwd_time": 0.03726155107840896
+    },
+    "Unet2015-64-tanh": {
+        "fwd_bwd_time": 0.037139212600886824
+    },
+    "Unetbase128": {
+        "fwd_bwd_time": 0.13407149210572242
+    },
+    "Unetbase64": {
+        "fwd_bwd_time": 0.046235883254557845
+    },
+    "Unetmod64": {
+        "fwd_bwd_time": 0.1854420938529074
+    },
+    "Unetmodattn64": {
+        "fwd_bwd_time": 0.19220952628180385
+    },
+    "date-created": "2022-11-01 23:04:14.518535",
+    "gpu-name": "Tesla V100-PCIE-16GB"
+}

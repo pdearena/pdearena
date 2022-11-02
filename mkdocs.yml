@@ -46,6 +46,7 @@ nav:
   - Home: "index.md"
   - Installation: "install.md"
   - Architectures: "architectures.md"
+  - Model Zoo: "modelzoo.md"
   - Data: 
     - Generation: "data.md"
     - Download: "datadownload.md"
