@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/pdearena/main/docs/assets/images/logo.png">
+  <img src="https://user-images.githubusercontent.com/1785175/199388258-4ca228d5-9f0b-463d-82dd-6c27015bc4ab.png">
 </p>
 <h1 align="center">PDEArena</h1>
 
@@ -46,3 +46,4 @@ trademarks or logos is subject to and must follow
 [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
 Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
 Any use of third-party trademarks or logos are subject to those third-party's policies.
+
