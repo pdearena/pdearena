@@ -99,6 +99,7 @@ model:
   unrolling: 0
 
 data:
+  task: ShallowWater2DVel-2Day
   data_dir: null
   time_history: 2
   time_future: 1
@@ -124,7 +125,7 @@ data:
   train_limit_trajectories: -1
   valid_limit_trajectories: -1
   test_limit_trajectories: -1
-  datapipe: True
+
 
 optimizer:
   class_path: torch.optim.AdamW
