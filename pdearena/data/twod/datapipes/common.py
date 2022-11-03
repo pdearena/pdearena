@@ -59,14 +59,15 @@ def build_datapipes(
     return dpipe
 
 
-class DirLister(dp.iter.IterDataPipe):
+class ZarrLister(dp.iter.IterDataPipe):
     def __init__(
         self,
         root: Union[str, Sequence[str], dp.iter.IterDataPipe] = ".",
     ) -> None:
         super().__init__()
+
         if isinstance(root, str):
-            self.root = [
+            root = [
                 root,
             ]
         if not isinstance(root, dp.iter.IterDataPipe):
@@ -77,7 +78,8 @@ class DirLister(dp.iter.IterDataPipe):
     def __iter__(self):
         for path in self.datapipe:
             for dirname in os.listdir(path):
-                yield os.path.join(path, dirname)
+                if dirname.endswith(".zarr"):
+                    yield os.path.join(path, dirname)
 
 
 class RandomTimeStepPDETrainData(dp.iter.IterDataPipe):

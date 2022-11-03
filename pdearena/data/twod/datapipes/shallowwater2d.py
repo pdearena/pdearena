@@ -11,7 +11,7 @@ import torch.distributed as dist
 import torchdata.datapipes as dp
 import xarray as xr
 
-from .common import DirLister, build_datapipes
+from .common import ZarrLister, build_datapipes
 
 
 class ShallowwaterDatasetOpener(dp.iter.IterDataPipe):
@@ -170,7 +170,7 @@ def _weathertest_filter(fname):
 train_datapipe_2day_vel = functools.partial(
     build_datapipes,
     dataset_opener=ShallowwaterDatasetOpener2Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathertrain_filter,
     sharder=_sharder,
     mode="train",
@@ -178,7 +178,7 @@ train_datapipe_2day_vel = functools.partial(
 onestep_valid_datapipe_2day_vel = functools.partial(
     build_datapipes,
     dataset_opener=ShallowwaterDatasetOpener2Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathervalid_filter,
     sharder=_sharder,
     mode="valid",
@@ -187,7 +187,7 @@ onestep_valid_datapipe_2day_vel = functools.partial(
 trajectory_valid_datapipe_2day_vel = functools.partial(
     build_datapipes,
     dataset_opener=ShallowwaterDatasetOpener2Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathervalid_filter,
     sharder=_sharder,
     mode="valid",
@@ -196,7 +196,7 @@ trajectory_valid_datapipe_2day_vel = functools.partial(
 onestep_test_datapipe_2day_vel = functools.partial(
     build_datapipes,
     dataset_opener=ShallowwaterDatasetOpener2Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathertest_filter,
     sharder=_sharder,
     mode="test",
@@ -205,7 +205,7 @@ onestep_test_datapipe_2day_vel = functools.partial(
 trajectory_test_datapipe_2day_vel = functools.partial(
     build_datapipes,
     dataset_opener=ShallowwaterDatasetOpener2Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathertest_filter,
     sharder=_sharder,
     mode="test",
@@ -215,7 +215,7 @@ trajectory_test_datapipe_2day_vel = functools.partial(
 train_datapipe_2day_vort = functools.partial(
     build_datapipes,
     dataset_opener=VortShallowwaterDatasetOpener2Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathertrain_filter,
     sharder=_sharder,
     mode="train",
@@ -223,7 +223,7 @@ train_datapipe_2day_vort = functools.partial(
 onestep_valid_datapipe_2day_vort = functools.partial(
     build_datapipes,
     dataset_opener=VortShallowwaterDatasetOpener2Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathervalid_filter,
     sharder=_sharder,
     mode="valid",
@@ -232,7 +232,7 @@ onestep_valid_datapipe_2day_vort = functools.partial(
 trajectory_valid_datapipe_2day_vort = functools.partial(
     build_datapipes,
     dataset_opener=VortShallowwaterDatasetOpener2Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathervalid_filter,
     sharder=_sharder,
     mode="valid",
@@ -241,7 +241,7 @@ trajectory_valid_datapipe_2day_vort = functools.partial(
 onestep_test_datapipe_2day_vort = functools.partial(
     build_datapipes,
     dataset_opener=VortShallowwaterDatasetOpener2Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathertest_filter,
     sharder=_sharder,
     mode="test",
@@ -250,7 +250,7 @@ onestep_test_datapipe_2day_vort = functools.partial(
 trajectory_test_datapipe_2day_vort = functools.partial(
     build_datapipes,
     dataset_opener=VortShallowwaterDatasetOpener2Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathertest_filter,
     sharder=_sharder,
     mode="test",
@@ -260,7 +260,7 @@ trajectory_test_datapipe_2day_vort = functools.partial(
 train_datapipe_1day_vel = functools.partial(
     build_datapipes,
     dataset_opener=ShallowwaterDatasetOpener1Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathertrain_filter,
     sharder=_sharder,
     mode="train",
@@ -268,7 +268,7 @@ train_datapipe_1day_vel = functools.partial(
 onestep_valid_datapipe_1day_vel = functools.partial(
     build_datapipes,
     dataset_opener=ShallowwaterDatasetOpener1Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathervalid_filter,
     sharder=_sharder,
     mode="valid",
@@ -277,7 +277,7 @@ onestep_valid_datapipe_1day_vel = functools.partial(
 trajectory_valid_datapipe_1day_vel = functools.partial(
     build_datapipes,
     dataset_opener=ShallowwaterDatasetOpener1Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathervalid_filter,
     sharder=_sharder,
     mode="valid",
@@ -286,7 +286,7 @@ trajectory_valid_datapipe_1day_vel = functools.partial(
 onestep_test_datapipe_1day_vel = functools.partial(
     build_datapipes,
     dataset_opener=ShallowwaterDatasetOpener1Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathertest_filter,
     sharder=_sharder,
     mode="test",
@@ -295,7 +295,7 @@ onestep_test_datapipe_1day_vel = functools.partial(
 trajectory_test_datapipe_1day_vel = functools.partial(
     build_datapipes,
     dataset_opener=ShallowwaterDatasetOpener1Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathertest_filter,
     sharder=_sharder,
     mode="test",
@@ -305,7 +305,7 @@ trajectory_test_datapipe_1day_vel = functools.partial(
 train_datapipe_1day_vort = functools.partial(
     build_datapipes,
     dataset_opener=VortShallowwaterDatasetOpener1Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathertrain_filter,
     sharder=_sharder,
     mode="train",
@@ -313,7 +313,7 @@ train_datapipe_1day_vort = functools.partial(
 onestep_valid_datapipe_1day_vort = functools.partial(
     build_datapipes,
     dataset_opener=VortShallowwaterDatasetOpener1Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathervalid_filter,
     sharder=_sharder,
     mode="valid",
@@ -322,7 +322,7 @@ onestep_valid_datapipe_1day_vort = functools.partial(
 trajectory_valid_datapipe_1day_vort = functools.partial(
     build_datapipes,
     dataset_opener=VortShallowwaterDatasetOpener1Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathervalid_filter,
     sharder=_sharder,
     mode="valid",
@@ -331,7 +331,7 @@ trajectory_valid_datapipe_1day_vort = functools.partial(
 onestep_test_datapipe_1day_vort = functools.partial(
     build_datapipes,
     dataset_opener=VortShallowwaterDatasetOpener1Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathertest_filter,
     sharder=_sharder,
     mode="test",
@@ -340,7 +340,7 @@ onestep_test_datapipe_1day_vort = functools.partial(
 trajectory_test_datapipe_1day_vort = functools.partial(
     build_datapipes,
     dataset_opener=VortShallowwaterDatasetOpener1Day,
-    lister=DirLister,
+    lister=ZarrLister,
     filter_fn=_weathertest_filter,
     sharder=_sharder,
     mode="test",
