@@ -12,9 +12,15 @@
 
 # Datapipes
 
-## Shared datapipes
 
 ::: pdearena.data.twod.datapipes.common
     options:
-        heading_level: 3
+        show_root_heading: true
+
+::: pdearena.data.twod.datapipes.navierstokes2d
+    options:
+        show_root_heading: true
+
+::: pdearena.data.twod.datapipes.shallowwater2d
+    options:
         show_root_heading: true
