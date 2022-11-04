@@ -7,6 +7,35 @@ from pytorch_lightning.utilities.model_summary.model_summary import (
 
 DOCS_DIR = os.path.dirname(__file__)
 
+MODELNAMELUT = {
+    "ResNet128": "ResNet128",
+    "ResNet256": "ResNet256",
+    "DilatedResNet-128": "DilatedResNet128",
+    "DilatedResNet-128-norm": "DilatedResNet128-norm",
+    "FNO128-8m": r"FNO128-8~modes8~$",
+    "FNO128-16m": r"FNO128-8~modes16~$",
+    "FNO64s-32m": r"FNO64-4~modes32~$",
+    "FNO96s-32m": r"FNO96-4~modes32~$",
+    "FNO128s-16m": r"FNO128-4~modes16~$",
+    "FNO128s-32m": r"FNO128-4~modes32~$",
+    "UNO64": "UNO64",
+    "UNO128": "UNO128",
+    "U-Net2015-64": r"U-Net~2015~64",
+    "U-Net2015-128": r"U-Net~2015~128",
+    "U-Netbase64": r"U-Net~base~64",
+    "U-Netbase128": r"U-Net~base~128",
+    "U-Netmod64": r"U-Net~mod~64",
+    "U-Netmodattn64": r"U-Net~att~64",
+    "U-FNet1-8m": r"U-F1Net~modes8~",
+    "U-FNet1-16m": r"U-F1Net~modes16~",
+    "U-FNet2-8m": r"U-F2Net~modes8,4~",
+    "U-FNet2-16m": r"U-F2Net~modes16,8~",
+    "U-FNet2-8mc": r"U-F2Net~modes8,8~",
+    "U-FNet2-16mc": r"U-F2Net~modes16,16~",
+    "U-FNet1attn": r"U-F1Net~att,modes16~",
+    "U-FNet2attn": r"U-F1Net~att,modes16,8~",
+}
+
 header = """
 # Model Zoo
 
@@ -23,6 +52,10 @@ def get_data_from_json(file):
         return data
     else:
         return {}
+
+
+def convert_model_name(name):
+    return MODELNAMELUT.get(name, name)
 
 
 def get_model_zoo_table_row(name, num_params, model_size, peak_gpu_usage, fwd_time, fwd_bwd_time):
@@ -52,7 +85,7 @@ def main(outfile):
         f.write("\n")
         for model in sorted(models):
             row = get_model_zoo_table_row(
-                model,
+                convert_model_name(model),
                 fwd_time_data[model]["num_params"],
                 fwd_time_data[model]["model_size"],
                 fwd_bwd_time_data[model]["peak_gpu_memory"],

@@ -180,7 +180,7 @@ MODELS = {
 
 def save_data(data):
     """ "Save the data file."""
-    filename = os.path.join(_PROJECT_DIR, "docs", "models_bwd_time.json")
+    filename = os.path.join(_PROJECT_DIR, "docs", "models_fwd_bwd_time.json")
     with open(filename, "w") as f:
         data["date-created"] = str(datetime.now())
         data["gpu-name"] = torch.cuda.get_device_name()
@@ -239,16 +239,21 @@ def main():
 
         torch.cuda.synchronize()
 
+        total_mem = 0
         with Timer() as ft:
             for i in range(n_repeats):
                 out = model(input)
                 loss = torch.mean((out - target) ** 2)
                 loss.backward()
                 torch.cuda.synchronize()
+                total_mem += int(torch.cuda.max_memory_allocated() / 2**20)
+                torch.cuda.reset_peak_memory_stats()
         print(f"{k} forward + backward time: {ft.dt/n_repeats:.3f}")
-        results[k] = {"fwd_bwd_time": ft.dt / n_repeats}
+
+        results[k] = {"fwd_bwd_time": ft.dt / n_repeats, "peak_gpu_memory": total_mem / n_repeats}
         del model
         torch.cuda.empty_cache()
+
         time.sleep(1)
 
     save_data(results)
