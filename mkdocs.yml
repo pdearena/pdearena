@@ -60,6 +60,7 @@ nav:
   - Research: "research.md"
   - Code Reference:
       - Data Loading: "reference/dataload.md"
+      - Architectures: "reference/modules.md"
 
 plugins:
   - search
