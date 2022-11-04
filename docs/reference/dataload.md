@@ -1,10 +1,16 @@
-# DataModule
+# DataModules
 
 ::: pdearena.data.datamodule
     option:
         show_root_heading: true
 
 
+
+
 # Datapipes
 
-::: pdearena.data.twod.datapipes
+## Shared datapipes
+
+::: pdearena.data.twod.datapipes.common
+    option:
+        heading_level: 3
