@@ -1,20 +1,14 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
-import os
 from typing import List
 
 import torch
-import torchdata.datapipes as dp
+import torch.utils.data.datapipes.datapipe as dp
 from pytorch_lightning import LightningDataModule
 from pytorch_lightning.cli import instantiate_class
 from torch.utils.data import DataLoader
 
-from pdearena.data.twod.datapipes import (
-    NavierStokesDatasetOpener,
-    RandomTimeStepPDETrainData,
-    TimestepPDEEvalData,
-    WeatherDatasetOpener,
-)
+from pdearena.data.twod.datapipes import DATAPIPE_REGISTRY
 
 
 def collate_fn_cat(batch):
@@ -54,8 +48,28 @@ def _test_filter(fname):
 
 
 class CondPDEDataModule(LightningDataModule):
+    """Definest the dataloading process for conditioned PDE data.
+
+    Supports generalization experiments.
+
+    Args:
+        task (str): Name of the task.
+        data_dir (str): Path to the data directory.
+        pde (dict): Dictionary containing the PDE class and its arguments.
+        batch_size (int): Batch size.
+        pin_memory (bool): Whether to pin memory.
+        num_workers (int): Number of workers.
+        train_limit_trajectories (int): Number of trajectories to use for training.
+        valid_limit_trajectories (int): Number of trajectories to use for validation.
+        test_limit_trajectories (int): Number of trajectories to use for testing.
+        eval_dts (List[int], optional): List of timesteps to use for evaluation. Defaults to [1, 2, 4, 8, 16].
+        datapipe (bool, optional): Whether to use the datapipe. Defaults to True.
+        usegrid (bool, optional): Whether to use the grid. Defaults to False.
+    """
+
     def __init__(
         self,
+        task: str,
         data_dir: str,
         pde,
         batch_size: int,
@@ -77,70 +91,63 @@ class CondPDEDataModule(LightningDataModule):
             self.pde = pde
         self.save_hyperparameters(ignore="pde", logger=False)
 
-        if "Weather" in pde["class_path"]:
-            self.dataset_opener = WeatherDatasetOpener
-            self.randomized_traindatapipe = RandomTimeStepPDETrainData
-            self.evaldatapipe = TimestepPDEEvalData
-            # self.train_filter = _weathertrain_filter
-            # self.valid_filter = _weathervalid_filter
-            # self.test_filter = _weathertest_filter
-            self.lister = lambda x: dp.iter.IterableWrapper(
-                map(lambda y: os.path.join(self.data_dir, y), os.listdir(x))
-            )
-            self.sharder = lambda x: x
-        elif len(self.pde.grid_size) == 3:
-            self.dataset_opener = NavierStokesDatasetOpener
-            self.randomized_traindatapipe = RandomTimeStepPDETrainData
-            self.evaldatapipe = TimestepPDEEvalData
-            self.train_filter = _train_filter
-            self.valid_filter = _valid_filter
-            self.test_filter = _test_filter
-            self.lister = dp.iter.FileLister
-            self.sharder = dp.iter.ShardingFilter
-        else:
-            raise NotImplementedError()
+        # if "Weather" in pde["class_path"]:
+        #     self.dataset_opener = WeatherDatasetOpener
+        #     self.randomized_traindatapipe = RandomTimeStepPDETrainData
+        #     self.evaldatapipe = TimestepPDEEvalData
+        #     # self.train_filter = _weathertrain_filter
+        #     # self.valid_filter = _weathervalid_filter
+        #     # self.test_filter = _weathertest_filter
+        #     self.lister = lambda x: dp.iter.IterableWrapper(
+        #         map(lambda y: os.path.join(self.data_dir, y), os.listdir(x))
+        #     )
+        #     self.sharder = lambda x: x
+        # elif len(self.pde.grid_size) == 3:
+        #     self.dataset_opener = NavierStokesDatasetOpener
+        #     self.randomized_traindatapipe = RandomTimeStepPDETrainData
+        #     self.evaldatapipe = TimestepPDEEvalData
+        #     self.train_filter = _train_filter
+        #     self.valid_filter = _valid_filter
+        #     self.test_filter = _test_filter
+        #     self.lister = dp.iter.FileLister
+        #     self.sharder = dp.iter.ShardingFilter
+        # else:
+        #     raise NotImplementedError()
 
     def setup(self, stage=None):
-        self.train_dp = self.randomized_traindatapipe(
-            self.dataset_opener(
-                self.sharder(self.lister(self.data_dir).filter(filter_fn=self.train_filter).shuffle()),
-                mode="train",
-                limit_trajectories=self.hparams.train_limit_trajectories,
-                usegrid=self.hparams.usegrid,
-            ).cycle(
-                self.pde.trajlen
-            ),  # We run every epoch as often as we have number of timesteps in one trajectory.
-            self.pde,
+        dps = DATAPIPE_REGISTRY[self.hparams.task]
+        self.train_dp = dps["train"](
+            pde=self.pde,
+            data_path=self.data_dir,
+            limit_trajectories=self.hparams.train_limit_trajectories,
+            usegrid=self.hparams.usegrid,
         )
         self.valid_dps = [
-            self.evaldatapipe(
-                self.dataset_opener(
-                    self.sharder(self.lister(self.data_dir).filter(filter_fn=self.valid_filter)),
-                    mode="valid",
-                    limit_trajectories=self.hparams.valid_limit_trajectories,
-                    usegrid=self.hparams.usegrid,
-                ),
-                self.pde,
+            dps["valid"](
+                pde=self.pde,
+                data_path=self.data_dir,
+                limit_trajectories=self.hparams.valid_limit_trajectories,
+                usegrid=False,
                 delta_t=dt,
             )
             for dt in self.eval_dts
         ]
 
-        self.test_dp = self.dataset_opener(
-            self.sharder(self.lister(self.data_dir).filter(filter_fn=self.test_filter)),
-            mode="test",
+        self.test_dp = dps["test"][1](
+            pde=self.pde,
+            data_path=self.data_dir,
             limit_trajectories=self.hparams.test_limit_trajectories,
             usegrid=self.hparams.usegrid,
+            time_history=self.hparams.time_history,
+            time_future=self.hparams.time_future,
+            time_gap=self.hparams.time_gap,
         )
         self.test_dps = [
-            self.evaldatapipe(
-                self.dataset_opener(
-                    self.sharder(self.lister(self.data_dir).filter(filter_fn=self.test_filter)),
-                    mode="test",
-                    limit_trajectories=self.hparams.test_limit_trajectories,
-                    usegrid=self.hparams.usegrid,
-                ),
-                self.pde,
+            dps["test"][0](
+                pde=self.pde,
+                data_path=self.data_dir,
+                limit_trajectories=self.hparams.test_limit_trajectories,
+                usegrid=False,
                 delta_t=dt,
             )
             for dt in self.eval_dts
