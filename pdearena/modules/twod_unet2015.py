@@ -21,10 +21,21 @@ from torch import nn
 
 
 class UNet2015(nn.Module):
+    """Two-dimensional UNet based on original architecture.
+
+    Args:
+        n_scalar_components (int): Number of scalar components in the input.
+        n_vector_components (int): Number of vector components in the input.
+        time_history (int): Number of time steps in the input.
+        time_future (int): Number of time steps in the output.
+        hidden_channels (int): Number of hidden channels.
+        activation (str): Activation function.
+    """
+
     def __init__(
         self,
-        n_scalar_components,
-        n_vector_components,
+        n_scalar_components: int,
+        n_vector_components: int,
         time_history: int,
         time_future: int,
         hidden_channels: int,

@@ -58,8 +58,27 @@ class Up(nn.Module):
 
 
 class OldUnet(nn.Module):
+    """Our interpretation of the original U-Net architecture.
+
+    Uses [torch.nn.GroupNorm][] instead of [torch.nn.BatchNorm2d][]. Also there is no `BottleNeck` block.
+
+    Args:
+        n_scalar_components (int): Number of scalar components in the input.
+        n_vector_components (int): Number of vector components in the input.
+        time_history (int): Number of time steps in the input.
+        time_future (int): Number of time steps in the output.
+        hidden_channels (int): Number of channels in the hidden layers.
+        activation (str): Activation function to use. One of ["gelu", "relu", "silu"].
+    """
+
     def __init__(
-        self, n_scalar_components, n_vector_components, time_history, time_future, hidden_channels, activation="gelu"
+        self,
+        n_scalar_components: int,
+        n_vector_components: int,
+        time_history: int,
+        time_future: int,
+        hidden_channels: int,
+        activation="gelu",
     ) -> None:
         super().__init__()
         self.n_scalar_components = n_scalar_components

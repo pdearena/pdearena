@@ -5,54 +5,55 @@ import torch.nn.functional as F
 from torch import nn
 
 # Based on https://github.com/ashiq24/UNO
-"""
-BSD 2-Clause License
+#
+# BSD 2-Clause License
 
-Copyright (c) 2022, Md Ashiqur rahman
-All rights reserved.
+# Copyright (c) 2022, Md Ashiqur rahman
+# All rights reserved.
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
 
-1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
+# 1. Redistributions of source code must retain the above copyright notice, this
+#    list of conditions and the following disclaimer.
 
-2. Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-"""
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
 
 
 class SpectralConv2d_Uno(nn.Module):
+    """2D Fourier layer. It does FFT, linear transform, and Inverse FFT.
+
+    Args:
+        dim1 (int): Default output grid size along x (or 1st dimension of output domain)
+        dim2 (int): Default output grid size along y ( or 2nd dimension of output domain)
+                    Ratio of grid size of the input and the output implecitely
+                    set the expansion or contraction farctor along each dimension.
+        modes1 (int), modes2 (int):  Number of fourier modes to consider for the ontegral operator
+                    Number of modes must be compatibale with the input grid size
+                    and desired output grid size.
+                    i.e., modes1 <= min( dim1/2, input_dim1/2).
+                    Here "input_dim1" is the grid size along x axis (or first dimension) of the input domain.
+                    Other modes also the have same constrain.
+        in_codim (int): Input co-domian dimension
+        out_codim (int): output co-domain dimension
+    """
+
     def __init__(self, in_codim, out_codim, dim1, dim2, modes1=None, modes2=None):
         super().__init__()
-
-        """
-        2D Fourier layer. It does FFT, linear transform, and Inverse FFT.
-        dim1 = Default output grid size along x (or 1st dimension of output domain)
-        dim2 = Default output grid size along y ( or 2nd dimension of output domain)
-        Ratio of grid size of the input and the output implecitely
-        set the expansion or contraction farctor along each dimension.
-        modes1, modes2 = Number of fourier modes to consider for the ontegral operator
-                        Number of modes must be compatibale with the input grid size
-                        and desired output grid size.
-                        i.e., modes1 <= min( dim1/2, input_dim1/2).
-                        Here "input_dim1" is the grid size along x axis (or first dimension) of the input domain.
-                        Other modes also the have same constrain.
-        in_codim = Input co-domian dimension
-        out_codim = output co-domain dimension
-        """
 
         in_codim = int(in_codim)
         out_codim = int(out_codim)
@@ -168,6 +169,19 @@ class OperatorBlock_2D(nn.Module):
 
 
 class UNO(nn.Module):
+    """UNO model
+
+    Args:
+        n_scalar_components (int): Number of scalar components in the model
+        n_vector_components (int): Number of vector components in the model
+        time_history (int): Number of time steps to include in the model
+        time_future (int): Number of time steps to predict in the model
+        hidden_channels (int): Number of hidden channels in the model
+        pad (int): Padding to use in the model
+        factor (int): Scaling factor to use in the model
+        activation (str): Activation function to use in the model
+    """
+
     def __init__(
         self,
         n_scalar_components: int,

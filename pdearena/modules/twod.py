@@ -151,6 +151,20 @@ class FourierBasicBlock(nn.Module):
 
 
 class ResNet(nn.Module):
+    """Class to support ResNet like feedforward architectures
+
+    Args:
+        n_scalar_components (int): Number of scalar components in the input
+        n_vector_components (int): Number of vector components in the input
+        block (Callable): BasicBlock or DilatedBasicBlock or FourierBasicBlock
+        num_blocks (List[int]): Number of blocks in each layer
+        time_history (int): Number of time steps to use in the input
+        time_future (int): Number of time steps to predict in the output
+        hidden_channels (int): Number of channels in the hidden layers
+        activation (str): Activation function to use
+        norm (bool): Whether to use normalization
+    """
+
     padding = 9
 
     def __init__(
