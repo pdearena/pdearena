@@ -25,11 +25,9 @@ def get_data_from_json(file):
         return {}
 
 
-def get_model_zoo_table_row(name, num_params, model_size, fwd_time, fwd_bwd_time):
+def get_model_zoo_table_row(name, num_params, model_size, peak_gpu_usage, fwd_time, fwd_bwd_time):
     """make modelzoo.md table row."""
-    return (
-        f"| {name} | {get_human_readable_count(num_params)} | {model_size:.1f} | {fwd_time:.3f} | {fwd_bwd_time:.3f} |"
-    )
+    return f"| {name} | {get_human_readable_count(num_params)} | {model_size:.1f} | {peak_gpu_usage} | {fwd_time:.3f} | {fwd_bwd_time:.3f} |"
 
 
 def main(outfile):
@@ -46,15 +44,18 @@ def main(outfile):
     with open(outfile, "w") as f:
         f.write(header)
         f.write("\n\n")
-        f.write(f"| Model | Num. Params | Model Size (MB) | Forward Time | Forward+Backward Time |")
+        f.write(
+            f"| Model | Num. Params | Model Size (MB) | Peak GPU Memory (MB) | Forward Time | Forward+Backward Time |"
+        )
         f.write("\n")
-        f.write("| --- | ---: | ---: | --- | --- |")
+        f.write("| --- | ---: | ---: | ---: | --- | --- |")
         f.write("\n")
         for model in sorted(models):
             row = get_model_zoo_table_row(
                 model,
                 fwd_time_data[model]["num_params"],
                 fwd_time_data[model]["model_size"],
+                fwd_bwd_time_data[model]["peak_gpu_memory"],
                 fwd_time_data[model]["fwd_time"],
                 fwd_bwd_time_data[model]["fwd_bwd_time"],
             )
