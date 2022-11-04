@@ -56,3 +56,14 @@ nav:
       - Application: "scenarios/applied.md"
       - PDE Surrogate Research: "scenarios/researcher.md"
   - Research: "research.md"
+  - Code Reference:
+      - Data Loading: "reference/dataload.md"
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          import:
+            - https://pytorch-lightning.readthedocs.io/en/stable/objects.inv

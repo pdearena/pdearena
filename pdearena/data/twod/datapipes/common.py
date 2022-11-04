@@ -29,6 +29,27 @@ def build_datapipes(
     onestep=False,
     conditioned=False,
 ):
+    """Build datapipes for training and evaluation.
+
+    Args:
+        pde (PDEConfig): PDE configuration.
+        data_path (str): Path to the data.
+        limit_trajectories (int): Number of trajectories to use.
+        usegrid (bool): Whether to use spatial grid as input.
+        dataset_opener (Callable): Dataset opener.
+        lister (Callable): List files.
+        sharder (Callable): Shard files.
+        filter_fn (Callable): Filter files.
+        mode (str): Mode of the data. ["train", "valid", "test"]
+        time_history (int, optional): Number of time steps in the past. Defaults to 1.
+        time_future (int, optional): Number of time steps in the future. Defaults to 1.
+        time_gap (int, optional): Number of time steps between the past and the future to be skipped. Defaults to 0.
+        onestep (bool, optional): Whether to use one-step prediction. Defaults to False.
+        conditioned (bool, optional): Whether to use conditioned data. Defaults to False.
+
+    Returns:
+        IterDataPipe: IterDataPipe for training and evaluation.
+    """
     dpipe = lister(
         data_path,
     ).filter(filter_fn=filter_fn)

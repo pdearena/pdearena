@@ -7,7 +7,7 @@ from setuptools import find_packages, setup
 with open("README.md", encoding="utf-8") as fh:
     long_description = fh.read()
 
-exec(open(osp.join(osp.dirname(__file__), "version.py")).read())
+exec(open(osp.join(osp.dirname(__file__), "pdearena", "version.py")).read())
 
 extras = {
     "datagen": [

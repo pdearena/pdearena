@@ -41,15 +41,31 @@ def collate_fn_stack(batch):
 
 
 class PDEDataModule(LightningDataModule):
-    """Define the dataloading process for pde data."""
+    """Define the dataloading process for PDE data.
+
+    Args:
+        task (str): The task to be solved.
+        data_dir (str): The path to the data directory.
+        time_history (int): The number of time steps in the past.
+        time_future (int): The number of time steps in the future.
+        time_gap (int): The number of time steps between the past and the future to be skipped.
+        pde (dict): The PDE to be solved.
+        batch_size (int): The batch size.
+        pin_memory (bool): Whether to pin memory.
+        num_workers (int): The number of workers. Make sure when using values greater than 1 on multi-GPU systems, the number of shards is divisible by the number of workers times number of GPUs.
+        train_limit_trajectories (int): The number of trajectories to be used for training. This is from each shard.
+        valid_limit_trajectories (int): The number of trajectories to be used for validation. This is from each shard.
+        test_limit_trajectories (int): The number of trajectories to be used for testing. This is from each shard.
+        usegrid (bool, optional): Whether to use a grid. Defaults to False.
+    """
 
     def __init__(
         self,
-        task,
+        task: str,
         data_dir: str,
-        time_history,
-        time_future,
-        time_gap,
+        time_history: int,
+        time_future: int,
+        time_gap: int,
         pde,
         batch_size: int,
         pin_memory: bool,

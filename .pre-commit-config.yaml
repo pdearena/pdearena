@@ -50,23 +50,3 @@ repos:
       - id: isort
         name: isort (python)
         args: [--profile, "black"]
-
-  # # python docstring formatting
-  # - repo: https://github.com/myint/docformatter
-  #   rev: v1.4
-  #   hooks:
-  #     - id: docformatter
-  #       args: [--in-place, --wrap-summaries, "99", --wrap-descriptions, "92"]
-
-
-  # markdown formatting
-  # - repo: https://github.com/executablebooks/mdformat
-  #   rev: 0.7.14
-  #   hooks:
-  #     - id: mdformat
-  #       additional_dependencies:
-  #         - mdformat-gfm
-  #         #- mdformat-black
-  #         - mdformat_frontmatter
-  #       exclude: |
-  #         install.md
