@@ -22,6 +22,7 @@ MODELNAMELUT = {
     "UNO128": "UNO128",
     "Unet2015-64": r"U-Net~2015~64",
     "Unet2015-128": r"U-Net~2015~128",
+    "Unet2015-64-tanh": r"U-Net~2015~64-tanh",
     "Unetbase64": r"U-Net~base~64",
     "Unetbase128": r"U-Net~base~128",
     "Unetmod64": r"U-Net~mod~64",
