@@ -67,4 +67,6 @@ plugins:
       handlers:
         python:
           import:
+            - https://docs.python.org/3/objects.inv
+            - https://pytorch.org/docs/stable/objects.inv
             - https://pytorch-lightning.readthedocs.io/en/stable/objects.inv
