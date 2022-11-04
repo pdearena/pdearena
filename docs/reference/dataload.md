@@ -1,10 +1,10 @@
-# PDEDataModule
+# DataModule
 
-::: pdearena.data.datamodule.PDEDataModule
+::: pdearena.data.datamodule
     option:
         show_root_heading: true
 
 
-# DataPipe Builders
+# Datapipes
 
-::: pdearena.data.twod.datapipes.common.build_datapipes
+::: pdearena.data.twod.datapipes

@@ -63,6 +63,7 @@ plugins:
   - search
   - mkdocstrings:
       default_handler: python
+      enable_inventory: true
       handlers:
         python:
           import:

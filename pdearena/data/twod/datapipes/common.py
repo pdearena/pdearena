@@ -48,7 +48,7 @@ def build_datapipes(
         conditioned (bool, optional): Whether to use conditioned data. Defaults to False.
 
     Returns:
-        IterDataPipe: IterDataPipe for training and evaluation.
+        dpipe (IterDataPipe): IterDataPipe for training and evaluation.
     """
     dpipe = lister(
         data_path,
