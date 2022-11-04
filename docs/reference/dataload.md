@@ -1,7 +1,7 @@
 # DataModules
 
 ::: pdearena.data.datamodule
-    option:
+    options:
         show_root_heading: true
 
 
@@ -12,5 +12,5 @@
 ## Shared datapipes
 
 ::: pdearena.data.twod.datapipes.common
-    option:
+    options:
         heading_level: 3
