@@ -81,6 +81,12 @@ def build_datapipes(
 
 
 class ZarrLister(dp.iter.IterDataPipe):
+    """Customized lister for zarr files.
+
+    Args:
+        root (Union[str, Sequence[str], dp.iter.IterDataPipe], optional): Root directory. Defaults to ".".
+    """
+
     def __init__(
         self,
         root: Union[str, Sequence[str], dp.iter.IterDataPipe] = ".",
@@ -104,6 +110,14 @@ class ZarrLister(dp.iter.IterDataPipe):
 
 
 class RandomTimeStepPDETrainData(dp.iter.IterDataPipe):
+    """Randomized data for training conditioned PDEs.
+
+    Args:
+        dp (IterDataPipe): Data pipe that returns individual PDE trajectories.
+        pde (PDEConfig): PDE configuration.
+        reweigh (bool, optional): Whether to rebalance the dataset so that longer horizon predictions get equal weightage despite there being fewer actual such datapoints in a trajectory. Defaults to True.
+    """
+
     def __init__(self, dp, pde: PDEConfig, reweigh=True) -> None:
         super().__init__()
         self.dp = dp
@@ -131,6 +145,14 @@ class RandomTimeStepPDETrainData(dp.iter.IterDataPipe):
 
 
 class TimestepPDEEvalData(dp.iter.IterDataPipe):
+    """Data for evaluation of time conditioned PDEs
+
+    Args:
+        dp (IterDataPipe): Data pipe that returns individual PDE trajectories.
+        pde (PDEConfig): PDE configuration.
+        delta_t (int): Evaluates predictions conditioned at that delta_t.
+    """
+
     def __init__(self, dp, pde: PDEConfig, delta_t: int) -> None:
         super().__init__()
         self.dp = dp
@@ -157,6 +179,8 @@ class TimestepPDEEvalData(dp.iter.IterDataPipe):
 
 
 class RandomizedPDETrainData(dp.iter.IterDataPipe):
+    """Randomized data for training PDEs."""
+
     def __init__(self, dp, pde: PDEConfig, time_history: int, time_future: int, time_gap: int) -> None:
         super().__init__()
         self.dp = dp
