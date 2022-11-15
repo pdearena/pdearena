@@ -9,6 +9,7 @@ from pdearena.models.registry import COND_MODEL_REGISTRY
 
 @pytest.mark.parametrize("name", list(COND_MODEL_REGISTRY.keys()))
 @pytest.mark.parametrize("param_conditioning", [None, "scalar"])
+@pytest.mark.slow
 def test_named_cond_models(name, param_conditioning):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 

@@ -10,6 +10,7 @@ from pdearena.models.pdemodel import PDEModel
 @pytest.mark.parametrize("time_history", [1, 2, 4])
 @pytest.mark.parametrize("max_num_steps", [4, 5, 8])
 @pytest.mark.parametrize("pdedata", [PDEDataConfig(1, 1, 14, 2), PDEDataConfig(2, 0, 20, 2)])
+@pytest.mark.slow
 def test_pde_model(name, train_criterion, time_history, max_num_steps, pdedata):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     time_future = 1
