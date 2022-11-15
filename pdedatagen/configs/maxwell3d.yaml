@@ -1,0 +1,22 @@
+dirname: ???
+experiment: maxwell
+mode: ???
+pdeconfig:
+  class_path: pdedatagen.pde.Maxwell3D
+  init_args:
+    wavelength: 1e-5
+    sol: 299_792_458.0
+    amplitude: 1.
+    permittivity: 10.0
+    permeability: 1.0
+    L: 3.2e-5
+    n: 32
+    n_large: 64
+    nt: 8
+    skip_nt: 250
+    sample_rate: 25
+    device: cpu
+samples: 32
+batchsize: 8
+seed: 42
+overwrite: false

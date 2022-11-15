@@ -1,0 +1,10 @@
+dirname: ???
+experiment: ???
+mode: ???
+samples: 32
+pdeconfig:
+  class_path: pdedatagen.pde.ShallowWaterWeather
+
+seed: 42
+parallel: 1
+overwrite: false

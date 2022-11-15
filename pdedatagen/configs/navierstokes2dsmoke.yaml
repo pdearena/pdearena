@@ -1,0 +1,27 @@
+dirname: ???
+experiment: ???
+mode: ???
+pdeconfig:
+  class_path: pdedatagen.pde.NavierStokes2D
+  init_args:
+    tmin: 18.0
+    tmax: 102.0
+    Lx: 32.0
+    Ly: 32.0
+    nt: 56 # number of timesteps at minimum dt
+    nx: 128 # spatial resolution on x-axis
+    ny: 128 # spatial resolution on y-axis
+    skip_nt: 8 # initial timesteps to ignore
+    sample_rate: 1 # sampling rate of data as a multiple of minumum dt
+    nu: 0.01 # viscosity
+    buoyancy_y: 0.5 # bouyancy force in vertical direction
+    correction_strength: 1.0
+    force_strength: 1.0
+    force_frequency: 4
+    n_scalar_components: 1
+    n_vector_components: 1
+    device: cpu
+samples: 32
+batchsize: 8
+seed: 42
+overwrite: false
