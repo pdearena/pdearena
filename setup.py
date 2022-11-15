@@ -33,6 +33,7 @@ base_requires = [
     "tensorboard",
     "pytest",
     "pytest-mock",
+    "pytest-explicit",
 ]
 
 setup(

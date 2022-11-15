@@ -8,6 +8,7 @@ from pdearena.models.registry import MODEL_REGISTRY
 
 
 @pytest.mark.parametrize("name", list(MODEL_REGISTRY.keys()))
+@pytest.mark.slow
 def test_named_models(name):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
