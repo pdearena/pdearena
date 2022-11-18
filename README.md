@@ -6,7 +6,7 @@
 [![Documentation](https://img.shields.io/badge/docs-passing-brightgreen)](https://microsoft.github.io/pdearena)
 [![Paper](https://img.shields.io/badge/arXiv-2209.15616-blue)](https://arxiv.org/abs/2209.15616)
 
-This repository contains code accompanying the paper [**Towards multi-spatiotemporal-scale generalized PDE modeling**](https://arxiv.org/abs/2209.15616), and as such we hope this serves a starting point for future PDE surrogate learning research.
+This repository contains code accompanying the paper [**Towards multi-spatiotemporal-scale generalized PDE modeling**](https://arxiv.org/abs/2209.15616), and as such we hope this serves as a starting point for future PDE surrogate learning research.
 We will soon have models from [**Clifford neural layers for PDE modeling**](https://arxiv.org/abs/2209.04934) as well.
 
 For details about usage please see [documentation](https://microsoft.github.io/pdearena).
