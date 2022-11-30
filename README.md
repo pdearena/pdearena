@@ -24,6 +24,7 @@ If you find this repository useful in your research, please consider citing the 
   year={2022}
 }
 ```
+Do remember to cite the original papers as well for individual architectures. 
 
 ## Contributing
 
