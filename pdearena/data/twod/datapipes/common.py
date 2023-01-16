@@ -352,7 +352,7 @@ class PDEEvalTimeStepData(dp.iter.IterDataPipe):
         # Number of future points to predict
         max_start_time = reduced_time_resolution - self.time_future - self.time_gap
         # We ignore these timesteps in the testing
-        start_time = [t for t in range(max_start_time + 1, self.time_gap + self.time_future)]
+        start_time = [t for t in range(0, max_start_time + 1, self.time_gap + self.time_future)]
         for start in start_time:
             for (u, v, cond, grid) in self.dp:
 
