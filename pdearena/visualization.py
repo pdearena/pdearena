@@ -65,7 +65,7 @@ def plot_scalar_sequence_comparison(init_field, ground_truth, prediction, fontsi
     assert ground_truth.shape == prediction.shape
     err = np.abs(ground_truth - prediction)
     n_timesteps = ground_truth.shape[0]
-    scaling = max(ground_truth.shape[-2] / ground_truth.shape[-1], 1)
+    scaling = max(ground_truth.shape[-1] / ground_truth.shape[-2], 1)
     fig = plt.figure(figsize=(n_timesteps * 6 * scaling, 15))
 
     # Plot the last timestep of init_field
