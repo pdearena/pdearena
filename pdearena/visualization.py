@@ -70,7 +70,7 @@ def plot_scalar_sequence_comparison(init_field, ground_truth, prediction, fontsi
 
     # Plot the last timestep of init_field
     ## create space for init_field
-    gs = GridSpec(1, n_timesteps + 1, figure=fig)
+    gs = GridSpec(3, n_timesteps + 1, figure=fig)
     ax1 = fig.add_subplot(gs[0, 0])
     im1 = plot_scalar(ax1, np.transpose(init_field[-1, ...], (1, 2, 0)))
     ax1.text(*text_loc, s="Ground truth", fontdict={"ha": "center", "va": "center"}, rotation=90, fontsize=fontsize)
