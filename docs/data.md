@@ -13,15 +13,15 @@
 export seed=42;
 
 python scripts/generate_data.py base=pdedatagen/configs/navierstokes2dsmoke.yaml \
-    experiment=smoke mode=train samples=256 seed=$seed pdeconfig.sample_rate=4 \
+    experiment=smoke mode=train samples=256 seed=$seed pdeconfig.init_args.sample_rate=4 \
     dirname=/mnt/data/navierstokes;
 
 python scripts/generate_data.py base=pdedatagen/configs/navierstokes2dsmoke.yaml \
-    experiment=smoke mode=valid samples=32 seed=$seed pdeconfig.sample_rate=4 \
+    experiment=smoke mode=valid samples=32 seed=$seed pdeconfig.init_args.sample_rate=4 \
     dirname=/mnt/data/navierstokes;
 
 python scripts/generate_data.py base=pdedatagen/configs/navierstokes2dsmoke.yaml \
-    experiment=smoke mode=test samples=32 seed=$seed pdeconfig.sample_rate=4 \
+    experiment=smoke mode=test samples=32 seed=$seed pdeconfig.init_args.sample_rate=4 \
     dirname=/mnt/data/navierstokes;
 ```
 
