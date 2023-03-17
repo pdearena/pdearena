@@ -14,7 +14,7 @@ def zero_module(module):
     return module
 
 
-def fourier_embedding(timesteps, dim, max_period=10000):
+def fourier_embedding(timesteps: torch.Tensor, dim, max_period=10000):
     r"""Create sinusoidal timestep embeddings.
 
     Args:
