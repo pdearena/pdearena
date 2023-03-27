@@ -72,9 +72,9 @@ def convert_model_name(name):
     return MODELNAMELUT.get(name, name)
 
 
-def get_model_zoo_table_row(model, name, num_params, model_size, peak_gpu_usage, fwd_time, fwd_bwd_time):
+def get_model_zoo_table_row(model, name, num_params, model_size, peak_gpu_usage, fwd_time, fwd_time_compiled, fwd_bwd_time):
     """make modelzoo.md table row."""
-    return f"| {model} | {name} | {get_human_readable_count(num_params)} | {model_size:.1f} | {peak_gpu_usage} | {fwd_time:.3f} | {fwd_bwd_time:.3f} |"
+    return f"| {model} | {name} | {get_human_readable_count(num_params)} | {model_size:.1f} | {peak_gpu_usage} | {fwd_time:.3f} | {fwd_time_compiled:.3f} | {fwd_bwd_time:.3f} |"
 
 
 def main(outfile):
@@ -82,7 +82,9 @@ def main(outfile):
     fwd_time_data = None
     fwd_bwd_time_data = None
     fwd_time_data = get_data_from_json(os.path.join(DOCS_DIR, "models_fwd_time.json"))
+    fwd_tim_data_compiled = get_data_from_json(os.path.join(DOCS_DIR, "models_fwd_time_compiled.json"))
     fwd_bwd_time_data = get_data_from_json(os.path.join(DOCS_DIR, "models_fwd_bwd_time.json"))
+    fwd_bwd_time_data_compiled = get_data_from_json(os.path.join(DOCS_DIR, "models_fwd_bwd_time_compiled.json"))
 
     date_created = fwd_time_data.pop("date-created")
     gpu = fwd_time_data.pop("gpu-name")
@@ -92,10 +94,10 @@ def main(outfile):
         f.write(header)
         f.write("\n\n")
         f.write(
-            f"| Model | Name | Num. Params | Model Size (MB) | Peak GPU Memory (MB) | Forward Time (s) | Forward+Backward Time (s) |"
+            f"| Model | Name | Num. Params | Model Size (MB) | Peak GPU Memory (MB) | Eag. Fwd. Time (s) | Comp. Fwd. Time (s)| Forward+Backward Time (s) | "
         )
         f.write("\n")
-        f.write("| --- | --- | ---: | ---: | ---: | --- | --- |")
+        f.write("| --- | --- | ---: | ---: | ---: | --- | --- | --- |")
         f.write("\n")
         for model in sorted(models):
             row = get_model_zoo_table_row(
@@ -105,6 +107,7 @@ def main(outfile):
                 fwd_time_data[model]["model_size"],
                 fwd_bwd_time_data[model]["peak_gpu_memory"],
                 fwd_time_data[model]["fwd_time"],
+                fwd_tim_data_compiled[model]["fwd_time"],
                 fwd_bwd_time_data[model]["fwd_bwd_time"],
             )
             f.write(row + "\n")

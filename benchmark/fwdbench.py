@@ -11,13 +11,18 @@ from pdearena.data.utils import PDEDataConfig
 from pdearena.models.pdemodel import get_model
 from pdearena.models.registry import MODEL_REGISTRY
 from pdearena.utils import Timer
+import torch._dynamo
+torch._dynamo.config.suppress_errors = True
 
 _PROJECT_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
-def save_data(data):
+def save_data(data, compile):
     """ "Save the data file."""
-    filename = os.path.join(_PROJECT_DIR, "docs", "models_fwd_time.json")
+    if compile:
+        filename = os.path.join(_PROJECT_DIR, "docs", "models_fwd_time_compiled.json")
+    else:
+        filename = os.path.join(_PROJECT_DIR, "docs", "models_fwd_time.json")
     with open(filename, "w") as f:
         data["date-created"] = str(datetime.now())
         data["gpu-name"] = torch.cuda.get_device_name()
@@ -29,7 +34,8 @@ def save_data(data):
 @click.argument("n_repeats", type=int, default=100)
 @click.option("--sleep/--no-sleep", default=True)
 @click.option("--save/--no-save", default=True)
-def main(n_warmups, n_repeats, sleep, save):
+@click.option("--compile/--no-compile", default=False)
+def main(n_warmups, n_repeats, sleep, save, compile):
     precision_megabytes = (32 / 8.0) * 1e-6
     pde = PDEDataConfig(1, 1, 14, 2)
     time_history = 4
@@ -44,6 +50,8 @@ def main(n_warmups, n_repeats, sleep, save):
             }
         )
         model = get_model(args, pde).to("cuda")
+        if compile:
+            model = torch.compile(model)
         bs = 8
         input = torch.randn(bs, time_history, 3, 128, 128, device="cuda")
         for _ in range(n_warmups):
@@ -65,7 +73,7 @@ def main(n_warmups, n_repeats, sleep, save):
             time.sleep(1)
 
     if save:
-        save_data(results)
+        save_data(results, compile)
     else:
         import pprint
 
