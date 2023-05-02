@@ -56,12 +56,20 @@ class NavierStokesDatasetOpener(dp.iter.IterDataPipe):
                     if self.usegrid:
                         gridx = torch.linspace(0, 1, data["x"][idx].shape[0])
                         gridy = torch.linspace(0, 1, data["y"][idx].shape[0])
-                        gridx = gridx.reshape(1, gridx.size(0), 1,).repeat(
+                        gridx = gridx.reshape(
+                            1,
+                            gridx.size(0),
+                            1,
+                        ).repeat(
                             1,
                             1,
                             gridy.size(0),
                         )
-                        gridy = gridy.reshape(1, 1, gridy.size(0),).repeat(
+                        gridy = gridy.reshape(
+                            1,
+                            1,
+                            gridy.size(0),
+                        ).repeat(
                             1,
                             gridx.size(1),
                             1,

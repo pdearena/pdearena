@@ -9,10 +9,12 @@ def batchmul1d(input, weights):
     # (batch, in_channel, x), (in_channel, out_channel, x) -> (batch, out_channel, x)
     return torch.einsum("bix,iox->box", input, weights)
 
+
 # Complex multiplication 2d
 def batchmul2d(input, weights):
     # (batch, in_channel, x,y ), (in_channel, out_channel, x,y) -> (batch, out_channel, x,y)
     return torch.einsum("bixy,ioxy->boxy", input, weights)
+
 
 # Complex multiplication 3d
 def batchmul3d(input, weights):
@@ -31,7 +33,7 @@ class SpectralConv1d(nn.Module):
     Args:
         in_channels (int): Number of input channels
         out_channels (int): Number of output channels
-        modes (int): Number of Fourier modes 
+        modes (int): Number of Fourier modes
     [paper](https://arxiv.org/abs/2010.08895)
     """
 
@@ -60,9 +62,7 @@ class SpectralConv1d(nn.Module):
             dtype=torch.cfloat,
             device=x.device,
         )
-        out_ft[:, :, : self.modes] = batchmul1d(
-            x_ft[:, :, : self.modes], torch.view_as_complex(self.weights)
-        )
+        out_ft[:, :, : self.modes] = batchmul1d(x_ft[:, :, : self.modes], torch.view_as_complex(self.weights))
 
         # Return to physical space
         x = torch.fft.irfft(out_ft, n=(x.size(-1),))
@@ -121,7 +121,7 @@ class SpectralConv2d(nn.Module):
         x = torch.fft.irfft2(out_ft, s=(x.size(-2), x.size(-1)))
         return x
 
-    
+
 class SpectralConv3d(nn.Module):
     """3D Fourier layer. Does FFT, linear transform, and Inverse FFT.
     Implemented in a way to allow multi-gpu training.
@@ -145,16 +145,20 @@ class SpectralConv3d(nn.Module):
 
         self.scale = 1 / (in_channels * out_channels)
         self.weights1 = nn.Parameter(
-            self.scale * torch.rand(in_channels, out_channels, self.modes1, self.modes2, self.modes3, 2, dtype=torch.float32)
+            self.scale
+            * torch.rand(in_channels, out_channels, self.modes1, self.modes2, self.modes3, 2, dtype=torch.float32)
         )
         self.weights2 = nn.Parameter(
-            self.scale * torch.rand(in_channels, out_channels, self.modes1, self.modes2, self.modes3, 2, dtype=torch.float32)
+            self.scale
+            * torch.rand(in_channels, out_channels, self.modes1, self.modes2, self.modes3, 2, dtype=torch.float32)
         )
         self.weights3 = nn.Parameter(
-            self.scale * torch.rand(in_channels, out_channels, self.modes1, self.modes2, self.modes3, 2, dtype=torch.float32)
+            self.scale
+            * torch.rand(in_channels, out_channels, self.modes1, self.modes2, self.modes3, 2, dtype=torch.float32)
         )
         self.weights4 = nn.Parameter(
-            self.scale * torch.rand(in_channels, out_channels, self.modes1, self.modes2, self.modes3, 2, dtype=torch.float32)
+            self.scale
+            * torch.rand(in_channels, out_channels, self.modes1, self.modes2, self.modes3, 2, dtype=torch.float32)
         )
 
     def forward(self, x):

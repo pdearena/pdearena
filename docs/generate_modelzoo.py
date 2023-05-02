@@ -72,7 +72,9 @@ def convert_model_name(name):
     return MODELNAMELUT.get(name, name)
 
 
-def get_model_zoo_table_row(model, name, num_params, model_size, peak_gpu_usage, fwd_time, fwd_time_compiled, fwd_bwd_time):
+def get_model_zoo_table_row(
+    model, name, num_params, model_size, peak_gpu_usage, fwd_time, fwd_time_compiled, fwd_bwd_time
+):
     """make modelzoo.md table row."""
     return f"| {model} | {name} | {get_human_readable_count(num_params)} | {model_size:.1f} | {peak_gpu_usage} | {fwd_time:.3f} | {fwd_time_compiled:.3f} | {fwd_bwd_time:.3f} |"
 

@@ -558,7 +558,6 @@ class Unet(nn.Module):
         )
         if self.param_conditioning is not None:
             if self.param_conditioning == "scalar":
-
                 self.pde_emb = nn.Sequential(
                     nn.Linear(hidden_channels, time_embed_dim),
                     self.activation,

@@ -5,13 +5,14 @@ from datetime import datetime
 
 import click
 import torch
+import torch._dynamo
 from omegaconf import OmegaConf
 
 from pdearena.data.utils import PDEDataConfig
 from pdearena.models.pdemodel import get_model
 from pdearena.models.registry import MODEL_REGISTRY
 from pdearena.utils import Timer
-import torch._dynamo
+
 torch._dynamo.config.suppress_errors = True
 
 _PROJECT_DIR = os.path.dirname(os.path.dirname(__file__))

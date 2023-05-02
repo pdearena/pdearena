@@ -7,7 +7,7 @@ The tables below provide results and useful statistics about training and infere
 
 
 
-| Model | Name | Num. Params | Model Size (MB) | Peak GPU Memory (MB) | Eag. Fwd. Time (s) | Comp. Fwd. Time (s)| Forward+Backward Time (s) | 
+| Model | Name | Num. Params | Model Size (MB) | Peak GPU Memory (MB) | Eag. Fwd. Time (s) | Comp. Fwd. Time (s)| Forward+Backward Time (s) |
 | --- | --- | ---: | ---: | ---: | --- | --- | --- |
 | DilResNet128 | `DilResNet-128` | 4.2 M | 16.7 | 4886.0 | 0.106 | 0.118 | 0.330 |
 | DilResNet-128-norm | `DilResNet-128-norm` | 4.2 M | 16.7 | 6959.0 | 0.161 | 0.167 | 0.401 |
