@@ -82,7 +82,6 @@ class SpectralConv2d_Uno(nn.Module):
 
     # Complex multiplication
     def compl_mul2d(self, input, weights):
-
         return torch.einsum("bixy,ioxy->boxy", input, weights)
 
     def forward(self, x, dim1=None, dim2=None):

@@ -131,7 +131,6 @@ class CondPDEModel(LightningModule):
             max_start_time + 1,
             1,
         ):
-
             end_time = start + 1
             target_start_time = start + delta_t
             target_end_time = target_start_time + delta_t * self.hparams.max_num_steps

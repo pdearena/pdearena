@@ -181,7 +181,7 @@ class RandomTimeStepConditionedPDETrainData(dp.iter.IterDataPipe):
     def __iter__(self):
         time_resolution = self.trajlen
 
-        for (u, v, cond, grid) in self.dp:
+        for u, v, cond, grid in self.dp:
             if self.reweigh:
                 end_time = random.choices(range(1, time_resolution), k=1)[0]
                 start_time = random.choices(range(0, end_time), weights=1 / np.arange(1, end_time + 1), k=1)[0]
@@ -229,9 +229,8 @@ class TimestepConditionedPDEEvalData(dp.iter.IterDataPipe):
         self.delta_t = delta_t
 
     def __iter__(self):
-
         for begin in range(self.trajlen - self.delta_t):
-            for (u, v, cond, grid) in self.dp:
+            for u, v, cond, grid in self.dp:
                 newu = u[begin :: self.delta_t, ...]
                 newv = v[begin :: self.delta_t, ...]
                 max_start_time = newu.size(0)
@@ -354,8 +353,7 @@ class PDEEvalTimeStepData(dp.iter.IterDataPipe):
         # We ignore these timesteps in the testing
         start_time = [t for t in range(0, max_start_time + 1, self.time_gap + self.time_future)]
         for start in start_time:
-            for (u, v, cond, grid) in self.dp:
-
+            for u, v, cond, grid in self.dp:
                 end_time = start + self.time_history
                 target_start_time = end_time + self.time_gap
                 target_end_time = target_start_time + self.time_future

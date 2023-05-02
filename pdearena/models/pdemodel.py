@@ -140,7 +140,6 @@ class PDEModel(LightningModule):
                 self.log(f"train/{key}_std", std)
 
     def compute_rolloutloss2D(self, batch: Any):
-
         (u, v, cond, grid) = batch
 
         losses = []
@@ -149,7 +148,6 @@ class PDEModel(LightningModule):
             self.max_start_time + 1,
             self.hparams.time_future + self.hparams.time_gap,
         ):
-
             end_time = start + self.hparams.time_history
             target_start_time = end_time + self.hparams.time_gap
             target_end_time = target_start_time + self.hparams.time_future * self.hparams.max_num_steps
