@@ -139,8 +139,8 @@ def generate_trajectories_maxwell(
         grid.run(pde.skip_nt, progress_bar=False)
         for i in range(0, pde.nt):
             grid.run(pde.sample_rate, progress_bar=False)
-            d_field_.append(grid.E[outer_area:-outer_area, outer_area:-outer_area, outer_area:-outer_area, :])
-            h_field_.append(grid.H[outer_area:-outer_area, outer_area:-outer_area, outer_area:-outer_area, :])
+            d_field_.append(grid.E[outer_area:-outer_area, outer_area:-outer_area, outer_area:-outer_area, :].copy())
+            h_field_.append(grid.H[outer_area:-outer_area, outer_area:-outer_area, outer_area:-outer_area, :].copy())
 
         return np.array(d_field_), np.array(h_field_)
 
