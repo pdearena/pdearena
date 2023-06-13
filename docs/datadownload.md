@@ -43,7 +43,7 @@ azcopy copy "https://pdearenarelease.blob.core.windows.net/datasets/ShallowWater
 Generated using [Python 3D FDTD Simulator](https://github.com/flaport/fdtd).
 
 ```bash
-azcopy copy "https://pdearenarelease.blob.core.windows.net/datasets/Maxwell2D" \
+azcopy copy "https://pdearenarelease.blob.core.windows.net/datasets/Maxwell3D" \
             "/mnt/data/" --recursive
 ```
 
