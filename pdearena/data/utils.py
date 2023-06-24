@@ -11,7 +11,7 @@ class PDEDataConfig:
     n_scalar_components: int
     n_vector_components: int
     trajlen: int
-    n_spatial_dims: int
+    n_spatial_dim: int
 
 
 def create_data2D(
@@ -27,12 +27,12 @@ def create_data2D(
     time_future: int,
     time_gap: int,
 ) -> Tuple[torch.Tensor, torch.Tensor]:
-    """Create training, test, valid data for one step prediction out of trajectory.
+    """Create 2D training, test, valid data for one step prediction out of trajectory.
 
     Args:
         scalar_fields (torch.Tensor): input data of the shape [t * pde.n_scalar_components, x, y]
         vector_fields (torch.Tensor): input data of the shape [2 * t * pde.n_vector_components, x, y]
-        start_time (list): list of starting points of one batch within the different timepoints of one trajectory
+        start (int): starting point within one trajectory
 
     Returns:
         (Tuple[torch.Tensor, torch.Tensor]): input trajectories, label trajectories
@@ -69,6 +69,43 @@ def create_data2D(
     if targets.size(1) == 0:
         raise ValueError("No targets")
     return data, targets
+
+
+def create_maxwell_data(
+    d_field: torch.Tensor,
+    h_field: torch.Tensor,
+    start: int,
+    time_history: int,
+    time_future: int,
+    time_gap: int,
+) -> Tuple[torch.Tensor, torch.Tensor]:
+    """Create 3D training, test, valid data for one step prediction out of trajectory.
+
+    Args:
+        d_field (torch.Tensor): input data of the shape `[t, 3, x, y, z]`
+        h_field (torch.Tensor): output data of the shape `[t, 3, x, y, z]`
+        start (int): start (int): starting point within one trajectory
+        time_history (int): number of history time steps
+        time_future (int): number of future time steps
+        time_gap (int): time gap between input and target
+
+    Returns:
+        Tuple[torch.Tensor, torch.Tensor]: input, target tensore of shape `[1, t, 6, x, y, z]`
+    """   
+    # Different starting points of one batch
+    end_time = start + time_history
+    target_start_time = end_time + time_gap
+    target_end_time = target_start_time + time_future
+
+    data_d_field = d_field[start:end_time]
+    labels_d_field = d_field[target_start_time:target_end_time]
+    data_h_field = h_field[start:end_time]
+    labels_h_field = h_field[target_start_time:target_end_time]
+
+    data = torch.cat((data_d_field, data_h_field), dim=1).unsqueeze(0)
+    labels = torch.cat((labels_d_field, labels_h_field), dim=1).unsqueeze(0)
+
+    return data, labels
 
 
 def create_time_conditioned_data(

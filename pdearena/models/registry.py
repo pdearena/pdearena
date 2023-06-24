@@ -7,6 +7,9 @@ from pdearena.modules.twod_resnet import (
     DilatedBasicBlock,
     FourierBasicBlock,
 )
+from pdearena.modules.threed import (
+    FourierBasicBlock3D,
+)
 
 MODEL_REGISTRY = {
     "FNO-128-8m": {
@@ -434,4 +437,16 @@ COND_MODEL_REGISTRY = {
             "use_scale_shift_norm": True,
         },
     },
+}
+
+MODEL_REGISTRY_3D = {
+    "FNO3D-96-8": {
+        "class_path": "pdearena.modules.threed.ResNet3D",
+        "init_args": {
+            "hidden_channels": 96,
+            "num_blocks": [1, 1],
+            "block": utils.partialclass("FourierBasicBlock3D", FourierBasicBlock3D, modes1=8, modes2=8, modes3=8),
+            "diffmode": False,
+        },
+    }, 
 }
