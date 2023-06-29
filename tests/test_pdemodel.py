@@ -65,7 +65,7 @@ def test_2d_pde_model(name, train_criterion, time_history, max_num_steps, pdedat
 @pytest.mark.parametrize("time_history", [1, 2, 4])
 @pytest.mark.parametrize("max_num_steps", [4, 5, 8])
 @pytest.mark.parametrize("pdedata", [PDEDataConfig(0, 2, 14, 3)])
-# @pytest.mark.slow
+@pytest.mark.slow
 def test_3d_pde_model(name, train_criterion, time_history, max_num_steps, pdedata):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     time_future = 1
@@ -105,11 +105,12 @@ def test_3d_pde_model(name, train_criterion, time_history, max_num_steps, pdedat
     # test rollout validation
     batch = (
         torch.randn(
-            8, time_history * pdedata.trajlen, 6, 32, 32, 32, device=device
+            8, pdedata.trajlen, 3, 32, 32, 32, device=device
         ),
         torch.randn(
-            8, time_future * pdedata.trajlen, 6, 32, 32, 32, device=device
+            8, pdedata.trajlen, 3, 32, 32, 32, device=device
         ),
+        None,
     )
     loss = litmodel.validation_step(batch, 0, 1)
     assert "unrolled_loss" in loss.keys()

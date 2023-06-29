@@ -205,7 +205,7 @@ class PDEModel(LightningModule):
         d, h, _ = batch
         losses = []
         for start in range(
-            self.pde.skip_nt,
+            0,
             self.max_start_time + 1,
             self.hparams.time_future + self.hparams.time_gap,
         ):
@@ -220,7 +220,6 @@ class PDEModel(LightningModule):
                 self.model,
                 init_d,
                 init_h,
-                self.pde,
                 self.hparams.time_history,
                 self.hparams.max_num_steps,
             )
