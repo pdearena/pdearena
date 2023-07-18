@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from pdearena.data.utils import create_data2D
+from pdearena.data.utils import create_data2D, create_maxwell_data
 
 
 @pytest.mark.parametrize(
@@ -72,4 +72,48 @@ def test_create_data2D(
             ...,
         ],
         targets[0, :, n_output_scalar_components : n_output_scalar_components + 2 * n_output_vector_components, ...],
+    )
+
+
+@pytest.mark.parametrize("start", [0, 1, 2, 3])
+@pytest.mark.parametrize("time_history", [1, 2, 3, 4])
+@pytest.mark.parametrize("time_future", [1, 2, 3, 4])
+def test_create_maxwell_data(
+    start,
+    time_history,
+    time_future,
+):
+    T = 15
+    N = 64
+    d_field = torch.rand(T, 3, N, N, N)
+    h_field = torch.rand(T, 3, N, N, N)
+    time_gap = 0
+    data, targets = create_maxwell_data(
+        d_field,
+        h_field,
+        start,
+        time_history,
+        time_future,
+        time_gap,
+    )
+    assert data.shape == (1, time_history, 6, N, N, N)
+    assert targets.shape == (1, time_future, 6, N, N, N)
+    
+    torch.testing.assert_close(
+        d_field[start : start + time_history], data[0, :, :3]
+    )
+    torch.testing.assert_close(
+        h_field[start : start + time_history], data[0, :, 3:]
+    )
+    torch.testing.assert_close(
+        d_field[
+            start + time_history + time_gap : start + time_history + time_gap + time_future, :3
+        ],
+        targets[0, :, :3],
+    )
+    torch.testing.assert_close(
+        h_field[
+            start + time_history + time_gap : start + time_history + time_gap + time_future, :3
+        ],
+        targets[0, :, 3:],
     )
