@@ -440,8 +440,8 @@ COND_MODEL_REGISTRY = {
 }
 
 MODEL_REGISTRY_3D = {
-    "FNO3D-96-8": {
-        "class_path": "pdearena.modules.threed.ResNet3D",
+    "MaxwellFNO3D-96-8": {
+        "class_path": "pdearena.modules.threed.MaxwellResNet3D",
         "init_args": {
             "hidden_channels": 96,
             "num_blocks": [1, 1],
