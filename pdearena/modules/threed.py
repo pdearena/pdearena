@@ -72,8 +72,8 @@ class FourierBasicBlock3D(nn.Module):
         return out
 
 
-class ResNet3D(nn.Module):
-    """3d ResNet model, difference to default ResNet architectures is that
+class MaxwellResNet3D(nn.Module):
+    """3d ResNet model for Maxwell equations, difference to default ResNet architectures is that
     spatial resolution and channels (in_planes) stay constant throughout the network."""
 
     padding = 2  # no periodic
@@ -97,7 +97,7 @@ class ResNet3D(nn.Module):
             time_future (int): prediction timesteps
             hidden_channels (int): hidden channels in the ResNet blocks
         """
-        super(ResNet3D, self).__init__()
+        super(MaxwellResNet3D, self).__init__()
 
         self.diffmode = diffmode
         self.in_planes = hidden_channels

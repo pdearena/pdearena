@@ -252,7 +252,15 @@ onestep_valid_datapipe_maxwell = functools.partial(
     mode="valid",
     onestep=True,
 )
-
+rollout_valid_datapipe_maxwell = functools.partial(
+    build_maxwell_datapipes,
+    dataset_opener=PDEDatasetOpener3D,
+    filter_fn=_valid_filter,
+    lister=dp.iter.FileLister,
+    sharder=dp.iter.ShardingFilter,
+    mode="valid",
+    onestep=False,
+)
 onestep_test_datapipe_maxwell = functools.partial(
     build_maxwell_datapipes,
     dataset_opener=PDEDatasetOpener3D,
@@ -261,4 +269,13 @@ onestep_test_datapipe_maxwell = functools.partial(
     sharder=dp.iter.ShardingFilter,
     mode="test",
     onestep=True,
+)
+rollout_test_datapipe_maxwell = functools.partial(
+    build_maxwell_datapipes,
+    dataset_opener=PDEDatasetOpener3D,
+    filter_fn=_test_filter,
+    lister=dp.iter.FileLister,
+    sharder=dp.iter.ShardingFilter,
+    mode="test",
+    onestep=False,
 )
