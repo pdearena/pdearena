@@ -1,10 +1,87 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+import functools
 from typing import Optional
 import random
 import h5py
 import torch
 import torchdata.datapipes as dp
+from typing import Callable, Optional
 from pdearena.data.utils import PDEDataConfig
 import pdearena.data.utils as datautils
+
+
+def build_maxwell_datapipes(
+    pde: PDEDataConfig,
+    data_path,
+    limit_trajectories,
+    usegrid: bool,
+    dataset_opener: Callable[..., dp.iter.IterDataPipe],
+    lister: Callable[..., dp.iter.IterDataPipe],
+    sharder: Callable[..., dp.iter.IterDataPipe],
+    filter_fn: Callable[..., dp.iter.IterDataPipe],
+    mode: str,
+    time_history=1,
+    time_future=1,
+    time_gap=0,
+    onestep=False,
+):
+    """Build datapipes for training and evaluation.
+
+    Args:
+        pde (PDEDataConfig): PDE configuration.
+        data_path (str): Path to the data.
+        limit_trajectories (int): Number of trajectories to use.
+        usegrid (bool): Whether to use spatial grid as input.
+        dataset_opener (Callable[..., dp.iter.IterDataPipe]): Dataset opener.
+        lister (Callable[..., dp.iter.IterDataPipe]): List files.
+        sharder (Callable[..., dp.iter.IterDataPipe]): Shard files.
+        filter_fn (Callable[..., dp.iter.IterDataPipe]): Filter files.
+        mode (str): Mode of the data. ["train", "valid", "test"]
+        time_history (int, optional): Number of time steps in the past. Defaults to 1.
+        time_future (int, optional): Number of time steps in the future. Defaults to 1.
+        time_gap (int, optional): Number of time steps between the past and the future to be skipped. Defaults to 0.
+        onestep (bool, optional): Whether to use one-step prediction. Defaults to False.
+
+    Returns:
+        dpipe (IterDataPipe): IterDataPipe for training and evaluation.
+    """
+    dpipe = lister(
+        data_path,
+    ).filter(filter_fn=filter_fn)
+    if mode == "train":
+        dpipe = dpipe.shuffle()
+
+    dpipe = dataset_opener(
+        sharder(dpipe),
+        mode=mode,
+        limit_trajectories=limit_trajectories,
+        usegrid=usegrid,
+    )
+    if mode == "train":
+        # Make sure that in expectation we have seen all the data despite randomization
+        dpipe = dpipe.cycle(pde.trajlen)
+
+    if mode == "train":
+        # Training data is randomized
+        dpipe = RandomizedPDETrainData3D(
+                dpipe,
+                pde,
+                time_history,
+                time_future,
+                time_gap,
+            )   
+    else:
+        # Evaluation data is not randomized.
+        if onestep:
+            dpipe = PDEEvalTimeStepData3D(
+                dpipe,
+                time_history,
+                time_future,
+                time_gap,
+            )
+
+    return dpipe
 
 
 @torch.utils.data.functional_datapipe("read_emfields")
@@ -57,12 +134,6 @@ class PDEDatasetOpener3D(dp.iter.IterDataPipe):
                     2,
                     3,
                 )
-                # d_field = d_field.reshape(
-                #     d_field.shape[0], d_field.shape[-1], *d_field.shape[-4:-1]
-                # )
-                # h_field = h_field.reshape(
-                #     h_field.shape[0], h_field.shape[-1], *h_field.shape[-4:-1]
-                # )
 
                 yield d_field.float(), h_field.float(), None
 
@@ -148,6 +219,46 @@ class PDEEvalTimeStepData3D(dp.iter.IterDataPipe):
                 labels = torch.cat((labels_dfield, labels_hfield), dim=1).unsqueeze(
                     0
                 )  # add batch dim
-                # data = data.reshape(1, -1, *data.shape[3:])
-                # labels = labels.reshape(1, -1, *labels.shape[3:])
+                
                 yield data, labels
+
+
+def _train_filter(fname):
+    return "train" in fname and "h5" in fname
+
+
+def _valid_filter(fname):
+    return "valid" in fname and "h5" in fname
+
+
+def _test_filter(fname):
+    return "test" in fname and "h5" in fname
+
+
+train_datapipe_maxwell = functools.partial(
+    build_maxwell_datapipes,
+    dataset_opener=PDEDatasetOpener3D,
+    filter_fn=_train_filter,
+    lister=dp.iter.FileLister,
+    sharder=dp.iter.ShardingFilter,
+    mode="train",
+)
+onestep_valid_datapipe_maxwell = functools.partial(
+    build_maxwell_datapipes,
+    dataset_opener=PDEDatasetOpener3D,
+    filter_fn=_valid_filter,
+    lister=dp.iter.FileLister,
+    sharder=dp.iter.ShardingFilter,
+    mode="valid",
+    onestep=True,
+)
+
+onestep_test_datapipe_maxwell = functools.partial(
+    build_maxwell_datapipes,
+    dataset_opener=PDEDatasetOpener3D,
+    filter_fn=_test_filter,
+    lister=dp.iter.FileLister,
+    sharder=dp.iter.ShardingFilter,
+    mode="test",
+    onestep=True,
+)
