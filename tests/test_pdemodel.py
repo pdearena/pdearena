@@ -60,7 +60,7 @@ def test_2d_pde_model(name, train_criterion, time_history, max_num_steps, pdedat
     assert loss["loss_timesteps"].size() == (max_num_steps,)
 
 
-@pytest.mark.parametrize("name", ["FNO3D-96-8"])
+@pytest.mark.parametrize("name", ["MaxwellFNO3D-96-8"])
 @pytest.mark.parametrize("train_criterion", ["mse", "scaledl2"])
 @pytest.mark.parametrize("time_history", [1, 2, 4])
 @pytest.mark.parametrize("max_num_steps", [4, 5, 8])
