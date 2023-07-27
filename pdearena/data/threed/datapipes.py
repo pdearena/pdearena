@@ -76,6 +76,7 @@ def build_maxwell_datapipes(
         if onestep:
             dpipe = PDEEvalTimeStepData3D(
                 dpipe,
+                pde,
                 time_history,
                 time_future,
                 time_gap,
@@ -84,7 +85,6 @@ def build_maxwell_datapipes(
     return dpipe
 
 
-@torch.utils.data.functional_datapipe("read_emfields")
 class PDEDatasetOpener3D(dp.iter.IterDataPipe):
     def __init__(
         self, dp, mode: str, limit_trajectories: Optional[int] = None, usegrid: bool = False
@@ -135,7 +135,7 @@ class PDEDatasetOpener3D(dp.iter.IterDataPipe):
                     3,
                 )
 
-                yield d_field.float(), h_field.float(), None
+                yield d_field.float(), h_field.float()
 
 
 class RandomizedPDETrainData3D(dp.iter.IterDataPipe):
@@ -157,13 +157,13 @@ class RandomizedPDETrainData3D(dp.iter.IterDataPipe):
         # Number of future points to predict
         max_start_time = reduced_time_resolution - self.time_future - self.time_gap
 
-        for (d, h, _) in self.dp:
+        for (d, h) in self.dp:
             # Choose initial random time point at the PDE solution manifold
             start_time = random.choices(
-                [t for t in range(self.pde.skip_nt, max_start_time + 1)], k=1
+                [t for t in range(max_start_time + 1)], k=1
             )
-            yield datautils.create_data3D(
-                self.pde, d, h, start_time[0], self.time_history, self.time_future, self.time_gap
+            yield datautils.create_maxwell_data(
+                d, h, start_time[0], self.time_history, self.time_future, self.time_gap
             )
 
 

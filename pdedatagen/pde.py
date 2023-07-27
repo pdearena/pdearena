@@ -119,11 +119,15 @@ class Maxwell3D(PDEConfig):
 
     @property
     def trajlen(self):
-        return int(self.nt / self.sample_rate)
+        return self.nt
 
     @property
     def grid_size(self):
         return (self.nt, self.n, self.n, self.n)
+
+    @property
+    def spatial_grid_size(self):
+        return(self.n, self.n, self.n)
 
     @property
     def grid_spacing(self):

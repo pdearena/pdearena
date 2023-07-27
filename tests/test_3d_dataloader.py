@@ -5,7 +5,7 @@ import os
 from pdedatagen.pde import Maxwell3D
 from pdearena.data.registry import DATAPIPE_REGISTRY
 from torch.utils.data import DataLoader
-from pdearena.data.datamodule import collate_fn_cat
+from pdearena.data.datamodule import collate_fn_cat, collate_fn_stack
 
 
 @pytest.fixture(scope="session")
@@ -77,13 +77,63 @@ def test_maxwell_dataloader(synthetic_maxwell):
                 drop_last=True,
                 collate_fn=collate_fn_cat,
             )
-            breakpoint()
-            for idx, (x, y) in enumerate(train_dataloader):
-                breakpoint()
+
+            for idx, (x,y) in enumerate(train_dataloader):
                 assert x.shape[0] == y.shape[0] == batch_size
                 assert x.shape[1] == time_history
                 assert y.shape[1] == time_future
-                assert x.shape[2] == y.shape[2] == 3
+                assert x.shape[-3:] == y.shape[-3:] == pde.spatial_grid_size
+                
+            assert idx > 0
+
+        elif mode == "valid" or mode == "test":
+            valid_dp1 = dps[mode][0](
+                pde=pde,
+                data_path=filenames[mode],
+                limit_trajectories=-1,
+                usegrid=False,
+                time_history=time_history,
+                time_future=time_future,
+                time_gap=time_gap,
+            )
+            valid_dataloader1 = DataLoader(
+                dataset=valid_dp1,
+                num_workers=1,
+                pin_memory=True,
+                batch_size=batch_size,
+                shuffle=False,
+                drop_last=True,
+                collate_fn=collate_fn_cat,
+            )
+            for idx, (x, y) in enumerate(valid_dataloader1):
+                assert x.shape[0] == y.shape[0] == batch_size
+                assert x.shape[1] == time_history
+                assert y.shape[1] == time_future
+                assert x.shape[-3:] == y.shape[-3:] == pde.spatial_grid_size
+            assert idx > 0
+
+            # valid_dp2 = dps[mode][1](
+            #     pde=pde,
+            #     data_path=filenames[mode],
+            #     limit_trajectories=-1,
+            #     usegrid=False,
+            #     time_history=time_history,
+            #     time_future=time_future,
+            #     time_gap=time_gap,
+            # )
+            # valid_dataloader2 = DataLoader(
+            #     dataset=valid_dp2,
+            #     num_workers=1,
+            #     pin_memory=True,
+            #     batch_size=batch_size,
+            #     shuffle=False,
+            #     drop_last=True,
+            #     collate_fn=collate_fn_stack,
+            # )
+            # for idx, x in enumerate(valid_dataloader2):
+            #     breakpoint()
+            #     assert x[0].shape == (batch_size, pde.nt, pde.n_scalar_components, pde.nx, pde.ny)
+            #     assert x[1].shape == (batch_size, pde.nt, pde.n_vector_components * 2, pde.nx, pde.ny) 
             # assert idx > 0
     
 
