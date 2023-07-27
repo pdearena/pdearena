@@ -112,28 +112,27 @@ def test_maxwell_dataloader(synthetic_maxwell):
                 assert x.shape[-3:] == y.shape[-3:] == pde.spatial_grid_size
             assert idx > 0
 
-            # valid_dp2 = dps[mode][1](
-            #     pde=pde,
-            #     data_path=filenames[mode],
-            #     limit_trajectories=-1,
-            #     usegrid=False,
-            #     time_history=time_history,
-            #     time_future=time_future,
-            #     time_gap=time_gap,
-            # )
-            # valid_dataloader2 = DataLoader(
-            #     dataset=valid_dp2,
-            #     num_workers=1,
-            #     pin_memory=True,
-            #     batch_size=batch_size,
-            #     shuffle=False,
-            #     drop_last=True,
-            #     collate_fn=collate_fn_stack,
-            # )
-            # for idx, x in enumerate(valid_dataloader2):
-            #     breakpoint()
-            #     assert x[0].shape == (batch_size, pde.nt, pde.n_scalar_components, pde.nx, pde.ny)
-            #     assert x[1].shape == (batch_size, pde.nt, pde.n_vector_components * 2, pde.nx, pde.ny) 
-            # assert idx > 0
+            valid_dp2 = dps[mode][1](
+                pde=pde,
+                data_path=filenames[mode],
+                limit_trajectories=-1,
+                usegrid=False,
+                time_history=time_history,
+                time_future=time_future,
+                time_gap=time_gap,
+            )
+            valid_dataloader2 = DataLoader(
+                dataset=valid_dp2,
+                num_workers=1,
+                pin_memory=True,
+                batch_size=batch_size,
+                shuffle=False,
+                drop_last=True,
+                collate_fn=collate_fn_stack,
+            )
+            for idx, x in enumerate(valid_dataloader2):
+                assert x[0].shape == (batch_size, pde.nt, 3, pde.n, pde.n, pde.n)
+                assert x[1].shape == (batch_size, pde.nt, 3, pde.n, pde.n, pde.n) 
+            assert idx > 0
     
 
