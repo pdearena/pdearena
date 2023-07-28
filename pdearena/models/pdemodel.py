@@ -9,9 +9,9 @@ from pytorch_lightning.cli import instantiate_class
 from pdearena import utils
 from pdearena.data.utils import PDEDataConfig
 from pdearena.modules.loss import CustomMSELoss, ScaledLpLoss
-from pdearena.rollout import rollout2d, rollout3d
+from pdearena.rollout import rollout2d, rollout3d_maxwell
 
-from .registry import MODEL_REGISTRY, MODEL_REGISTRY_3D
+from .registry import MODEL_REGISTRY
 
 logger = utils.get_logger(__name__)
 
@@ -215,7 +215,7 @@ class PDEModel(LightningModule):
             )
             init_d = d[:, start:end_time]
             init_h = h[:, start:end_time]
-            pred_traj = rollout3d(
+            pred_traj = rollout3d_maxwell(
                 self.model,
                 init_d,
                 init_h,
