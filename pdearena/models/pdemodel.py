@@ -138,17 +138,6 @@ class PDEModel(LightningModule):
                 "scalar_loss": scalar_loss.detach(),
                 "vector_loss": vector_loss.detach(),
             }
-        elif self._mode == "3DMaxwell":
-            d_loss = self.train_criterion(preds[:, :, :3, ...], targets[:, :, :3, ...])
-            h_loss = self.train_criterion(preds[:, :, 3:, ...], targets[:, :, 3:, ...])
-            self.log("train/loss", loss)
-            self.log("train/d_loss", d_loss)
-            self.log("train/h_loss", h_loss)
-            return {
-                "loss": loss,
-                "d_loss": d_loss,
-                "h_loss": h_loss,
-            }
         else:
             raise NotImplementedError(f"{self._mode}")
 
@@ -200,35 +189,6 @@ class PDEModel(LightningModule):
         loss_vec = torch.stack(losses, dim=0).mean(dim=0)
         return loss_vec
 
-    def compute_rolloutloss3D(self, batch: Any):
-        d, h, _ = batch
-        losses = []
-        for start in range(
-            0,
-            self.max_start_time + 1,
-            self.hparams.time_future + self.hparams.time_gap,
-        ):
-            end_time = start + self.hparams.time_history
-            target_start_time = end_time + self.hparams.time_gap
-            target_end_time = (
-                target_start_time + self.hparams.time_future * self.hparams.max_num_steps
-            )
-            init_d = d[:, start:end_time]
-            init_h = h[:, start:end_time]
-            pred_traj = rollout3d_maxwell(
-                self.model,
-                init_d,
-                init_h,
-                self.hparams.time_history,
-                self.hparams.max_num_steps,
-            )
-            targ_d = d[:, target_start_time:target_end_time]
-            targ_h = h[:, target_start_time:target_end_time]
-            targ_traj = torch.cat((targ_d, targ_h), dim=2)  # along channel
-            loss = self.rollout_criterion(pred_traj, targ_traj).mean(dim=(0, 2, 3, 4, 5))
-            losses.append(loss)
-        loss_vec = torch.stack(losses, dim=0).mean(dim=0)
-        return loss_vec
 
     def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0):
         if dataloader_idx == 0:
@@ -248,13 +208,6 @@ class PDEModel(LightningModule):
                     self.log(f"valid/loss/{k}", loss[k])
                 return {f"{k}_loss": v for k, v in loss.items()}
 
-            elif self._mode == "3DMaxwell":
-                loss["d_field_mse"] = self.val_criterions["mse"](preds[:, :, :3, ...], targets[:, :, :3, ...])
-                loss["h_field_mse"] = self.val_criterions["mse"](preds[:, :, 3:, ...], targets[:, :, 3:, ...])
-
-                for k in loss.keys():
-                    self.log("valid/loss", loss[k])
-                return {f"{k}_loss": v for k, v in loss.items()}
             else:
                 raise NotImplementedError(f"{self._mode}")
 
@@ -262,8 +215,6 @@ class PDEModel(LightningModule):
             # rollout loss
             if self._mode == "2D":
                 loss_vec = self.compute_rolloutloss2D(batch)
-            elif self._mode == "3DMaxwell":
-                loss_vec = self.compute_rolloutloss3D(batch)
             else:
                 raise NotImplementedError(f"{self._mode}")
             # summing across "time axis"
@@ -314,25 +265,12 @@ class PDEModel(LightningModule):
 
                 self.log("test/loss", loss)
                 return {f"{k}_loss": v for k, v in loss.items()}
-            elif self._mode == "3DMaxwell":
-                d_loss = self.val_criterions["mse"](preds[:, :, :3, ...], targets[:, :, :3, ...])
-                h_loss = self.val_criterions["mse"](preds[:, :, 3:, ...], targets[:, :, 3:, ...])
-                self.log("test/loss", loss)
-                self.log("test/d_loss", d_loss)
-                self.log("test/h_loss", h_loss)
-                return {
-                    "loss": loss,
-                    "d_loss": d_loss,
-                    "h_loss": h_loss,
-                }
             else:
                 raise NotImplementedError(f"{self._mode}")
 
         elif dataloader_idx == 1:
             if self._mode == "2D":
                 loss_vec = self.compute_rolloutloss2D(batch)
-            elif self._mode == "3DMaxell":
-                loss_vec = self.compute_rolloutloss3D(batch)
             else:
                 raise NotImplementedError(f"{self._mode}")
             # summing across "time axis"
@@ -368,3 +306,118 @@ class PDEModel(LightningModule):
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.model.parameters(), lr=self.hparams.lr)
         return optimizer
+
+
+class Maxwell3DPDEModel(PDEModel):
+    
+    def compute_rolloutloss3D(self, batch: Any):
+        d, h, _ = batch
+        losses = []
+        for start in range(
+            0,
+            self.max_start_time + 1,
+            self.hparams.time_future + self.hparams.time_gap,
+        ):
+            end_time = start + self.hparams.time_history
+            target_start_time = end_time + self.hparams.time_gap
+            target_end_time = (
+                target_start_time + self.hparams.time_future * self.hparams.max_num_steps
+            )
+            init_d = d[:, start:end_time]
+            init_h = h[:, start:end_time]
+            pred_traj = rollout3d_maxwell(
+                self.model,
+                init_d,
+                init_h,
+                self.hparams.time_history,
+                self.hparams.max_num_steps,
+            )
+            targ_d = d[:, target_start_time:target_end_time]
+            targ_h = h[:, target_start_time:target_end_time]
+            targ_traj = torch.cat((targ_d, targ_h), dim=2)  # along channel
+            loss = self.rollout_criterion(pred_traj, targ_traj).mean(dim=(0, 2, 3, 4, 5))
+            losses.append(loss)
+        loss_vec = torch.stack(losses, dim=0).mean(dim=0)
+        return loss_vec
+
+    def training_step(self, batch, batch_idx: int):
+        loss, preds, targets = self.train_step(batch)
+
+        if self._mode == "3DMaxwell":
+            d_loss = self.train_criterion(preds[:, :, :3, ...], targets[:, :, :3, ...])
+            h_loss = self.train_criterion(preds[:, :, 3:, ...], targets[:, :, 3:, ...])
+            self.log("train/loss", loss)
+            self.log("train/d_loss", d_loss)
+            self.log("train/h_loss", h_loss)
+            return {
+                "loss": loss,
+                "d_loss": d_loss,
+                "h_loss": h_loss,
+            }
+        else:
+            raise NotImplementedError(f"{self._mode}")
+
+    def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0):
+        if dataloader_idx == 0:
+            # one-step loss
+            loss, preds, targets = self.eval_step(batch)
+            if self._mode == "3DMaxwell":
+                loss["d_field_mse"] = self.val_criterions["mse"](preds[:, :, :3, ...], targets[:, :, :3, ...])
+                loss["h_field_mse"] = self.val_criterions["mse"](preds[:, :, 3:, ...], targets[:, :, 3:, ...])
+
+                for k in loss.keys():
+                    self.log("valid/loss", loss[k])
+                return {f"{k}_loss": v for k, v in loss.items()}
+            else:
+                raise NotImplementedError(f"{self._mode}")
+
+        elif dataloader_idx == 1:
+            # rollout loss
+            if self._mode == "3DMaxwell":
+                loss_vec = self.compute_rolloutloss3D(batch)
+            else:
+                raise NotImplementedError(f"{self._mode}")
+            # summing across "time axis"
+            loss = loss_vec.sum()
+            loss_t = loss_vec.cumsum(0)
+            chan_avg_loss = loss / (self.pde.n_scalar_components + self.pde.n_vector_components)
+            self.log("valid/unrolled_loss", loss)
+            return {
+                "unrolled_loss": loss,
+                "loss_timesteps": loss_t,
+                "unrolled_chan_avg_loss": chan_avg_loss,
+            }
+        
+
+    def test_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0):
+        if dataloader_idx == 0:
+            loss, preds, targets = self.eval_step(batch)
+            if self._mode == "3DMaxwell":
+                d_loss = self.val_criterions["mse"](preds[:, :, :3, ...], targets[:, :, :3, ...])
+                h_loss = self.val_criterions["mse"](preds[:, :, 3:, ...], targets[:, :, 3:, ...])
+                self.log("test/loss", loss)
+                self.log("test/d_loss", d_loss)
+                self.log("test/h_loss", h_loss)
+                return {
+                    "loss": loss,
+                    "d_loss": d_loss,
+                    "h_loss": h_loss,
+                }
+            else:
+                raise NotImplementedError(f"{self._mode}")
+
+        elif dataloader_idx == 1:
+            if self._mode == "3DMaxell":
+                loss_vec = self.compute_rolloutloss3D(batch)
+            else:
+                raise NotImplementedError(f"{self._mode}")
+            # summing across "time axis"
+            loss = loss_vec.sum()
+            loss_t = loss_vec.cumsum(0)
+            self.log("test/unrolled_loss", loss)
+            # self.log("valid/normalized_unrolled_loss", loss)
+            return {
+                "unrolled_loss": loss,
+                "loss_timesteps": loss_t,
+            }
+        
