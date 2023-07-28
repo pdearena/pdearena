@@ -19,27 +19,26 @@ logger = utils.get_logger(__name__)
 def get_model(args, pde):
     if args.name in MODEL_REGISTRY:
         _model = MODEL_REGISTRY[args.name].copy()
-        _model["init_args"].update(
-            dict(
-                n_input_scalar_components=pde.n_scalar_components,
-                n_output_scalar_components=pde.n_scalar_components,
-                n_input_vector_components=pde.n_vector_components,
-                n_output_vector_components=pde.n_vector_components,
-                time_history=args.time_history,
-                time_future=args.time_future,
-                activation=args.activation,
+        if "Maxwell" in args.name:
+            _model["init_args"].update(
+                dict(
+                    time_history=args.time_history,
+                    time_future=args.time_future,
+                    activation=args.activation,
+                )
             )
-        )
-        model = instantiate_class(tuple(), _model)
-    elif args.name in MODEL_REGISTRY_3D:
-        _model = MODEL_REGISTRY_3D[args.name].copy()
-        _model["init_args"].update(
-            dict(
-                time_history=args.time_history,
-                time_future=args.time_future,
-                activation=args.activation,
+        else:
+            _model["init_args"].update(
+                dict(
+                    n_input_scalar_components=pde.n_scalar_components,
+                    n_output_scalar_components=pde.n_scalar_components,
+                    n_input_vector_components=pde.n_vector_components,
+                    n_output_vector_components=pde.n_vector_components,
+                    time_history=args.time_history,
+                    time_future=args.time_future,
+                    activation=args.activation,
+                )
             )
-        )
         model = instantiate_class(tuple(), _model)
     else:
         logger.warning("Model not found in registry. Using fallback. Best to add your model to the registry.")

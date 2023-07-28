@@ -437,9 +437,6 @@ COND_MODEL_REGISTRY = {
             "use_scale_shift_norm": True,
         },
     },
-}
-
-MODEL_REGISTRY_3D = {
     "MaxwellFNO3D-96-8": {
         "class_path": "pdearena.modules.threed.MaxwellResNet3D",
         "init_args": {
