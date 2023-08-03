@@ -91,3 +91,28 @@ def cond_rollout2d(
 
     traj = torch.cat(traj_ls, dim=1)
     return traj
+
+def rollout3d_maxwell(
+    model: torch.nn.Module,
+    initial_d: torch.Tensor,
+    initial_h: torch.Tensor,
+    time_history: int,
+    num_steps: int,
+):
+    traj_ls = []
+    pred = torch.Tensor()
+    for i in range(num_steps):
+        if i == 0:
+            data = torch.cat((initial_d, initial_h), dim=2)
+        else:
+            data = torch.cat((data, pred), dim=1)  # along time
+            data = data[
+                :,
+                -time_history:,
+            ]
+
+        pred = model(data)
+        traj_ls.append(pred)
+
+    traj = torch.cat(traj_ls, dim=1)
+    return traj

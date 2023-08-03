@@ -9,7 +9,7 @@ from pytorch_lightning.cli import instantiate_class
 from pdearena import utils
 from pdearena.data.utils import PDEDataConfig
 from pdearena.modules.loss import CustomMSELoss, ScaledLpLoss
-from pdearena.rollout import rollout2d
+from pdearena.rollout import rollout2d, rollout3d_maxwell
 
 from .registry import MODEL_REGISTRY
 
@@ -19,17 +19,26 @@ logger = utils.get_logger(__name__)
 def get_model(args, pde):
     if args.name in MODEL_REGISTRY:
         _model = MODEL_REGISTRY[args.name].copy()
-        _model["init_args"].update(
-            dict(
-                n_input_scalar_components=pde.n_scalar_components,
-                n_output_scalar_components=pde.n_scalar_components,
-                n_input_vector_components=pde.n_vector_components,
-                n_output_vector_components=pde.n_vector_components,
-                time_history=args.time_history,
-                time_future=args.time_future,
-                activation=args.activation,
+        if "Maxwell" in args.name:
+            _model["init_args"].update(
+                dict(
+                    time_history=args.time_history,
+                    time_future=args.time_future,
+                    activation=args.activation,
+                )
             )
-        )
+        else:
+            _model["init_args"].update(
+                dict(
+                    n_input_scalar_components=pde.n_scalar_components,
+                    n_output_scalar_components=pde.n_scalar_components,
+                    n_input_vector_components=pde.n_vector_components,
+                    n_output_vector_components=pde.n_vector_components,
+                    time_history=args.time_history,
+                    time_future=args.time_future,
+                    activation=args.activation,
+                )
+            )
         model = instantiate_class(tuple(), _model)
     else:
         logger.warning("Model not found in registry. Using fallback. Best to add your model to the registry.")
@@ -63,9 +72,11 @@ class PDEModel(LightningModule):
         super().__init__()
         self.save_hyperparameters(ignore="pdeconfig")
         self.pde = pdeconfig
-        if (self.pde.n_spatial_dims) == 3:
-            self._mode = "3D"
-        elif (self.pde.n_spatial_dims) == 2:
+        if (self.pde.n_spatial_dim) == 3:
+            self._mode = "3DMaxwell"
+            assert self.pde.n_scalar_components == 0
+            assert self.pde.n_vector_components == 2
+        elif (self.pde.n_spatial_dim) == 2:
             self._mode = "2D"
         else:
             raise NotImplementedError(f"{self.pde}")
@@ -127,7 +138,18 @@ class PDEModel(LightningModule):
                 "scalar_loss": scalar_loss.detach(),
                 "vector_loss": vector_loss.detach(),
             }
-        elif self._mode == "3D":
+        elif self._mode == "3DMaxwell":
+            d_loss = self.train_criterion(preds[:, :, :3, ...], targets[:, :, :3, ...])
+            h_loss = self.train_criterion(preds[:, :, 3:, ...], targets[:, :, 3:, ...])
+            self.log("train/loss", loss)
+            self.log("train/d_loss", d_loss)
+            self.log("train/h_loss", h_loss)
+            return {
+                "loss": loss,
+                "d_loss": d_loss,
+                "h_loss": h_loss,
+            }
+        else:
             raise NotImplementedError(f"{self._mode}")
 
     def training_epoch_end(self, outputs: List[Any]):
@@ -178,6 +200,36 @@ class PDEModel(LightningModule):
         loss_vec = torch.stack(losses, dim=0).mean(dim=0)
         return loss_vec
 
+    def compute_rolloutloss3D(self, batch: Any):
+        d, h, _ = batch
+        losses = []
+        for start in range(
+            0,
+            self.max_start_time + 1,
+            self.hparams.time_future + self.hparams.time_gap,
+        ):
+            end_time = start + self.hparams.time_history
+            target_start_time = end_time + self.hparams.time_gap
+            target_end_time = (
+                target_start_time + self.hparams.time_future * self.hparams.max_num_steps
+            )
+            init_d = d[:, start:end_time]
+            init_h = h[:, start:end_time]
+            pred_traj = rollout3d_maxwell(
+                self.model,
+                init_d,
+                init_h,
+                self.hparams.time_history,
+                self.hparams.max_num_steps,
+            )
+            targ_d = d[:, target_start_time:target_end_time]
+            targ_h = h[:, target_start_time:target_end_time]
+            targ_traj = torch.cat((targ_d, targ_h), dim=2)  # along channel
+            loss = self.rollout_criterion(pred_traj, targ_traj).mean(dim=(0, 2, 3, 4, 5))
+            losses.append(loss)
+        loss_vec = torch.stack(losses, dim=0).mean(dim=0)
+        return loss_vec
+
     def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0):
         if dataloader_idx == 0:
             # one-step loss
@@ -196,14 +248,23 @@ class PDEModel(LightningModule):
                     self.log(f"valid/loss/{k}", loss[k])
                 return {f"{k}_loss": v for k, v in loss.items()}
 
-            elif self._mode == "3D":
+            elif self._mode == "3DMaxwell":
+                loss["d_field_mse"] = self.val_criterions["mse"](preds[:, :, :3, ...], targets[:, :, :3, ...])
+                loss["h_field_mse"] = self.val_criterions["mse"](preds[:, :, 3:, ...], targets[:, :, 3:, ...])
+
+                for k in loss.keys():
+                    self.log("valid/loss", loss[k])
+                return {f"{k}_loss": v for k, v in loss.items()}
+            else:
                 raise NotImplementedError(f"{self._mode}")
 
         elif dataloader_idx == 1:
             # rollout loss
             if self._mode == "2D":
                 loss_vec = self.compute_rolloutloss2D(batch)
-            elif self._mode == "3D":
+            elif self._mode == "3DMaxwell":
+                loss_vec = self.compute_rolloutloss3D(batch)
+            else:
                 raise NotImplementedError(f"{self._mode}")
             # summing across "time axis"
             loss = loss_vec.sum()
@@ -253,13 +314,26 @@ class PDEModel(LightningModule):
 
                 self.log("test/loss", loss)
                 return {f"{k}_loss": v for k, v in loss.items()}
-            elif self._mode == "3D":
+            elif self._mode == "3DMaxwell":
+                d_loss = self.val_criterions["mse"](preds[:, :, :3, ...], targets[:, :, :3, ...])
+                h_loss = self.val_criterions["mse"](preds[:, :, 3:, ...], targets[:, :, 3:, ...])
+                self.log("test/loss", loss)
+                self.log("test/d_loss", d_loss)
+                self.log("test/h_loss", h_loss)
+                return {
+                    "loss": loss,
+                    "d_loss": d_loss,
+                    "h_loss": h_loss,
+                }
+            else:
                 raise NotImplementedError(f"{self._mode}")
 
         elif dataloader_idx == 1:
             if self._mode == "2D":
                 loss_vec = self.compute_rolloutloss2D(batch)
-            elif self._mode == "3D":
+            elif self._mode == "3DMaxell":
+                loss_vec = self.compute_rolloutloss3D(batch)
+            else:
                 raise NotImplementedError(f"{self._mode}")
             # summing across "time axis"
             loss = loss_vec.sum()
