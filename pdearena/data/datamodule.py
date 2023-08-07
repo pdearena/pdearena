@@ -25,6 +25,7 @@ def collate_fn_stack(batch):
             b2 = torch.stack([b[1] for b in batch], dim=0)
         else:
             b2 = None
+        b3 = None
     if len(batch[0]) > 2:
         if batch[0][2] is not None:
             b3 = torch.cat([b[2] for b in batch], dim=0)

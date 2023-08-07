@@ -41,7 +41,7 @@ def generate_trajectories_smoke(
     """
     Generate data trajectories for smoke inflow in bounded domain
     Args:
-        pde (PDE): pde at hand [NS2D]
+        pde (PDEConfig): pde at hand [NS2D]
         mode (str): [train, valid, test]
         num_samples (int): how many trajectories do we create
         batch_size (int): batch size
