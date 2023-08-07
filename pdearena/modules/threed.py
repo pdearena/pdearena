@@ -97,7 +97,6 @@ class MaxwellResNet3D(nn.Module):
             time_future (int): prediction timesteps
             hidden_channels (int): hidden channels in the ResNet blocks
         """
-
         super().__init__()
 
         self.diffmode = diffmode

@@ -189,7 +189,6 @@ class PDEModel(LightningModule):
         loss_vec = torch.stack(losses, dim=0).mean(dim=0)
         return loss_vec
 
-
     def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0):
         if dataloader_idx == 0:
             # one-step loss
