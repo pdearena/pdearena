@@ -2,7 +2,7 @@ import pytest
 import torch
 
 from pdearena.data.utils import PDEDataConfig
-from pdearena.models.pdemodel import PDEModel
+from pdearena.models.pdemodel import PDEModel, Maxwell3DPDEModel
 
 
 @pytest.mark.parametrize("name", ["Unet2015-64", "ResNet-128"])
@@ -60,7 +60,7 @@ def test_2d_pde_model(name, train_criterion, time_history, max_num_steps, pdedat
     assert loss["loss_timesteps"].size() == (max_num_steps,)
 
 
-@pytest.mark.parametrize("name", ["MaxwellFNO3D-96-8"])
+@pytest.mark.parametrize("name", ["MaxwellFNO3D-96-8", "MaxwellCFNO3D-32-8"])
 @pytest.mark.parametrize("train_criterion", ["mse", "scaledl2"])
 @pytest.mark.parametrize("time_history", [1, 2, 4])
 @pytest.mark.parametrize("max_num_steps", [4, 5, 8])
@@ -69,7 +69,7 @@ def test_2d_pde_model(name, train_criterion, time_history, max_num_steps, pdedat
 def test_3d_pde_model(name, train_criterion, time_history, max_num_steps, pdedata):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     time_future = 1
-    litmodel = PDEModel(
+    litmodel = Maxwell3DPDEModel(
         name=name,
         time_history=time_history,
         time_future=time_future,

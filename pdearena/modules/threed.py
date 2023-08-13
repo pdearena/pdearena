@@ -1,9 +1,11 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
-from typing import Callable
+from typing import Callable, Union
 from .activations import ACTIVATION_REGISTRY
 from .fourier import SpectralConv3d
+from cliffordlayers.nn.modules.groupnorm import CliffordGroupNorm3d
+from cliffordlayers.models.custom_layers import CliffordConv3dMaxwellEncoder, CliffordConv3dMaxwellDecoder
 
 
 class FourierBasicBlock3D(nn.Module):
@@ -199,3 +201,139 @@ class MaxwellResNet3D(nn.Module):
         if self.diffmode:
             x = x + prev[:, -1:, ...].detach()
         return x.reshape(orig_shape[0], -1, 6, *orig_shape[3:])
+    
+
+class CliffordMaxwellResNet3D(nn.Module):
+    """3D building block for Clifford architectures with ResNet backbone network.
+    The backbone networks follows these three steps:
+        1. Clifford vector+bivector encoding.
+        2. Basic blocks as provided.
+        3. Clifford vector+bivector decoding.
+
+    Args:
+        g (Union[tuple, list, torch.Tensor]): Signature of Clifford algebra.
+        block (nn.Module): Choice of basic blocks.
+        num_blocks (list): List of basic blocks in each residual block.
+        in_channels (int): Number of input channels.
+        out_channels (int): Number of output channels.
+        activation (Callable, optional): Activation function. Defaults to F.gelu.
+        norm (bool, optional): Wether to use Clifford (group) normalization. Defaults to False.
+        num_groups (int, optional): Number of groups when using Clifford (group) normalization. Defaults to 1.
+    """
+
+    # For periodic boundary conditions, set padding = 0.
+    padding = 2
+
+    def __init__(
+        self,
+        g: Union[tuple, list, torch.Tensor],
+        block: nn.Module,
+        num_blocks: list,
+        time_history: int,
+        time_future: int,
+        hidden_channels: int,
+        activation: str = "gelu",
+        norm: bool = False,
+        num_groups: int = 1,
+        diffmode: bool = False,
+    ):
+        super().__init__()
+
+        # Encoding and decoding layers.
+        self.encoder = CliffordConv3dMaxwellEncoder(
+            g,
+            in_channels=time_history,
+            out_channels=hidden_channels,
+            kernel_size=1,
+            padding=0,
+        )
+        self.decoder = CliffordConv3dMaxwellDecoder(
+            g,
+            in_channels=hidden_channels,
+            out_channels=time_future,
+            kernel_size=1,
+            padding=0,
+               )
+
+        self.activation: nn.Module = ACTIVATION_REGISTRY.get(activation, None)
+        if self.activation is None:
+            raise NotImplementedError(f"Activation {activation} not implemented") 
+
+        # Residual blocks.
+        self.layers = nn.ModuleList(
+            [
+                self._make_basic_block(
+                    g,
+                    block,
+                    hidden_channels,
+                    num_blocks[i],
+                    activation=self.activation,
+                    norm=norm,
+                    num_groups=num_groups,
+                )
+                for i in range(len(num_blocks))
+            ]
+        )
+
+    def _make_basic_block(
+        self,
+        g,
+        block: nn.Module,
+        hidden_channels: int,
+        num_blocks: int,
+        activation: Callable,
+        norm: bool,
+        num_groups: int,
+    ) -> nn.Sequential:
+        blocks = []
+        for _ in range(num_blocks):
+            blocks.append(
+                block(
+                    g,
+                    hidden_channels,
+                    hidden_channels,
+                    activation=activation,
+                    norm=norm,
+                    num_groups=num_groups,
+                )
+            )
+        return nn.Sequential(*blocks)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        assert x.dim() == 6
+        
+        # Get data into shape where I dimension is last.
+        B_dim, C_dim, I_dim, *D_dims = range(len(x.shape))
+        x = x.permute(B_dim, C_dim, *D_dims, I_dim)
+
+        # Encoding layer.
+        x = self.encoder(self.activation(x))
+
+        # Embed for non-periodic boundaries.
+        if self.padding > 0:
+            B_dim, C_dim, *D_dims, I_dim = range(len(x.shape))
+            x = x.permute(B_dim, I_dim, C_dim, *D_dims)
+            x = F.pad(x, [0, self.padding, 0, self.padding, 0, self.padding])
+            B_dim, I_dim, C_dim, *D_dims = range(len(x.shape))
+            x = x.permute(B_dim, C_dim, *D_dims, I_dim)
+
+        # Apply residual layers.
+        for layer in self.layers:
+            x = layer(x)
+
+        # Decoding layer.
+        if self.padding > 0:
+            B_dim, C_dim, *D_dims, I_dim = range(len(x.shape))
+            x = x.permute(B_dim, I_dim, C_dim, *D_dims)
+            x = x[..., : -self.padding, : -self.padding, : -self.padding]
+            B_dim, I_dim, C_dim, *D_dims = range(len(x.shape))
+            x = x.permute(B_dim, C_dim, *D_dims, I_dim)
+
+        # Output layer.
+        x = self.decoder(x)
+
+        # Get data back to normal shape.
+        B_dim, C_dim, *D_dims, I_dim = range(len(x.shape))
+        x = x.permute(B_dim, C_dim, I_dim, *D_dims)
+
+        return x
