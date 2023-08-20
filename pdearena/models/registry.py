@@ -10,6 +10,9 @@ from pdearena.modules.twod_resnet import (
 from pdearena.modules.threed import (
     FourierBasicBlock3D,
 )
+from cliffordlayers.models.models_3d import (
+    CliffordFourierBasicBlock3d,
+)
 
 MODEL_REGISTRY = {
     "FNO-128-8m": {
@@ -345,6 +348,25 @@ MODEL_REGISTRY = {
             "num_blocks": [1, 1, 1, 1],
         },
     },
+    "MaxwellFNO3D-96-8": {
+        "class_path": "pdearena.modules.threed.MaxwellResNet3D",
+        "init_args": {
+            "hidden_channels": 96,
+            "num_blocks": [1, 1],
+            "block": utils.partialclass("FourierBasicBlock3D", FourierBasicBlock3D, modes1=8, modes2=8, modes3=8),
+            "diffmode": False,
+        },
+    }, 
+    "MaxwellCFNO3D-32-8": {
+        "class_path": "pdearena.modules.threed.CliffordMaxwellResNet3D",
+        "init_args": {
+            "g": [1, 1, 1],
+            "hidden_channels": 32,
+            "num_blocks": [1, 1],
+            "block": utils.partialclass("CliffordFourierBasicBlock3d", CliffordFourierBasicBlock3d, modes1=8, modes2=8, modes3=8),
+            "diffmode": False,
+        },
+    },
 }
 
 COND_MODEL_REGISTRY = {
@@ -437,13 +459,4 @@ COND_MODEL_REGISTRY = {
             "use_scale_shift_norm": True,
         },
     },
-    "MaxwellFNO3D-96-8": {
-        "class_path": "pdearena.modules.threed.MaxwellResNet3D",
-        "init_args": {
-            "hidden_channels": 96,
-            "num_blocks": [1, 1],
-            "block": utils.partialclass("FourierBasicBlock3D", FourierBasicBlock3D, modes1=8, modes2=8, modes3=8),
-            "diffmode": False,
-        },
-    }, 
 }
