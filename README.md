@@ -48,6 +48,9 @@ CGAN layers, CGAN-UNet architectures:
 
 Do remember to cite the original papers as well for individual architectures.
 
+You can further checkout our dedicated repo [**CliffordLayers**](https://microsoft.github.io/cliffordlayers/).
+
+
 ## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
