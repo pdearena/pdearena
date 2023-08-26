@@ -7,7 +7,7 @@
 [![Paper](https://img.shields.io/badge/arXiv-2209.15616-blue)](https://arxiv.org/abs/2209.15616)
 
 This repository contains code accompanying the paper [**Towards multi-spatiotemporal-scale generalized PDE modeling**](https://arxiv.org/abs/2209.15616), and as such we hope this serves as a starting point for future PDE surrogate learning research.
-We will soon have models from [**Clifford neural layers for PDE modeling**](https://arxiv.org/abs/2209.04934) as well.
+We have imported models from [**Clifford neural layers for PDE modeling**](https://arxiv.org/abs/2209.04934) and [**Geometric Clifford Algebra Networks**](https://arxiv.org/abs/2302.06594).
 
 For details about usage please see [documentation](https://microsoft.github.io/pdearena).
 If you have any questions or suggestions please open a [discussion](https://github.com/microsoft/pdearena/discussions). If you notice a bug, please open an [issue](https://github.com/microsoft/pdearena/issues).
@@ -16,6 +16,7 @@ If you have any questions or suggestions please open a [discussion](https://gith
 
 If you find this repository useful in your research, please consider citing the following papers:
 
+Initial PDE arena, architecture zoo, Navier-Stokes and Shallow Water datasets:
 ```bibtex
 @article{gupta2022towards,
   title={Towards Multi-spatiotemporal-scale Generalized PDE Modeling},
@@ -24,6 +25,27 @@ If you find this repository useful in your research, please consider citing the 
   year={2022}
 }
 ```
+
+3D Clifford FNO layers, Maxwell data:
+```bibtex
+@article{brandstetter2022clifford,
+  title={Clifford neural layers for PDE modeling},
+  author={Brandstetter, Johannes and Berg, Rianne van den and Welling, Max and Gupta, Jayesh K},
+  journal={arXiv preprint arXiv:2209.04934},
+  year={2022}
+}
+```
+
+CGAN layers, CGAN-UNet architectures:
+```bibtex
+@article{ruhe2023geometric,
+  title={Geometric clifford algebra networks},
+  author={Ruhe, David and Gupta, Jayesh K and De Keninck, Steven and Welling, Max and Brandstetter, Johannes},
+  journal={arXiv preprint arXiv:2302.06594},
+  year={2023}
+}
+```
+
 Do remember to cite the original papers as well for individual architectures.
 
 ## Contributing
