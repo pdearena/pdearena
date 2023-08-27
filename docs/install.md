@@ -18,6 +18,10 @@ git clone https://github.com/microsoft/pdearena
     pip install -e .
     ```
 
+    ```bash title="additionally installing Clifford Neural Layers"
+    pip install "cliffordlayers @ git+https://github.com/microsoft/cliffordlayers"
+    ```
+
     If you also want to do data generation:
 
     ```bash

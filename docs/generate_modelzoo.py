@@ -47,6 +47,8 @@ MODELNAMELUT = {
     "U-FNet1attn": r"U-F1Net~att,modes16~",
     "U-FNet2attn-16m": r"U-F2Net~att,modes16,8~",
     "U-FNet2attn-16m-1x1": r"U-F2Net~att,modes16,8~-1x1",
+    "MaxwellFNO3D": r"FNO3D-96-8~modes8~",
+    "MaxwellCFNO3D": r"CFNO3D-32-8~modes8~",
 }
 
 header = """

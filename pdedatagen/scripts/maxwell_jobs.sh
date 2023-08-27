@@ -17,3 +17,6 @@ do
     python scripts/generate_data.py base=pdedatagen/configs/maxwell3d.yaml \
     experiment=maxwell mode=test samples=25 seed=$SEED dirname=pdearena_data/maxwell3d/
 done
+
+python scripts/compute_normalization.py \
+    --dataset maxwell pdearena_data/maxwell3d

@@ -45,6 +45,9 @@ The tables below provide results and useful statistics about training and infere
 | U-Net~mod~64-1x1 | `Unetmod-64-1x1` | 144 M | 577.0 | 3917.95 | 0.080 | 0.057 | 0.185 |
 | U-Net~att~64 | `Unetmodattn-64` | 148 M | 593.9 | 3991.47 | 0.082 | 0.060 | 0.193 |
 | U-Net~att~64-1x1 | `Unetmodattn-64-1x1` | 148 M | 593.8 | 3994.42 | 0.082 | 0.059 | 0.191 |
+| MaxwellFNO3D~96-1x1| `MaxwellFNO3D` | 55 M | | | | | |
+| MaxwellCFNO3D~32-1x1| `MaxwellCFNO3D` | 55 M | | | | | |
+
 
 - **Date Created**: 2023-03-27 01:42:54.528237
 - **GPU**: Tesla V100-PCIE-16GB
