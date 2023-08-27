@@ -8,6 +8,30 @@ If you have used PDEArena in your research, and would like it listed here, pleas
 
 
 <figure markdown>
+![](assets/images/research/CGANs-thumbnail.png){ width="500"}
+<figcaption>
+<!-- Large font: -->
+<h2>
+<a href="https://arxiv.org/abs/2302.06594">Geometric Clifford Algebra Networks</a>
+</h2>
+</figcaption>
+</figure>
+<center>
+David Ruhe <sup>1</sup>, Jayesh K. Gupta <sup>2</sup>, Steven de Keninck <sup>3</sup>, Max Welling <sup>1</sup>, Johannes Brandstetter <sup>1</sup>
+
+<small><sup>1</sup>Microsoft Research AI4Science, <sup>2</sup>Microsoft Autonomous Systems and Robotics Research, <sup>3</sup>University of Amsterdam</small>
+</center>
+**Abstract:** We propose Geometric Clifford Algebra Networks (GCANs) for modeling dynamical systems. GCANs are based on symmetry group transformations using geometric (Clifford) algebras. We first review the quintessence of modern (plane-based) geometric algebra, which builds on isometries encoded as elements of the *Pin*(p,q,r) group. We then propose the concept of group action layers, which linearly combine object transformations using pre-specified group actions. Together with a new activation and normalization scheme, these layers serve as adjustable geometric templates that can be refined via gradient descent. Theoretical advantages are strongly reflected in the modeling of three-dimensional rigid body transformations as well as large-scale fluid dynamics simulations, showing significantly improved performance over traditional methods.
+
+
+
+    
+
+---
+
+
+
+<figure markdown>
 ![](assets/images/research/unet-results.png){ width="500"}
 <figcaption>
 <!-- Large font: -->
@@ -25,7 +49,7 @@ Jayesh K. Gupta* <sup>1</sup>, Johannes Brandstetter* <sup>2</sup>
 
 
 
-
+    
 
 ---
 
@@ -48,18 +72,5 @@ Johannes Brandstetter <sup>1</sup>, Rianne van den Berg <sup>1</sup>, Max Wellin
 **Abstract:** Partial differential equations (PDEs) see widespread use in sciences and engineering to describe simulation of physical processes as scalar and vector fields interacting and coevolving over time. Due to the computationally expensive nature of their standard solution methods, neural PDE surrogates have become an active research topic to accelerate these simulations. However, current methods do not explicitly take into account the relationship between different fields and their internal components, which are often correlated. Viewing the time evolution of such correlated fields through the lens of multivector fields allows us to overcome these limitations. Multivector fields consist of scalar, vector, as well as higher-order components, such as bivectors and trivectors. Their algebraic properties, such as multiplication, addition and other arithmetic operations can be described by Clifford algebras. To our knowledge, this paper presents the first usage of such multivector representations together with Clifford convolutions and Clifford Fourier transforms in the context of deep learning. The resulting Clifford neural layers are universally applicable and will find direct use in the areas of fluid dynamics, weather forecasting, and the modeling of physical systems in general. We empirically evaluate the benefit of Clifford neural layers by replacing convolution and Fourier operations in common neural PDE surrogates by their Clifford counterparts on two-dimensional Navier-Stokes and weather modeling tasks, as well as three-dimensional Maxwell equations. Clifford neural layers consistently improve generalization capabilities of the tested neural PDE surrogates.
 
 
-<figure markdown>
-![](assets/images/research/CGANs-thumbnail.png){ width="500"}
-<figcaption>
-<!-- Large font: -->
-<h2>
-<a href="https://arxiv.org/abs/2302.06594">Geometric Clifford Algebra Networks</a>
-</h2>
-</figcaption>
-</figure>
-<center>
-David Ruhe <sup>1</sup>, Jayesh K. Gupta <sup>2</sup>, Steven de Keninck <sup>3</sup>, Max Welling <sup>1</sup>, Johannes Brandstetter <sup>1</sup>
 
-<small><sup>1</sup>Microsoft Research AI4Scienc, <sup>2</sup>Microsoft Autonomous Systems and Robotics Research, <sup>3</sup>University of Amsterdam</small>
-</center>
-**Abstract:** We propose Geometric Clifford Algebra Networks (GCANs) for modeling dynamical systems. GCANs are based on symmetry group transformations using geometric (Clifford) algebras. We first review the quintessence of modern (plane-based) geometric algebra, which builds on isometries encoded as elements of the *Pin*(p,q,r) group. We then propose the concept of group action layers, which linearly combine object transformations using pre-specified group actions. Together with a new activation and normalization scheme, these layers serve as adjustable geometric templates that can be refined via gradient descent. Theoretical advantages are strongly reflected in the modeling of three-dimensional rigid body transformations as well as large-scale fluid dynamics simulations, showing significantly improved performance over traditional methods.
+    

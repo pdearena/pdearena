@@ -1,8 +1,8 @@
 papers:
   - title: Towards Multi-spatiotemporal-scale Generalized PDE Modeling
     authors:
-      - Jayesh K. Gupta (1)
-      - Johannes Brandstetter (2)
+      - Jayesh K. Gupta* (1)
+      - Johannes Brandstetter* (2)
 
     affiliations:
       1: Microsoft Autonomous Systems and Robotics Research
