@@ -83,11 +83,13 @@ trainer:
   move_metrics_to_cpu: false
   multiple_trainloader_mode: max_size_cycle
 model:
-  name: "Unetmod-64"
-  max_num_steps: 5
-  activation: "gelu"
-  criterion: mse
-  lr: 1e-3
+  class_path: pdearena.models.pdemodel.PDEModel
+  init_args:
+    name: "Unetmod-64"
+    max_num_steps: 5
+    activation: "gelu"
+    criterion: mse
+    lr: 1e-3
 
 
 data:

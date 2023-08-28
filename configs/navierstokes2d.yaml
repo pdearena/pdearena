@@ -92,23 +92,25 @@ model:
 
 
 data:
-  task: NavierStokes2D
-  data_dir: null
-  time_history: 4
-  time_future: 1
-  time_gap: 0
-  pde:
-      n_scalar_components: 1
-      n_vector_components: 1
-      trajlen: 14
-      n_spatial_dim: 2
+  class_path: pdearena.models.pdemodel.PDEModel
+  init_args:
+    task: NavierStokes2D
+    data_dir: null
+    time_history: 4
+    time_future: 1
+    time_gap: 0
+    pde:
+        n_scalar_components: 1
+        n_vector_components: 1
+        trajlen: 14
+        n_spatial_dim: 2
 
-  batch_size: 8
-  pin_memory: True
-  num_workers: 1
-  train_limit_trajectories: -1
-  valid_limit_trajectories: -1
-  test_limit_trajectories: -1
+    batch_size: 8
+    pin_memory: True
+    num_workers: 1
+    train_limit_trajectories: -1
+    valid_limit_trajectories: -1
+    test_limit_trajectories: -1
 
 
 optimizer:
