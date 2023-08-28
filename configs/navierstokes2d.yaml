@@ -84,33 +84,34 @@ trainer:
   move_metrics_to_cpu: false
   multiple_trainloader_mode: max_size_cycle
 model:
-  name: "FourierResNet"
-  max_num_steps: 5
-  activation: "gelu"
-  criterion: mse
-  lr: 1e-3
+  class_path: pdearena.models.pdemodel.PDEModel
+  init_args:
+    name: "FourierResNet"
+    max_num_steps: 5
+    activation: "gelu"
+    criterion: mse
+    lr: 1e-3
 
 
 data:
-  class_path: pdearena.models.pdemodel.PDEModel
-  init_args:
-    task: NavierStokes2D
-    data_dir: null
-    time_history: 4
-    time_future: 1
-    time_gap: 0
-    pde:
-        n_scalar_components: 1
-        n_vector_components: 1
-        trajlen: 14
-        n_spatial_dim: 2
 
-    batch_size: 8
-    pin_memory: True
-    num_workers: 1
-    train_limit_trajectories: -1
-    valid_limit_trajectories: -1
-    test_limit_trajectories: -1
+  task: NavierStokes2D
+  data_dir: null
+  time_history: 4
+  time_future: 1
+  time_gap: 0
+  pde:
+      n_scalar_components: 1
+      n_vector_components: 1
+      trajlen: 14
+      n_spatial_dim: 2
+
+  batch_size: 8
+  pin_memory: True
+  num_workers: 1
+  train_limit_trajectories: -1
+  valid_limit_trajectories: -1
+  test_limit_trajectories: -1
 
 
 optimizer:
