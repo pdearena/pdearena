@@ -14,3 +14,9 @@
 ::: pdearena.data.twod.datapipes.shallowwater2d
     options:
         show_root_heading: true
+
+ ---
+
+::: pdearena.data.threed.datapipes
+    options:
+        show_root_heading: true       

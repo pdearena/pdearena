@@ -20,8 +20,8 @@ do
     dirname=pdearena_data/shallowwater;
 done
 
-python scripts/compute_normalization.py --dataset shallowwater pdearena_data/shallowwater
-
 for mode in train valid test; do
     python scripts/convertnc2zarr.py "pdearena_data/shallowwater/$mode";
 done
+
+python scripts/compute_normalization.py --dataset shallowwater pdearena_data/shallowwater

@@ -2,7 +2,7 @@
 
 If you would like your architecture added, please submit a [pull request](https://github.com/microsoft/pdearena/pulls).
 
-## Standard
+## Standard - 2D
 
 | Architecture   | Module                                                                                                                              | Description                                                                                        | Based on                                                                                                                                                                                                                                        |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -15,7 +15,7 @@ If you would like your architecture added, please submit a [pull request](https:
 | U-F[*]Net        | `FourierUnet` | Modern U-Nets with [*]  Fourier blocks in the downsampling path                                 | [:simple-arxiv:](https://arxiv.org/abs/2209.15616)                                                                                                                                                                                              |
 | UNO            | `UNO`                                                                                                                                   | Original U-shaped Neural Operator Implementation                                                   | [:simple-github:](https://github.com/ashiq24/UNO) [:simple-arxiv:](https://arxiv.org/abs/2204.11127)                                                                                                                                            |
 
-## Conditioned
+## Conditioned - 2D 
 
 !!! note
     Currently only scalar parameter conditioning is available.
@@ -25,6 +25,13 @@ If you would like your architecture added, please submit a [pull request](https:
 | FNO          | `ResNet` with `FourierBasicBlock` | `Addition` based conditioning in both spatial and spectral domain.            |
 | U-Net-modern | `Unet`          | `Addition` and `AdaGN` style conditioning in the spatial domain.            |
 | UF-Net       | `FourierUnet`   | `Addition` and `AdaGN` style conditioning in the spatial domain, `Addition` in the spectral domain.            |
+
+## Maxwell - 3D 
+
+| Architecture | Model Name      | Description | Based on |
+| ------------ | --------------- | ----------- | -------- |
+| MaxwellFNO3D         | `MaxwellResNet3D` with `FourierBasicBlock3D` | 3D Fourier Neural Operator implementation with support for deeper architectures (currently 4 layers)      | [:simple-github:](https://github.com/zongyi-li/fourier_neural_operator) [:simple-arxiv:](https://arxiv.org/abs/2010.08895) 
+| MaxwellCFNO3D         | `CliffordMaxwellResNet3D` with `CliffordFourierBasicBlock3D` | 3D Clifford Fourier Neural Operator implementation with support for deeper architectures (currently 4 layers)      | [:simple-github:](https://microsoft.github.io/cliffordlayers/) [:simple-arxiv:](https://arxiv.org/abs/2209.04934) 
 
 ## Model Architecture Registry Philosophy
 

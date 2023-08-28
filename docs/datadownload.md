@@ -1,15 +1,8 @@
-# Downloading data from Azure
+# Downloading data from Huggingface
 
-First make sure you have [`azcopy`](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10) installed.
+The data of PDEArena is currently hosted on Huggingface: [https://huggingface.co/pdearena](https://huggingface.co/pdearena).
 
-On Linux you can do:
-
-```bash
-wget https://aka.ms/downloadazcopy-v10-linux
-tar -xvf downloadazcopy-v10-linux
-# move to somewhere on your PATH
-mv ./azcopy_linux_amd64_*/azcopy $HOME/.local/bin
-```
+Downloading the data is simple:
 
 ## Navier Stokes - 2D
 
@@ -17,34 +10,103 @@ Generated using [Φ~Flow~](https://github.com/tum-pbs/PhiFlow/).
 
 ### Standard dataset
 
+SSH:
 ```bash
-azcopy copy "https://pdearenarelease.blob.core.windows.net/datasets/NavierStokes2D_smoke" \
-            "/mnt/data/" --recursive
+# Make sure you have git-lfs installed (https://git-lfs.com)
+git lfs install
+git clone git@hf.co:datasets/pdearena/NavierStokes-2D
+
+# if you want to clone without large files – just their pointers
+# prepend your git clone with the following env var:
+GIT_LFS_SKIP_SMUDGE=1
+```
+
+HTTPS:
+```bash
+# Make sure you have git-lfs installed (https://git-lfs.com)
+git lfs install
+git clone https://huggingface.co/datasets/pdearena/NavierStokes-2D
+
+# if you want to clone without large files – just their pointers
+# prepend your git clone with the following env var:
+GIT_LFS_SKIP_SMUDGE=1
 ```
 
 ### Conditioning dataset
 
+SSH:
 ```bash
-azcopy copy "https://pdearenarelease.blob.core.windows.net/datasets/NavierStokes2D_cond_smoke_v1" \
-            "/mnt/data/" --recursive
+# Make sure you have git-lfs installed (https://git-lfs.com)
+git lfs install
+git clone git@hf.co:datasets/pdearena/NavierStokes-2D-conditoned
+
+# if you want to clone without large files – just their pointers
+# prepend your git clone with the following env var:
+GIT_LFS_SKIP_SMUDGE=1
 ```
+
+HTTPS:
+```bash
+# Make sure you have git-lfs installed (https://git-lfs.com)
+git lfs install
+git clone https://huggingface.co/datasets/pdearena/NavierStokes-2D-conditoned
+
+# if you want to clone without large files – just their pointers
+# prepend your git clone with the following env var:
+GIT_LFS_SKIP_SMUDGE=1
+```
+
 
 ## Shallow water - 2D
 
 Generated using [SpeedyWeather.jl](https://github.com/milankl/SpeedyWeather.jl).
 
+SSH:
 ```bash
-azcopy copy "https://pdearenarelease.blob.core.windows.net/datasets/ShallowWater2D" \
-            "/mnt/data/" --recursive
+# Make sure you have git-lfs installed (https://git-lfs.com)
+git lfs install
+git clone git@hf.co:datasets/pdearena/ShallowWater-2D
+
+# if you want to clone without large files – just their pointers
+# prepend your git clone with the following env var:
+GIT_LFS_SKIP_SMUDGE=1
+```
+
+HTTPS:
+```bash
+# Make sure you have git-lfs installed (https://git-lfs.com)
+git lfs install
+git clone https://huggingface.co/datasets/pdearena/ShallowWater-2D
+
+# if you want to clone without large files – just their pointers
+# prepend your git clone with the following env var:
+GIT_LFS_SKIP_SMUDGE=1
 ```
 
 ## Maxwell - 3D
 
 Generated using [Python 3D FDTD Simulator](https://github.com/flaport/fdtd).
 
+SSH:
 ```bash
-azcopy copy "https://pdearenarelease.blob.core.windows.net/datasets/Maxwell3D" \
-            "/mnt/data/" --recursive
+# Make sure you have git-lfs installed (https://git-lfs.com)
+git lfs install
+git clone git@hf.co:datasets/pdearena/Maxwell-3D
+
+# if you want to clone without large files – just their pointers
+# prepend your git clone with the following env var:
+GIT_LFS_SKIP_SMUDGE=1
+```
+
+HTTPS:
+```bash
+# Make sure you have git-lfs installed (https://git-lfs.com)
+git lfs install
+git clone https://huggingface.co/datasets/pdearena/Maxwell-3D
+
+# if you want to clone without large files – just their pointers
+# prepend your git clone with the following env var:
+GIT_LFS_SKIP_SMUDGE=1
 ```
 
 # PDEBench

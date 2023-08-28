@@ -13,3 +13,5 @@
 ::: pdearena.modules.twod_unetbase
 
 ::: pdearena.modules.twod_unet
+
+::: pdearena.modules.threed

@@ -1,5 +1,5 @@
 #!/bin/bash
-# This script produces 5.2k training, 1.3k valid, and 1.3k test trajectories of the Maxwell dataset.
+# This script produces 5.2k training, 1.3k valid, and 1.3k test trajectories of the Navier-Stokes dataset.
 seeds=(197910 452145 540788 61649 337293 296323 471551 238734 \
 795028 806339 144207 415274 950547 391920 891493 645944 \
 431652 391355 600690 495919 874847 97373 403121 588319 \
