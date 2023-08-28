@@ -214,10 +214,11 @@ class CliffordMaxwellResNet3D(nn.Module):
         g (Union[tuple, list, torch.Tensor]): Signature of Clifford algebra.
         block (nn.Module): Choice of basic blocks.
         num_blocks (list): List of basic blocks in each residual block.
-        in_channels (int): Number of input channels.
-        out_channels (int): Number of output channels.
+        time_history (int): Number of input timesteps.
+        time_future (int): Number of output timesteps.
+        hidden_channels (int): Number of hidden channels.
         activation (Callable, optional): Activation function. Defaults to F.gelu.
-        norm (bool, optional): Wether to use Clifford (group) normalization. Defaults to False.
+        norm (bool, optional): Whether to use Clifford (group) normalization. Defaults to False.
         num_groups (int, optional): Number of groups when using Clifford (group) normalization. Defaults to 1.
     """
 
