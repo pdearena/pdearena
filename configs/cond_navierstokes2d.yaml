@@ -92,7 +92,7 @@ data:
       n_scalar_components: 1
       n_vector_components: 1
       trajlen: 56
-      n_spatial_dims: 2
+      n_spatial_dim: 2
 
     # class_path: pdearena.pde.NavierStokes2D
     # init_args:

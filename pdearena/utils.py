@@ -81,11 +81,11 @@ def partialclass(name, cls, *args, **kwds):
 
 class PDECLI(LightningCLI):
     def add_arguments_to_parser(self, parser) -> None:
-        parser.link_arguments("data.time_gap", "model.time_gap")
-        parser.link_arguments("data.time_history", "model.time_history")
-        parser.link_arguments("data.time_future", "model.time_future")
-        parser.link_arguments("data.pde.n_scalar_components", "model.pdeconfig.n_scalar_components")
-        parser.link_arguments("data.pde.n_vector_components", "model.pdeconfig.n_vector_components")
-        parser.link_arguments("data.pde.trajlen", "model.pdeconfig.trajlen")
-        parser.link_arguments("data.pde.n_spatial_dims", "model.pdeconfig.n_spatial_dims")
+        parser.link_arguments("data.time_gap", "model.init_args.time_gap")
+        parser.link_arguments("data.time_history", "model.init_args.time_history")
+        parser.link_arguments("data.time_future", "model.init_args.time_future")
+        parser.link_arguments("data.pde.n_scalar_components", "model.init_args.pdeconfig.n_scalar_components")
+        parser.link_arguments("data.pde.n_vector_components", "model.init_args.pdeconfig.n_vector_components")
+        parser.link_arguments("data.pde.trajlen", "model.init_args.pdeconfig.trajlen")
+        parser.link_arguments("data.pde.n_spatial_dim", "model.init_args.pdeconfig.n_spatial_dim")
         # parser.link_arguments("data.usegrid", "model.usegrid")

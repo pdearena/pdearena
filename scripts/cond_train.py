@@ -23,7 +23,7 @@ class CondCLI(LightningCLI):
         parser.link_arguments("data.pde.n_scalar_components", "model.pdeconfig.n_scalar_components")
         parser.link_arguments("data.pde.n_vector_components", "model.pdeconfig.n_vector_components")
         parser.link_arguments("data.pde.trajlen", "model.pdeconfig.trajlen")
-        parser.link_arguments("data.pde.n_spatial_dims", "model.pdeconfig.n_spatial_dims")
+        parser.link_arguments("data.pde.n_spatial_dim", "model.pdeconfig.n_spatial_dim")
 
 
 def main():

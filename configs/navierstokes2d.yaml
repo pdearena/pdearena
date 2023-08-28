@@ -101,7 +101,7 @@ data:
       n_scalar_components: 1
       n_vector_components: 1
       trajlen: 14
-      n_spatial_dims: 2
+      n_spatial_dim: 2
 
   batch_size: 8
   pin_memory: True
