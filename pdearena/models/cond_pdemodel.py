@@ -56,9 +56,9 @@ class CondPDEModel(LightningModule):
         super().__init__()
         self.save_hyperparameters(ignore="pdeconfig")
         self.pde = pdeconfig  # instantiate_class(args=tuple(), init=pdeconfig)
-        if (self.pde.n_spatial_dims) == 3:
+        if (self.pde.n_spatial_dim) == 3:
             self._mode = "3D"
-        elif (self.pde.n_spatial_dims) == 2:
+        elif (self.pde.n_spatial_dim) == 2:
             self._mode = "2D"
         else:
             raise NotImplementedError(f"{self.pde}")

@@ -19,10 +19,11 @@ def setupdir(path):
 def main():
     cli = utils.PDECLI(
         PDEModel,
-        PDEDataModule,
+        datamodule_class=PDEDataModule,
         seed_everything_default=42,
         save_config_overwrite=True,
         run=False,
+        subclass_mode_model=True,
         parser_kwargs={"parser_mode": "omegaconf"},
     )
     if cli.trainer.default_root_dir is None:
