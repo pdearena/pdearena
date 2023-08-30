@@ -32,7 +32,7 @@ class FourierBasicBlock3D(nn.Module):
             modes2 (int): Fourier modes for y direction.
             modes3 (int): Fourier modes for z direction. 
             stride (int, optional): stride of 2d convolution. Defaults to 1.
-            norm (bool): Wether to use normalization. Defaults to Fals.
+            norm (bool): Wether to use normalization. Defaults to False.
         """
         super().__init__()
 
