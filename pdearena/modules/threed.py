@@ -4,7 +4,6 @@ from torch.nn import functional as F
 from typing import Callable, Union
 from .activations import ACTIVATION_REGISTRY
 from .fourier import SpectralConv3d
-from cliffordlayers.nn.modules.groupnorm import CliffordGroupNorm3d
 from cliffordlayers.models.custom_layers import CliffordConv3dMaxwellEncoder, CliffordConv3dMaxwellDecoder
 
 
@@ -22,13 +21,18 @@ class FourierBasicBlock3D(nn.Module):
             modes2: int,
             modes3: int, 
             stride: int = 1, 
-            activation: str = "gelu"
+            activation: str = "gelu",
+            norm: bool = False,
             ):
         """Initialize basic 3d FNO ResNet building block
         Args:
-            in_planes (int): input channels
-            planes (int): output channels
+            in_planes (int): Input channels
+            planes (int): Output channels
+            modes1 (int): Fourier modes for x direction.
+            modes2 (int): Fourier modes for y direction.
+            modes3 (int): Fourier modes for z direction. 
             stride (int, optional): stride of 2d convolution. Defaults to 1.
+            norm (bool): Wether to use normalization. Defaults to Fals.
         """
         super().__init__()
 
@@ -54,6 +58,9 @@ class FourierBasicBlock3D(nn.Module):
             self.activation = F.relu
         else:
             raise NotImplementedError(f"Activation {activation} not implemented")
+
+        if norm == True:
+            raise NotImplementedError(f"Normalization for FourierBasicBlock3D not implemented")
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward pass of basic 3d Fourier ResNet building block.
