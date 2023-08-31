@@ -59,7 +59,7 @@ class FourierBasicBlock3D(nn.Module):
         else:
             raise NotImplementedError(f"Activation {activation} not implemented")
 
-        if norm == True:
+        if norm:
             raise NotImplementedError(f"Normalization for FourierBasicBlock3D not implemented")
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
