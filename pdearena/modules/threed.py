@@ -4,7 +4,7 @@ from torch.nn import functional as F
 from typing import Callable, Union
 from .activations import ACTIVATION_REGISTRY
 from .fourier import SpectralConv3d
-from cliffordlayers.models.custom_layers import CliffordConv3dMaxwellEncoder, CliffordConv3dMaxwellDecoder
+from cliffordlayers.models.basic.custom_layers import CliffordConv3dMaxwellEncoder, CliffordConv3dMaxwellDecoder
 
 
 class FourierBasicBlock3D(nn.Module):
