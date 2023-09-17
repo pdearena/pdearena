@@ -64,7 +64,7 @@ def main(cfg):
     elif cfg.experiment == "smoke_cond":
         bfys = np.random.uniform(0.2, 0.5, size=cfg.samples // 32)
         for bf in bfys:
-            cfg.pdeconfig.buoyancy_y = bf.item()
+            cfg.pdeconfig.init_args.buoyancy_y = bf.item()
             pde = instantiate_class(tuple(), cfg.pdeconfig)
             generate_trajectories_smoke(
                 pde=pde,
@@ -79,7 +79,7 @@ def main(cfg):
     elif cfg.experiment == "smoke_cond_eval":
         bfys = np.linspace(0.1, 0.6, num=18)
         for bf in bfys:
-            cfg.pdeconfig.buoyancy_y = bf.item()
+            cfg.pdeconfig.init_args.buoyancy_y = bf.item()
             pde = instantiate_class(tuple(), cfg.pdeconfig)
             generate_trajectories_smoke(
                 pde=pde,
