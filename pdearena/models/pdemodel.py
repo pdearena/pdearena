@@ -27,6 +27,13 @@ def get_model(args, pde):
                     activation=args.activation,
                 )
             )
+        elif "GCA" in args.name:
+            _model["init_args"].update(
+                dict(
+                    in_channels=args.time_history,
+                    out_channels=args.time_future,
+                )
+            )
         else:
             _model["init_args"].update(
                 dict(

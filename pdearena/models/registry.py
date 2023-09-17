@@ -10,8 +10,11 @@ from pdearena.modules.twod_resnet import (
 from pdearena.modules.threed import (
     FourierBasicBlock3D,
 )
-from cliffordlayers.models.models_3d import (
+from cliffordlayers.models.basic.threed import (
     CliffordFourierBasicBlock3d,
+)
+from cliffordlayers.models.gca.twod import (
+    CliffordG3UNet2d,
 )
 
 MODEL_REGISTRY = {
@@ -365,6 +368,15 @@ MODEL_REGISTRY = {
             "num_blocks": [1, 1],
             "block": utils.partialclass("CliffordFourierBasicBlock3d", CliffordFourierBasicBlock3d, modes1=8, modes2=8, modes3=8),
             "diffmode": False,
+        },
+    },
+    "GCAFluidNet2d-32": {
+        "class_path": "pdearena.modules.twod_gcaunet.GCAFluidNet2d",
+        "init_args": {
+            "in_channels": 1,
+            "out_channels": 1,
+            "hidden_channels": 32,
+            "norm": True,
         },
     },
 }
