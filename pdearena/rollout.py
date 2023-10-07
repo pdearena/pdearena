@@ -54,7 +54,7 @@ def cond_rollout2d(
     model: torch.nn.Module,
     initial_u: torch.Tensor,
     initial_v: torch.Tensor,
-    delta_t: torch.Tensor,
+    delta_t: Optional[torch.Tensor],
     cond: Optional[torch.Tensor],
     grid: Optional[torch.Tensor],
     pde: PDEDataConfig,
@@ -86,7 +86,10 @@ def cond_rollout2d(
         if grid is not None:
             data = torch.cat((data, grid), dim=1)
 
-        pred = model(data, delta_t, cond)
+        if delta_t is not None:
+            pred = model(data, delta_t, cond)
+        else:
+            pred = model(data, cond)
         traj_ls.append(pred)
 
     traj = torch.cat(traj_ls, dim=1)
