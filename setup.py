@@ -34,6 +34,7 @@ base_requires = [
     "pytest",
     "pytest-mock",
     "pytest-explicit",
+    "diffusers",
 ]
 
 setup(
