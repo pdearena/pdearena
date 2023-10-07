@@ -427,6 +427,42 @@ COND_MODEL_REGISTRY = {
             "use_scale_shift_norm": True,
         },
     },
+    "Unetmod-1d-64": {
+        "class_path": "pdearena.modules.conditioned.oned_unet.Unet",
+        "init_args": {
+            "hidden_channels": 64,
+            "norm": True,
+            "n_dims": 1,
+        },
+    },
+    "Unetmodattn-1d-64": {
+        "class_path": "pdearena.modules.conditioned.oned_unet.Unet",
+        "init_args": {
+            "hidden_channels": 64,
+            "norm": True,
+            "mid_attn": True,
+            "n_dims": 1,
+        },
+    },
+    "Unetmod-1d-64-1x1": {
+        "class_path": "pdearena.modules.conditioned.oned_unet.Unet",
+        "init_args": {
+            "hidden_channels": 64,
+            "norm": True,
+            "use1x1": True,
+            "n_dims": 1,
+        },
+    },
+    "Unetmodattn-1d-64-1x1": {
+        "class_path": "pdearena.modules.conditioned.oned_unet.Unet",
+        "init_args": {
+            "hidden_channels": 64,
+            "norm": True,
+            "mid_attn": True,
+            "use1x1": True,
+            "n_dims": 1,
+        },
+    },
     "U-FNet1-16m": {
         "class_path": "pdearena.modules.conditioned.twod_unet.FourierUnet",
         "init_args": {
