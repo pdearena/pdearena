@@ -33,6 +33,7 @@ def get_model(args, pde):
                 time_future=args.time_future,
                 activation=args.activation,
                 param_conditioning=args.param_conditioning,
+                n_dims=pde.n_spatial_dim,
             )
         )
         model = instantiate_class(tuple(), _model)
@@ -55,6 +56,7 @@ class PDERefiner(LightningModule):
         lr: float,
         pdeconfig: PDEDataConfig,
         model: Optional[Dict] = None,
+        param_conditioning: Optional[str] = None,
         padding_mode: str = "zeros",
         predict_difference: bool = False,
         difference_weight: float = 1.0,
@@ -65,13 +67,13 @@ class PDERefiner(LightningModule):
         self.save_hyperparameters(ignore="pdeconfig")
         self.pde = pdeconfig
         # Set padding for convolutions globally.
-        if (self.pde.n_spatial_dims) == 3:
+        if (self.pde.n_spatial_dim) == 3:
             self._mode = "3D"
             nn.Conv3d = partial(nn.Conv3d, padding_mode=self.hparams.padding_mode)
-        elif (self.pde.n_spatial_dims) == 2:
+        elif (self.pde.n_spatial_dim) == 2:
             self._mode = "2D"
             nn.Conv2d = partial(nn.Conv2d, padding_mode=self.hparams.padding_mode)
-        elif (self.pde.n_spatial_dims) == 1:
+        elif (self.pde.n_spatial_dim) == 1:
             self._mode = "1D"
             nn.Conv1d = partial(nn.Conv1d, padding_mode=self.hparams.padding_mode)
         else:
@@ -101,6 +103,7 @@ class PDERefiner(LightningModule):
             reduced_time_resolution - self.hparams.time_future *
             self.hparams.max_num_steps - self.hparams.time_gap
         )
+        self.max_start_time = max(1, self.max_start_time)
 
     def forward(self, x, cond):
         return self.predict_next_solution(x, cond)
@@ -201,9 +204,15 @@ class PDERefiner(LightningModule):
                 init_v = v[:, start:end_time, ...]
             else:
                 init_v = None
+            targ_u = u[:, target_start_time:target_end_time, ...]
+            if self.pde.n_vector_components > 0:
+                targ_v = v[:, target_start_time:target_end_time, ...]
+                targ_traj = torch.cat((targ_u, targ_v), dim=2)
+            else:
+                targ_traj = targ_u
 
             pred_traj = cond_rollout2d(
-                self.model,
+                self,
                 init_u,
                 init_v,
                 None,
@@ -211,19 +220,13 @@ class PDERefiner(LightningModule):
                 grid,
                 self.pde,
                 self.hparams.time_history,
-                self.hparams.max_num_steps,
+                min(targ_u.shape[1], self.hparams.max_num_steps),
             )
-            targ_u = u[:, target_start_time:target_end_time, ...]
-            if self.pde.n_vector_components > 0:
-                targ_v = v[:, target_start_time:target_end_time, ...]
-                targ_traj = torch.cat((targ_u, targ_v), dim=2)
-            else:
-                targ_traj = targ_u
             for k, criterion in self.rollout_criterions.items():
                 loss = criterion(pred_traj, targ_traj)
                 loss = loss.mean(dim=(0,) + tuple(range(2, loss.ndim)))
                 losses[k].append(loss)
-        loss_vecs = {k: sum(v)/len(v) for k, v in losses.items()}
+        loss_vecs = {k: sum(v)/max(1, len(v)) for k, v in losses.items()}
         return loss_vecs
 
     def validation_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0):
@@ -284,7 +287,9 @@ class PDERefiner(LightningModule):
                     [outputs[1][i]["loss_timesteps"] for i in range(len(outputs[1]))])
                 loss_timesteps = loss_timesteps_B.mean(0)
 
-                for i in range(self.hparams.max_num_steps):
+                log_timesteps = range(loss_timesteps.shape[0], max(1, loss_timesteps.shape[0] // 10))
+
+                for i in log_timesteps:
                     self.log(f"valid/intime_{i}_loss", loss_timesteps[i])
 
                 mean, std = utils.bootstrap(unrolled_loss, 64, 1)
@@ -297,8 +302,8 @@ class PDERefiner(LightningModule):
                 )
                 corr_timesteps = corr_timesteps_B.mean(0)
                 for threshold in [0.8, 0.9, 0.95]:
-                    self.log(f"valid/time_till_corr_lower_{threshold}", (corr_timesteps > threshold).sum())
-                for t in range(corr_timesteps.shape[0], max(1, corr_timesteps.shape[0] // 10)):
+                    self.log(f"valid/time_till_corr_lower_{threshold}", (corr_timesteps > threshold).float().sum())
+                for t in log_timesteps:
                     self.log(f"valid/corr_at_{t}", corr_timesteps[t])
 
     def test_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0):
@@ -353,7 +358,8 @@ class PDERefiner(LightningModule):
             loss_timesteps_B = torch.stack(
                 [outputs[1][i]["loss_timesteps"] for i in range(len(outputs[1]))])
             loss_timesteps = loss_timesteps_B.mean(0)
-            for i in range(self.hparams.max_num_steps):
+            log_timesteps = range(loss_timesteps.shape[0], max(1, loss_timesteps.shape[0] // 10))
+            for i in log_timesteps:
                 self.log(f"test/intime_{i}_loss", loss_timesteps[i])
 
             mean, std = utils.bootstrap(unrolled_loss, 64, 1)
@@ -366,8 +372,8 @@ class PDERefiner(LightningModule):
             )
             corr_timesteps = corr_timesteps_B.mean(0)
             for threshold in [0.8, 0.9, 0.95]:
-                self.log(f"tests/time_till_corr_lower_{threshold}", (corr_timesteps > threshold).sum())
-            for t in range(corr_timesteps.shape[0], max(1, corr_timesteps.shape[0] // 10)):
+                self.log(f"tests/time_till_corr_lower_{threshold}", (corr_timesteps > threshold).float().sum())
+            for t in log_timesteps:
                 self.log(f"tests/corr_at_{t}", corr_timesteps[t])
 
     def configure_optimizers(self):

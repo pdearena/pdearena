@@ -40,7 +40,7 @@ def create_data2D(
     assert n_input_scalar_components > 0 or n_input_vector_components > 0
     assert n_output_scalar_components > 0 or n_output_vector_components > 0
     assert time_history > 0
-
+    
     # Different starting points of one batch according to field_x(t_0), field_y(t_0), ...
     end_time = start + time_history
     target_start_time = end_time + time_gap

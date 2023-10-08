@@ -9,11 +9,9 @@ from pdearena.modules.activations import ACTIVATION_REGISTRY
 
 from .condition_utils import (
     ConditionedBlock,
-    conv_layer,
     fourier_embedding,
     zero_module,
 )
-from .fourier_cond import SpectralConv1d, SpectralConv2d
 
 # Largely based on https://github.com/labmlai/annotated_deep_learning_paper_implementations/blob/master/labml_nn/diffusion/ddpm/unet.py
 # MIT License
@@ -493,7 +491,7 @@ class Unet(nn.Module):
         n_resolutions = len(ch_mults)
 
         insize = (
-            time_history * (self.n_input_scalar_components + self.n_input_vector_components * 2) + self.n_grid_channels
+            time_history * (self.n_input_scalar_components + self.n_input_vector_components * 2)
         )
         n_channels = hidden_channels
         time_embed_dim = hidden_channels * 4
@@ -620,20 +618,15 @@ class Unet(nn.Module):
         else:
             self.final = zero_module(conv_layer(in_channels, out_channels, kernel_size=3, n_dims=n_dims))
 
-    def forward(self, x: torch.Tensor, time: torch.Tensor = None, z: torch.Tensor = None, grid: torch.Tensor = None):
+    def forward(self, x: torch.Tensor, time: torch.Tensor = None, z: torch.Tensor = None):
         assert x.dim() == 3 + self.n_dims
         assert not (time is None and z is None)
         orig_shape = x.shape
         x = x.reshape(x.size(0), -1, *x.shape[3:])  # collapse T,C
-        if self.n_grid_channels > 0:
-            assert grid is not None, "Grid must be provided if n_grid_channels > 0"
-            if grid.ndim == 3 + self.n_dims:
-                grid = grid.reshape(grid.size(0), -1, *grid.shape[3:])  # collapse T,C
-            x = torch.cat([grid[:, : self.n_grid_channels], x], dim=1)
 
         emb = 0
         if time is not None:
-            emb = emb + self.time_embed(fourier_embedding(time * self.time_multiplier, self.hidden_channels))
+            emb = emb + self.time_embed(fourier_embedding(time, self.hidden_channels))
             self.param_use_time = True
         else:
             assert not self.param_use_time, "Cannot pass time=None after using it in a previous forward pass"

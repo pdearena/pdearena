@@ -7,7 +7,7 @@ import numpy as np
 import torch
 import torchdata.datapipes as dp
 
-from pdearena.data.datapipes_common import build_datapipes
+from pdearena.data.oned.datapipes.common import build_datapipes
 
 
 class KuramotoSivashinskyDatasetOpener(dp.iter.IterDataPipe):
@@ -33,6 +33,7 @@ class KuramotoSivashinskyDatasetOpener(dp.iter.IterDataPipe):
         allow_shuffle: bool = True,
         resolution: int = -1,
         usegrid: bool = False,
+        time_step: int = 4,
         **kwargs,
     ) -> None:
         super().__init__()
@@ -42,6 +43,7 @@ class KuramotoSivashinskyDatasetOpener(dp.iter.IterDataPipe):
         self.dtype = np.float32
         self.resolution = resolution
         self.usegrid = usegrid
+        self.time_step = time_step
         print(f"Loading {mode} data from {len([p for p in dp])} files.")
         self.storage = {}
         if preload:
@@ -54,18 +56,21 @@ class KuramotoSivashinskyDatasetOpener(dp.iter.IterDataPipe):
         else:
             with h5py.File(path, "r") as f:
                 data_h5 = f[self.mode]
-                data_key = [k for k in data_h5.keys() if k.startswith("pde_")][0]
+                data_key = [
+                    k for k in data_h5.keys() if k.startswith("pde_")][0]
                 data = {
                     "u": torch.tensor(data_h5[data_key][:].astype(self.dtype)),
                     "dt": torch.tensor(data_h5["dt"][:].astype(self.dtype)),
                     "dx": torch.tensor(data_h5["dx"][:].astype(self.dtype)),
                 }
                 if "v" in data_h5:
-                    data["v"] = torch.tensor(data_h5["v"][:].astype(self.dtype))
+                    data["v"] = torch.tensor(
+                        data_h5["v"][:].astype(self.dtype))
 
                 data["orig_dt"] = data["dt"].clone()
                 if data["u"].ndim == 3:
-                    data["u"] = data["u"].unsqueeze(dim=-2)  # Add channel dimension
+                    data["u"] = data["u"].unsqueeze(
+                        dim=-2)  # Add channel dimension
                 # Scaling dt to be in the range [0, 10] to be visible changes in fourier embeds
                 if data["dt"].min() > 0.3 and data["dt"].max() < 0.5:
                     data["dt"] = (data["dt"] - 0.3) * 50.0
@@ -103,9 +108,10 @@ class KuramotoSivashinskyDatasetOpener(dp.iter.IterDataPipe):
                 u = u.unsqueeze(0)
             if self.resolution > 0 and u.shape[-1] > self.resolution:
                 step_size = u.shape[-1] // self.resolution
-                start_idx = 0 if not self.mode == "train" else np.random.randint(0, step_size)
+                start_idx = 0 if not self.mode == "train" else np.random.randint(
+                    0, step_size)
                 u = u[..., start_idx::step_size]
-            idxs = np.arange(int(u.shape[0] * self.data_proportion))
+            idxs = np.arange(u.shape[0])
             if self.mode == "train" and self.allow_shuffle:
                 np.random.shuffle(idxs)
             for i in range(idxs.shape[0]):
@@ -117,7 +123,14 @@ class KuramotoSivashinskyDatasetOpener(dp.iter.IterDataPipe):
                     grid = np.linspace(0, 1, u.shape[-1])
                 else:
                     grid = None
-                yield u[idx], torch.zeros_like(u[idx, :, 0:0]), torch.tensor(cond), grid
+                u_sample = u[idx]
+                if self.time_step > 1:
+                    if self.mode == "train":
+                        start_idx = np.random.randint(0, self.time_step)
+                    else:
+                        start_idx = 0
+                    u_sample = u_sample[start_idx:: self.time_step]
+                yield u_sample, torch.zeros_like(u_sample[:, 0:0]), torch.tensor(cond)[None], grid
 
 
 def _train_filter(fname):

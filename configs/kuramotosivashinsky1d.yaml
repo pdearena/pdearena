@@ -89,20 +89,22 @@ model:
   difference_weight: 0.3
   min_noise_std: 4e-7
   num_refinement_steps: 4
+  time_history: 1
+  time_future: 1
+  time_gap: 3
 
 
 data:
-  task: KuramotoShivashinsky1D
+  task: KuramotoSivashinsky1D
   data_dir: null
   time_history: 1
   time_future: 1
   time_gap: 0
-  time_step: 4
   pde:
       n_scalar_components: 1
       n_vector_components: 0
       trajlen: 140
-      n_spatial_dims: 1
+      n_spatial_dim: 1
 
   batch_size: 128
   pin_memory: True
