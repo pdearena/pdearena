@@ -123,4 +123,4 @@ lr_scheduler:
     warmup_epochs: 0
     max_epochs: 400
     warmup_start_lr: 1e-8
-    eta_min: 1e-8
+    eta_min: 1e-6

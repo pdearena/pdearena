@@ -52,6 +52,20 @@ python scripts/cond_train.py -c configs/cond_navierstokes2d.yaml \
     --lr_scheduler.max_epochs=50 --lr_scheduler.eta_min=1e-7
 ```
 
+## PDE Surrogate Learning with PDE-Refiner
+
+```bash
+python scripts/pderefiner_train.py -c <path/to/config>
+```
+
+For example, to run PDE-Refiner with modern U-Net on Kuramoto-Sivashinsky use:
+
+```bash
+python scripts/pderefiner_train.py -c configs/kuramotosivashinsky1d.yaml \
+    --data.data_dir /mnt/data/KuramotoSivashinsky1D/ \
+    --trainer.devices=1
+```
+
 ## Dataloading philosophy
 
 - Use modern [`torchdata`](https://pytorch.org/data/) [iterable datapipes](https://pytorch.org/data/beta/torchdata.datapipes.iter.html#torchdata.datapipes.iter.IterDataPipe) as they scale better with cloud storage.
