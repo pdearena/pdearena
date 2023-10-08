@@ -11,6 +11,7 @@ from pytorch_lightning.cli import instantiate_class
 
 from pdearena import utils
 from pdearena.data.utils import PDEDataConfig
+from pdearena.ema import ExponentialMovingAverage
 from pdearena.modules.loss import CustomMSELoss, ScaledLpLoss, PearsonCorrelationScore
 from pdearena.rollout import cond_rollout2d
 
@@ -62,6 +63,7 @@ class PDERefiner(LightningModule):
         difference_weight: float = 1.0,
         num_refinement_steps: int = 4,
         min_noise_std: float = 4e-7,
+        ema_decay: float = 0.995,
     ) -> None:
         super().__init__()
         self.save_hyperparameters(ignore="pdeconfig")
@@ -69,18 +71,27 @@ class PDERefiner(LightningModule):
         # Set padding for convolutions globally.
         if (self.pde.n_spatial_dim) == 3:
             self._mode = "3D"
-            nn.Conv3d = partial(nn.Conv3d, padding_mode=self.hparams.padding_mode)
+            nn.Conv3d = partial(
+                nn.Conv3d, padding_mode=self.hparams.padding_mode)
         elif (self.pde.n_spatial_dim) == 2:
             self._mode = "2D"
-            nn.Conv2d = partial(nn.Conv2d, padding_mode=self.hparams.padding_mode)
+            nn.Conv2d = partial(
+                nn.Conv2d, padding_mode=self.hparams.padding_mode)
         elif (self.pde.n_spatial_dim) == 1:
             self._mode = "1D"
-            nn.Conv1d = partial(nn.Conv1d, padding_mode=self.hparams.padding_mode)
+            nn.Conv1d = partial(
+                nn.Conv1d, padding_mode=self.hparams.padding_mode)
         else:
             raise NotImplementedError(f"{self.pde}")
 
         self.model = get_model(self.hparams, self.pde)
         self.train_criterion = CustomMSELoss()
+        # For Diffusion models and models in general working on small errors,
+        # it is better to evaluate the exponential average of the model weights
+        # instead of the current weights. If an appropriate scheduler with
+        # cooldown is used, the test results will be not influenced.
+        self.ema = ExponentialMovingAverage(
+            self.model, decay=self.hparams.ema_decay)
         # We use the Diffusion implementation here. Alternatively, one could
         # implement the denoising manually.
         betas = [min_noise_std ** (k / num_refinement_steps)
@@ -287,7 +298,8 @@ class PDERefiner(LightningModule):
                     [outputs[1][i]["loss_timesteps"] for i in range(len(outputs[1]))])
                 loss_timesteps = loss_timesteps_B.mean(0)
 
-                log_timesteps = range(loss_timesteps.shape[0], max(1, loss_timesteps.shape[0] // 10))
+                log_timesteps = range(loss_timesteps.shape[0], max(
+                    1, loss_timesteps.shape[0] // 10))
 
                 for i in log_timesteps:
                     self.log(f"valid/intime_{i}_loss", loss_timesteps[i])
@@ -302,7 +314,8 @@ class PDERefiner(LightningModule):
                 )
                 corr_timesteps = corr_timesteps_B.mean(0)
                 for threshold in [0.8, 0.9, 0.95]:
-                    self.log(f"valid/time_till_corr_lower_{threshold}", (corr_timesteps > threshold).float().sum())
+                    self.log(
+                        f"valid/time_till_corr_lower_{threshold}", (corr_timesteps > threshold).float().sum())
                 for t in log_timesteps:
                     self.log(f"valid/corr_at_{t}", corr_timesteps[t])
 
@@ -358,7 +371,8 @@ class PDERefiner(LightningModule):
             loss_timesteps_B = torch.stack(
                 [outputs[1][i]["loss_timesteps"] for i in range(len(outputs[1]))])
             loss_timesteps = loss_timesteps_B.mean(0)
-            log_timesteps = range(loss_timesteps.shape[0], max(1, loss_timesteps.shape[0] // 10))
+            log_timesteps = range(loss_timesteps.shape[0], max(
+                1, loss_timesteps.shape[0] // 10))
             for i in log_timesteps:
                 self.log(f"test/intime_{i}_loss", loss_timesteps[i])
 
@@ -372,7 +386,8 @@ class PDERefiner(LightningModule):
             )
             corr_timesteps = corr_timesteps_B.mean(0)
             for threshold in [0.8, 0.9, 0.95]:
-                self.log(f"tests/time_till_corr_lower_{threshold}", (corr_timesteps > threshold).float().sum())
+                self.log(
+                    f"tests/time_till_corr_lower_{threshold}", (corr_timesteps > threshold).float().sum())
             for t in log_timesteps:
                 self.log(f"tests/corr_at_{t}", corr_timesteps[t])
 
@@ -380,3 +395,28 @@ class PDERefiner(LightningModule):
         optimizer = torch.optim.Adam(
             self.model.parameters(), lr=self.hparams.lr)
         return optimizer
+
+    def on_fit_start(self):
+        self.ema.register()
+
+    def on_train_batch_end(self, *args, **kwargs):
+        self.ema.update()
+
+    def on_validation_start(self):
+        self.apply_ema()
+
+    def on_validation_end(self):
+        self.remove_ema()
+
+    def apply_ema(self):
+        self.ema.apply_shadow()
+
+    def remove_ema(self):
+        self.ema.restore()
+
+    def on_save_checkpoint(self, checkpoint):
+        checkpoint["ema"] = self.ema.shadow
+
+    def on_load_checkpoint(self, checkpoint):
+        if "ema" in checkpoint:
+            self.ema.shadow = checkpoint["ema"]
