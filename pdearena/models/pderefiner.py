@@ -61,7 +61,7 @@ class PDERefiner(LightningModule):
         padding_mode: str = "zeros",
         predict_difference: bool = False,
         difference_weight: float = 1.0,
-        num_refinement_steps: int = 4,
+        num_refinement_steps: int = 3,
         min_noise_std: float = 4e-7,
         ema_decay: float = 0.995,
     ) -> None:
@@ -96,9 +96,10 @@ class PDERefiner(LightningModule):
         # implement the denoising manually.
         betas = [min_noise_std ** (k / num_refinement_steps)
                  for k in reversed(range(num_refinement_steps + 1))]
-        self.scheduler = DDPMScheduler(num_train_timesteps=num_refinement_steps,
+        self.scheduler = DDPMScheduler(num_train_timesteps=num_refinement_steps + 1,
                                        trained_betas=betas,
-                                       prediction_type='v_prediction')
+                                       prediction_type='v_prediction',
+                                       clip_sample=False)
         # Multiplies k before passing to frequency embedding.
         self.time_multiplier = 1000 / num_refinement_steps
 
@@ -147,7 +148,7 @@ class PDERefiner(LightningModule):
     def predict_next_solution(self, x, cond):
         y_noised = torch.randn(size=(
             x.shape[0], self.hparams.time_future, *x.shape[2:]), dtype=x.dtype, device=x.device)
-        for k in range(self.scheduler.config.num_train_timesteps):
+        for k in self.scheduler.timesteps:
             time = torch.zeros(
                 size=(x.shape[0],), dtype=x.dtype, device=x.device) + k
             x_in = torch.cat([x, y_noised], axis=1)
