@@ -298,7 +298,7 @@ class PDERefiner(LightningModule):
                     [outputs[1][i]["loss_timesteps"] for i in range(len(outputs[1]))])
                 loss_timesteps = loss_timesteps_B.mean(0)
 
-                log_timesteps = range(loss_timesteps.shape[0], max(
+                log_timesteps = range(0, loss_timesteps.shape[0], max(
                     1, loss_timesteps.shape[0] // 10))
 
                 for i in log_timesteps:
