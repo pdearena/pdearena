@@ -408,6 +408,12 @@ class PDERefiner(LightningModule):
     def on_validation_end(self):
         self.remove_ema()
 
+    def on_test_start(self):
+        self.apply_ema()
+
+    def on_test_end(self):
+        self.remove_ema()
+
     def apply_ema(self):
         self.ema.apply_shadow()
 
