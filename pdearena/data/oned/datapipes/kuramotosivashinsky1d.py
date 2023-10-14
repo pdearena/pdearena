@@ -71,25 +71,27 @@ class KuramotoSivashinskyDatasetOpener(dp.iter.IterDataPipe):
                 if data["u"].ndim == 3:
                     data["u"] = data["u"].unsqueeze(
                         dim=-2)  # Add channel dimension
-                # Scaling dt to be in the range [0, 10] to be visible changes in fourier embeds
-                if data["dt"].min() > 0.3 and data["dt"].max() < 0.5:
-                    data["dt"] = (data["dt"] - 0.3) * 50.0
-                elif data["dt"].min() > 0.15 and data["dt"].max() < 0.25:
+                # The KS equation is parameterized by [1] the time step between observations
+                # (measured in seconds, usually around 0.2), [2] the spatial step between 
+                # data points in the spatial domain (measured in meters, usually around 0.2),
+                # and finally [3] the viscosity parameter (measured in m^2/s, usually between 0.5 - 1.5).
+                # We scale these parameters to be in the range [0, 10] to be visible changes in fourier embeds.
+                # This accelerates learning and makes it easier for the models to learn the conditional dynamics.
+                # Scaling time step.
+                if data["dt"].min() > 0.15 and data["dt"].max() < 0.25:
                     data["dt"] = (data["dt"] - 0.15) * 100.0
                 else:
                     print(
                         f"WARNING: dt is not in the expected range (min {data['dt'].min()}, max {data['dt'].max()}, mean {data['dt'].mean()}) - scaling may be incorrect."
                     )
-                # Scaling dx to be in the range [0, 10] to be visible changes in fourier embeds
-                if data["dx"].min() > 0.4 and data["dx"].max() < 0.6:
-                    data["dx"] = (data["dx"] - 0.4) * 50.0
-                elif data["dx"].min() > 0.2 and data["dx"].max() < 0.3:
+                # Scaling spatial step.
+                if data["dx"].min() > 0.2 and data["dx"].max() < 0.3:
                     data["dx"] = (data["dx"] - 0.2) * 100.0
                 else:
                     print(
-                        f"WARNING: dt is not in the expected range (min {data['dx'].min()}, max {data['dx'].max()}, mean {data['dx'].mean()}) - scaling may be incorrect."
+                        f"WARNING: dx is not in the expected range (min {data['dx'].min()}, max {data['dx'].max()}, mean {data['dx'].mean()}) - scaling may be incorrect."
                     )
-
+                # Scaling viscosity.
                 if "v" in data:
                     if data["v"].min() >= 0.5 and data["v"].max() <= 1.5:
                         data["v"] = (data["v"] - 0.5) * 100.0
