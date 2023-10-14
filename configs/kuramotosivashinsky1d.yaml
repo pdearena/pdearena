@@ -43,7 +43,7 @@ trainer:
   check_val_every_n_epoch: 20
   fast_dev_run: false
   accumulate_grad_batches: null
-  max_epochs: null
+  max_epochs: 400
   min_epochs: null
   max_steps: -1
   min_steps: null
@@ -91,7 +91,7 @@ model:
   num_refinement_steps: 3
   time_history: 1
   time_future: 1
-  time_gap: 3
+  time_gap: 0
 
 
 data:

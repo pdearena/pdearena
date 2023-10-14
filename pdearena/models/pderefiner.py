@@ -115,7 +115,7 @@ class PDERefiner(LightningModule):
             reduced_time_resolution - self.hparams.time_future *
             self.hparams.max_num_steps - self.hparams.time_gap
         )
-        self.max_start_time = max(1, self.max_start_time)
+        self.max_start_time = max(0, self.max_start_time)
 
     def forward(self, x, cond):
         return self.predict_next_solution(x, cond)
