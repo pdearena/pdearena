@@ -28,7 +28,7 @@ def main():
     )
     if cli.trainer.default_root_dir is None:
         logger.warning("No default root dir set, using: ")
-        cli.trainer.default_root_dir = os.environ.get("AMLT_OUTPUT_DIR", "./outputs")
+        cli.trainer.default_root_dir = os.environ.get("PDEARENA_OUTPUT_DIR", "./outputs")
         logger.warning(f"\t {cli.trainer.default_root_dir}")
 
     setupdir(cli.trainer.default_root_dir)

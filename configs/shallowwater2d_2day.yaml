@@ -1,6 +1,6 @@
 seed_everything: 42
 trainer:
-  default_root_dir: ${oc.env:AMLT_OUTPUT_DIR,outputs}
+  default_root_dir: ${oc.env:PDEARENA_OUTPUT_DIR,outputs}
   logger:
     class_path: pytorch_lightning.loggers.tensorboard.TensorBoardLogger
     init_args:
