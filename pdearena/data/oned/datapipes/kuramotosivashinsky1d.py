@@ -7,7 +7,7 @@ import numpy as np
 import torch
 import torchdata.datapipes as dp
 
-from pdearena.data.oned.datapipes.common import build_datapipes
+from pdearena.data.datapipes_common import build_datapipes
 
 
 class KuramotoSivashinskyDatasetOpener(dp.iter.IterDataPipe):
