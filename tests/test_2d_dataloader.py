@@ -87,7 +87,7 @@ def test_navier_stokes_dataloader(synthetic_navier_stokes):
                 collate_fn=collate_fn_cat,
             )
 
-            for idx, (x, y) in enumerate(train_dataloader):
+            for idx, (x, y, _) in enumerate(train_dataloader):
                 assert x.shape[0] == y.shape[0] == batch_size
                 assert x.shape[1] == time_history
                 assert y.shape[1] == time_future
@@ -113,7 +113,7 @@ def test_navier_stokes_dataloader(synthetic_navier_stokes):
                 drop_last=True,
                 collate_fn=collate_fn_cat,
             )
-            for idx, (x, y) in enumerate(valid_dataloader1):
+            for idx, (x, y, _) in enumerate(valid_dataloader1):
                 assert x.shape[0] == y.shape[0] == batch_size
                 assert x.shape[1] == time_history
                 assert y.shape[1] == time_future

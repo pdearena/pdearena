@@ -1,4 +1,4 @@
-from pdearena.data.twod.datapipes.common import ZarrLister
+from pdearena.data.datapipes_common import ZarrLister
 
 
 class TestZarrLister:
