@@ -95,6 +95,7 @@ def cond_rollout2d(
     traj = torch.cat(traj_ls, dim=1)
     return traj
 
+
 def rollout3d_maxwell(
     model: torch.nn.Module,
     initial_d: torch.Tensor,

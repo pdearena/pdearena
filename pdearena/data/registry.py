@@ -5,7 +5,13 @@ from .oned.datapipes.kuramotosivashinsky1d import (
     trajectory_test_datapipe_ks,
     trajectory_valid_datapipe_ks,
 )
-
+from .threed.datapipes import (
+    onestep_test_datapipe_maxwell,
+    onestep_valid_datapipe_maxwell,
+    rollout_test_datapipe_maxwell,
+    rollout_valid_datapipe_maxwell,
+    train_datapipe_maxwell,
+)
 from .twod.datapipes.navierstokes2d import (
     onestep_test_datapipe_ns,
     onestep_test_datapipe_ns_cond,
@@ -38,14 +44,6 @@ from .twod.datapipes.shallowwater2d import (
     trajectory_valid_datapipe_1day_vort,
     trajectory_valid_datapipe_2day_vel,
     trajectory_valid_datapipe_2day_vort,
-)
-
-from .threed.datapipes import (
-    train_datapipe_maxwell,
-    onestep_valid_datapipe_maxwell,
-    rollout_valid_datapipe_maxwell,
-    onestep_test_datapipe_maxwell,
-    rollout_test_datapipe_maxwell,
 )
 
 DATAPIPE_REGISTRY = {}

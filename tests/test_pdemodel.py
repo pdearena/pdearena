@@ -2,7 +2,7 @@ import pytest
 import torch
 
 from pdearena.data.utils import PDEDataConfig
-from pdearena.models.pdemodel import PDEModel, Maxwell3DPDEModel
+from pdearena.models.pdemodel import Maxwell3DPDEModel, PDEModel
 
 
 @pytest.mark.parametrize("name", ["Unet2015-64", "ResNet-128"])
@@ -87,12 +87,8 @@ def test_3d_pde_model(name, train_criterion, time_history, max_num_steps, pdedat
 
     # test one-step training
     batch = (
-        torch.randn(
-            8, time_history, 6, 32, 32, 32, device=device
-        ),
-        torch.randn(
-            8, time_future, 6, 32, 32, 32, device=device
-        ),
+        torch.randn(8, time_history, 6, 32, 32, 32, device=device),
+        torch.randn(8, time_future, 6, 32, 32, 32, device=device),
     )
     loss = litmodel.training_step(batch, 0)
     assert "loss" in loss.keys()
@@ -104,12 +100,8 @@ def test_3d_pde_model(name, train_criterion, time_history, max_num_steps, pdedat
 
     # test rollout validation
     batch = (
-        torch.randn(
-            8, pdedata.trajlen, 3, 32, 32, 32, device=device
-        ),
-        torch.randn(
-            8, pdedata.trajlen, 3, 32, 32, 32, device=device
-        ),
+        torch.randn(8, pdedata.trajlen, 3, 32, 32, 32, device=device),
+        torch.randn(8, pdedata.trajlen, 3, 32, 32, 32, device=device),
         None,
     )
     loss = litmodel.validation_step(batch, 0, 1)

@@ -1,11 +1,13 @@
-import pytest
+import os
+
 import h5py
 import numpy as np
-import os
-from pdedatagen.pde import NavierStokes2D
-from pdearena.data.registry import DATAPIPE_REGISTRY
+import pytest
 from torch.utils.data import DataLoader
+
 from pdearena.data.datamodule import collate_fn_cat, collate_fn_stack
+from pdearena.data.registry import DATAPIPE_REGISTRY
+from pdedatagen.pde import NavierStokes2D
 
 
 @pytest.fixture(scope="session")
@@ -73,8 +75,8 @@ def test_navier_stokes_dataloader(synthetic_navier_stokes):
                 time_history=time_history,
                 time_future=time_future,
                 time_gap=time_gap,
-                )
-    
+            )
+
             train_dataloader = DataLoader(
                 dataset=train_dp,
                 num_workers=1,
@@ -84,7 +86,7 @@ def test_navier_stokes_dataloader(synthetic_navier_stokes):
                 drop_last=True,
                 collate_fn=collate_fn_cat,
             )
-    
+
             for idx, (x, y) in enumerate(train_dataloader):
                 assert x.shape[0] == y.shape[0] == batch_size
                 assert x.shape[1] == time_history
@@ -138,5 +140,5 @@ def test_navier_stokes_dataloader(synthetic_navier_stokes):
             )
             for idx, x in enumerate(valid_dataloader2):
                 assert x[0].shape == (batch_size, pde.nt, pde.n_scalar_components, pde.nx, pde.ny)
-                assert x[1].shape == (batch_size, pde.nt, pde.n_vector_components * 2, pde.nx, pde.ny) 
+                assert x[1].shape == (batch_size, pde.nt, pde.n_vector_components * 2, pde.nx, pde.ny)
             assert idx > 0

@@ -1,10 +1,15 @@
+from typing import Callable, Union
+
 import torch
+from cliffordlayers.models.basic.custom_layers import (
+    CliffordConv3dMaxwellDecoder,
+    CliffordConv3dMaxwellEncoder,
+)
 from torch import nn
 from torch.nn import functional as F
-from typing import Callable, Union
+
 from .activations import ACTIVATION_REGISTRY
 from .fourier import SpectralConv3d
-from cliffordlayers.models.basic.custom_layers import CliffordConv3dMaxwellEncoder, CliffordConv3dMaxwellDecoder
 
 
 class FourierBasicBlock3D(nn.Module):
@@ -14,44 +19,38 @@ class FourierBasicBlock3D(nn.Module):
     expansion: int = 1
 
     def __init__(
-            self, 
-            in_planes: int, 
-            planes: int,
-            modes1: int,
-            modes2: int,
-            modes3: int, 
-            stride: int = 1, 
-            activation: str = "gelu",
-            norm: bool = False,
-            ):
+        self,
+        in_planes: int,
+        planes: int,
+        modes1: int,
+        modes2: int,
+        modes3: int,
+        stride: int = 1,
+        activation: str = "gelu",
+        norm: bool = False,
+    ):
         """Initialize basic 3d FNO ResNet building block
         Args:
             in_planes (int): Input channels
             planes (int): Output channels
             modes1 (int): Fourier modes for x direction.
             modes2 (int): Fourier modes for y direction.
-            modes3 (int): Fourier modes for z direction. 
+            modes3 (int): Fourier modes for z direction.
             stride (int, optional): stride of 2d convolution. Defaults to 1.
             norm (bool): Wether to use normalization. Defaults to False.
         """
         super().__init__()
 
-        self.fourier1 = SpectralConv3d(
-            in_planes, planes, modes1=modes1, modes2=modes2, modes3=modes3
-        )
+        self.fourier1 = SpectralConv3d(in_planes, planes, modes1=modes1, modes2=modes2, modes3=modes3)
         self.conv1 = nn.Conv3d(in_planes, planes, kernel_size=1, padding=0, padding_mode="zeros")
-        self.fourier2 = SpectralConv3d(
-            planes, planes, modes1=modes1, modes2=modes2, modes3=modes3
-        )
+        self.fourier2 = SpectralConv3d(planes, planes, modes1=modes1, modes2=modes2, modes3=modes3)
         self.conv2 = nn.Conv3d(planes, planes, kernel_size=1, padding=0, padding_mode="zeros")
 
         # Shortcut connection, batchnorm removed
         # So far shortcut connections are not helping
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != self.expansion * planes:
-            self.shortcut = nn.Sequential(
-                nn.Conv2d(in_planes, self.expansion * planes, kernel_size=1)
-            )
+            self.shortcut = nn.Sequential(nn.Conv2d(in_planes, self.expansion * planes, kernel_size=1))
         if activation == "gelu":
             self.activation = F.gelu
         elif activation == "relu":
@@ -152,11 +151,11 @@ class MaxwellResNet3D(nn.Module):
             raise NotImplementedError(f"Activation {activation} not implemented")
 
     def _make_layer(
-        self, 
-        block: Callable, 
-        planes: int, 
-        num_blocks: int, 
-        stride: int, 
+        self,
+        block: Callable,
+        planes: int,
+        num_blocks: int,
+        stride: int,
         activation: str,
     ) -> nn.Sequential:
         """Build 3d ResNet layers out of basic building blocks.
@@ -208,7 +207,7 @@ class MaxwellResNet3D(nn.Module):
         if self.diffmode:
             x = x + prev[:, -1:, ...].detach()
         return x.reshape(orig_shape[0], -1, 6, *orig_shape[3:])
-    
+
 
 class CliffordMaxwellResNet3D(nn.Module):
     """3D building block for Clifford architectures with ResNet backbone network.
@@ -261,11 +260,11 @@ class CliffordMaxwellResNet3D(nn.Module):
             out_channels=time_future,
             kernel_size=1,
             padding=0,
-               )
+        )
 
         self.activation: nn.Module = ACTIVATION_REGISTRY.get(activation, None)
         if self.activation is None:
-            raise NotImplementedError(f"Activation {activation} not implemented") 
+            raise NotImplementedError(f"Activation {activation} not implemented")
 
         # Residual blocks.
         self.layers = nn.ModuleList(
@@ -309,7 +308,7 @@ class CliffordMaxwellResNet3D(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         assert x.dim() == 6
-        
+
         # Get data into shape where I dimension is last.
         B_dim, C_dim, I_dim, *D_dims = range(len(x.shape))
         x = x.permute(B_dim, C_dim, *D_dims, I_dim)

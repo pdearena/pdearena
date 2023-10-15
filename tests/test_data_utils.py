@@ -98,22 +98,14 @@ def test_create_maxwell_data(
     )
     assert data.shape == (1, time_history, 6, N, N, N)
     assert targets.shape == (1, time_future, 6, N, N, N)
-    
+
+    torch.testing.assert_close(d_field[start : start + time_history], data[0, :, :3])
+    torch.testing.assert_close(h_field[start : start + time_history], data[0, :, 3:])
     torch.testing.assert_close(
-        d_field[start : start + time_history], data[0, :, :3]
-    )
-    torch.testing.assert_close(
-        h_field[start : start + time_history], data[0, :, 3:]
-    )
-    torch.testing.assert_close(
-        d_field[
-            start + time_history + time_gap : start + time_history + time_gap + time_future, :3
-        ],
+        d_field[start + time_history + time_gap : start + time_history + time_gap + time_future, :3],
         targets[0, :, :3],
     )
     torch.testing.assert_close(
-        h_field[
-            start + time_history + time_gap : start + time_history + time_gap + time_future, :3
-        ],
+        h_field[start + time_history + time_gap : start + time_history + time_gap + time_future, :3],
         targets[0, :, 3:],
     )

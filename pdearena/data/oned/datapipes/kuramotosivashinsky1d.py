@@ -56,23 +56,20 @@ class KuramotoSivashinskyDatasetOpener(dp.iter.IterDataPipe):
         else:
             with h5py.File(path, "r") as f:
                 data_h5 = f[self.mode]
-                data_key = [
-                    k for k in data_h5.keys() if k.startswith("pde_")][0]
+                data_key = [k for k in data_h5.keys() if k.startswith("pde_")][0]
                 data = {
                     "u": torch.tensor(data_h5[data_key][:].astype(self.dtype)),
                     "dt": torch.tensor(data_h5["dt"][:].astype(self.dtype)),
                     "dx": torch.tensor(data_h5["dx"][:].astype(self.dtype)),
                 }
                 if "v" in data_h5:
-                    data["v"] = torch.tensor(
-                        data_h5["v"][:].astype(self.dtype))
+                    data["v"] = torch.tensor(data_h5["v"][:].astype(self.dtype))
 
                 data["orig_dt"] = data["dt"].clone()
                 if data["u"].ndim == 3:
-                    data["u"] = data["u"].unsqueeze(
-                        dim=-2)  # Add channel dimension
+                    data["u"] = data["u"].unsqueeze(dim=-2)  # Add channel dimension
                 # The KS equation is parameterized by [1] the time step between observations
-                # (measured in seconds, usually around 0.2), [2] the spatial step between 
+                # (measured in seconds, usually around 0.2), [2] the spatial step between
                 # data points in the spatial domain (measured in meters, usually around 0.2),
                 # and finally [3] the viscosity parameter (measured in m^2/s, usually between 0.5 - 1.5).
                 # We scale these parameters to be in the range [0, 10] to be visible changes in fourier embeds.
@@ -110,8 +107,7 @@ class KuramotoSivashinskyDatasetOpener(dp.iter.IterDataPipe):
                 u = u.unsqueeze(0)
             if self.resolution > 0 and u.shape[-1] > self.resolution:
                 step_size = u.shape[-1] // self.resolution
-                start_idx = 0 if not self.mode == "train" else np.random.randint(
-                    0, step_size)
+                start_idx = 0 if not self.mode == "train" else np.random.randint(0, step_size)
                 u = u[..., start_idx::step_size]
             idxs = np.arange(u.shape[0])
             if self.mode == "train" and self.allow_shuffle:
@@ -131,7 +127,7 @@ class KuramotoSivashinskyDatasetOpener(dp.iter.IterDataPipe):
                         start_idx = np.random.randint(0, self.time_step)
                     else:
                         start_idx = 0
-                    u_sample = u_sample[start_idx:: self.time_step]
+                    u_sample = u_sample[start_idx :: self.time_step]
                 yield u_sample, torch.zeros_like(u_sample[:, 0:0]), torch.tensor(cond)[None], grid
 
 

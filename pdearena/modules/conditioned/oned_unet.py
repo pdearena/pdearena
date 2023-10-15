@@ -1,20 +1,17 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
-from typing import Any, Callable, List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 import torch
 from torch import nn
 
 from pdearena.modules.activations import ACTIVATION_REGISTRY
 
-from .condition_utils import (
-    ConditionedBlock,
-    fourier_embedding,
-    zero_module,
-)
+from .condition_utils import ConditionedBlock, fourier_embedding, zero_module
 
 # Largely based on https://github.com/labmlai/annotated_deep_learning_paper_implementations/blob/master/labml_nn/diffusion/ddpm/unet.py
 # MIT License
+
 
 def conv_layer(
     c_in: int, c_out: int, kernel_size: int, stride: int = 1, dilation: int = 1, padding: int = -1, n_dims: int = 1
@@ -27,7 +24,7 @@ def conv_layer(
         return nn.Conv2d(c_in, c_out, kernel_size=kernel_size, stride=stride, padding=padding, dilation=dilation)
     else:
         raise NotImplementedError(f"n_dims {n_dims} not implemented")
-    
+
 
 class ResidualBlock(ConditionedBlock):
     """Wide Residual Blocks used in modern Unet architectures.
@@ -490,9 +487,7 @@ class Unet(nn.Module):
         # Number of resolutions
         n_resolutions = len(ch_mults)
 
-        insize = (
-            time_history * (self.n_input_scalar_components + self.n_input_vector_components * 2)
-        )
+        insize = time_history * (self.n_input_scalar_components + self.n_input_vector_components * 2)
         n_channels = hidden_channels
         time_embed_dim = hidden_channels * 4
         self.time_embed = nn.Sequential(

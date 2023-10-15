@@ -295,7 +295,7 @@ class RandomizedPDETrainData(dp.iter.IterDataPipe):
                 (u, v, cond, grid) = batch
             else:
                 raise ValueError(f"Unknown batch length of {len(batch)}.")
-            
+
             # Length of trajectory
             time_resolution = min(u.shape[0], self.trajlen)
             # Max number of previous points solver can eat

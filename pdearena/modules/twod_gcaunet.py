@@ -1,11 +1,9 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 
-from cliffordlayers.models.gca.twod import (
-    CliffordG3UNet2d,
-    CliffordUpsample,
-)
 import torch
+from cliffordlayers.models.gca.twod import CliffordG3UNet2d, CliffordUpsample
+
 
 class GCAFluidNet2d(CliffordG3UNet2d):
     """2D GCA-UNet as introduced in the paper "Geometric Clifford Algebra Networks". https://arxiv.org/abs/2302.06594."""

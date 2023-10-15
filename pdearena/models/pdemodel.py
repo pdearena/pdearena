@@ -315,7 +315,6 @@ class PDEModel(LightningModule):
 
 
 class Maxwell3DPDEModel(PDEModel):
-    
     def compute_rolloutloss3D(self, batch: Any):
         d, h, _ = batch
         losses = []
@@ -326,9 +325,7 @@ class Maxwell3DPDEModel(PDEModel):
         ):
             end_time = start + self.hparams.time_history
             target_start_time = end_time + self.hparams.time_gap
-            target_end_time = (
-                target_start_time + self.hparams.time_future * self.hparams.max_num_steps
-            )
+            target_end_time = target_start_time + self.hparams.time_future * self.hparams.max_num_steps
             init_d = d[:, start:end_time]
             init_h = h[:, start:end_time]
             pred_traj = rollout3d_maxwell(
@@ -393,7 +390,6 @@ class Maxwell3DPDEModel(PDEModel):
                 "loss_timesteps": loss_t,
                 "unrolled_chan_avg_loss": chan_avg_loss,
             }
-        
 
     def test_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0):
         if dataloader_idx == 0:
@@ -426,4 +422,3 @@ class Maxwell3DPDEModel(PDEModel):
                 "unrolled_loss": loss,
                 "loss_timesteps": loss_t,
             }
-        

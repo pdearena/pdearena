@@ -88,6 +88,7 @@ class CustomMSELoss(torch.nn.Module):
     def forward(self, input: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
         return custommse_loss(input, target, reduction=self.reduction)
 
+
 class PearsonCorrelationScore(torch.nn.Module):
     """Pearson Correlation Score for PDEs."""
 

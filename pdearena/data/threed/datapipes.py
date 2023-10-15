@@ -1,14 +1,15 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 import functools
-from typing import Optional
 import random
+from typing import Callable, Optional
+
 import h5py
 import torch
 import torchdata.datapipes as dp
-from typing import Callable, Optional
-from pdearena.data.utils import PDEDataConfig
+
 import pdearena.data.utils as datautils
+from pdearena.data.utils import PDEDataConfig
 
 
 def build_maxwell_datapipes(
@@ -65,12 +66,12 @@ def build_maxwell_datapipes(
     if mode == "train":
         # Training data is randomized
         dpipe = RandomizedPDETrainData3D(
-                dpipe,
-                pde,
-                time_history,
-                time_future,
-                time_gap,
-            )   
+            dpipe,
+            pde,
+            time_history,
+            time_future,
+            time_gap,
+        )
     else:
         # Evaluation data is not randomized.
         if onestep:
@@ -86,9 +87,7 @@ def build_maxwell_datapipes(
 
 
 class PDEDatasetOpener3D(dp.iter.IterDataPipe):
-    def __init__(
-        self, dp, mode: str, limit_trajectories: Optional[int] = None, usegrid: bool = False
-    ) -> None:
+    def __init__(self, dp, mode: str, limit_trajectories: Optional[int] = None, usegrid: bool = False) -> None:
         super().__init__()
         self.dp = dp
         self.mode = mode
@@ -139,9 +138,7 @@ class PDEDatasetOpener3D(dp.iter.IterDataPipe):
 
 
 class RandomizedPDETrainData3D(dp.iter.IterDataPipe):
-    def __init__(
-        self, dp, pde: PDEDataConfig, time_history: int, time_future: int, time_gap: int
-    ) -> None:
+    def __init__(self, dp, pde: PDEDataConfig, time_history: int, time_future: int, time_gap: int) -> None:
         super().__init__()
         self.dp = dp
         self.pde = pde
@@ -157,20 +154,14 @@ class RandomizedPDETrainData3D(dp.iter.IterDataPipe):
         # Number of future points to predict
         max_start_time = reduced_time_resolution - self.time_future - self.time_gap
 
-        for (d, h) in self.dp:
+        for d, h in self.dp:
             # Choose initial random time point at the PDE solution manifold
-            start_time = random.choices(
-                [t for t in range(max_start_time + 1)], k=1
-            )
-            yield datautils.create_maxwell_data(
-                d, h, start_time[0], self.time_history, self.time_future, self.time_gap
-            )
+            start_time = random.choices([t for t in range(max_start_time + 1)], k=1)
+            yield datautils.create_maxwell_data(d, h, start_time[0], self.time_history, self.time_future, self.time_gap)
 
 
 class PDEEvalTimeStepData3D(dp.iter.IterDataPipe):
-    def __init__(
-        self, dp, pde: PDEDataConfig, time_history: int, time_future: int, time_gap: int
-    ) -> None:
+    def __init__(self, dp, pde: PDEDataConfig, time_history: int, time_future: int, time_gap: int) -> None:
         super().__init__()
         self.dp = dp
         self.pde = pde
@@ -186,11 +177,9 @@ class PDEEvalTimeStepData3D(dp.iter.IterDataPipe):
         # Number of future points to predict
         max_start_time = reduced_time_resolution - self.time_future - self.time_gap
         # We ignore these timesteps in the testing
-        start_time = [
-            t for t in range(self.pde.skip_nt, max_start_time + 1, self.time_gap + self.time_future)
-        ]
+        start_time = [t for t in range(self.pde.skip_nt, max_start_time + 1, self.time_gap + self.time_future)]
         for start in start_time:
-            for (d, h, _) in self.dp:
+            for d, h, _ in self.dp:
                 end_time = start + self.time_history
                 target_start_time = end_time + self.time_gap
                 target_end_time = target_start_time + self.time_future
@@ -216,10 +205,8 @@ class PDEEvalTimeStepData3D(dp.iter.IterDataPipe):
                 ]
 
                 data = torch.cat((data_dfield, data_hfield), dim=1).unsqueeze(0)  # add batch dim
-                labels = torch.cat((labels_dfield, labels_hfield), dim=1).unsqueeze(
-                    0
-                )  # add batch dim
-                
+                labels = torch.cat((labels_dfield, labels_hfield), dim=1).unsqueeze(0)  # add batch dim
+
                 yield data, labels
 
 
