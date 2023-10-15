@@ -8,30 +8,6 @@ If you have used PDEArena in your research, and would like it listed here, pleas
 
 
 <figure markdown>
-![](assets/images/research/PDERefiner-thumbnail.png){ width="500"}
-<figcaption>
-<!-- Large font: -->
-<h2>
-<a href="https://arxiv.org/abs/2308.05732">PDE-Refiner: Achieving Accurate Long Rollouts with Neural PDE Solvers</a>
-</h2>
-</figcaption>
-</figure>
-<center>
-Phillip Lippe <sup>1</sup>, Bastiaan S. Veeling <sup>1</sup>, Paris Perdikaris <sup>1</sup>, Richard E. Turner <sup>1</sup>, Johannes Brandstetter <sup>1</sup>
-
-<small><sup>1</sup>Microsoft Research AI4Science</small>
-</center>
-**Abstract:** Time-dependent partial differential equations (PDEs) are ubiquitous in science and engineering. Recently, mostly due to the high computational cost of traditional solution techniques, deep neural network based surrogates have gained increased interest. The practical utility of such neural PDE solvers relies on their ability to provide accurate, stable predictions over long time horizons, which is a notoriously hard problem. In this work, we present a large-scale analysis of common temporal rollout strategies, identifying the neglect of non-dominant spatial frequency information, often associated with high frequencies in PDE solutions, as the primary pitfall limiting stable, accurate rollout performance. Based on these insights, we draw inspiration from recent advances in diffusion models to introduce PDE-Refiner; a novel model class that enables more accurate modeling of all frequency components via a multistep refinement process. We validate PDE-Refiner on challenging benchmarks of complex fluid dynamics, demonstrating stable and accurate rollouts that consistently outperform state-of-the-art models, including neural, numerical, and hybrid neural-numerical architectures. We further demonstrate that PDE-Refiner greatly enhances data efficiency, since the denoising objective implicitly induces a novel form of spectral data augmentation. Finally, PDE-Refiner's connection to diffusion models enables an accurate and efficient assessment of the model's predictive uncertainty, allowing us to estimate when the surrogate becomes inaccurate.
-
-
-
-    
-
----
-
-
-
-<figure markdown>
 ![](assets/images/research/CGANs-thumbnail.png){ width="500"}
 <figcaption>
 <!-- Large font: -->
