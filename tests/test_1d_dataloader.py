@@ -24,7 +24,7 @@ def synthetic_kuramoto_sivashinsky(tmpdir_factory):
 
     filenames = {}
     for mode in modes:
-        file_name = os.path.join(tmpdir, f'kuramoto_sivashinsky_{mode}_{seed}_{num_samples}.h5')
+        file_name = os.path.join(tmpdir, f"kuramoto_sivashinsky_{mode}_{seed}_{num_samples}.h5")
         filenames[mode] = file_name
 
         h5f = h5py.File(file_name, "a")

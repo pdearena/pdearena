@@ -7,7 +7,7 @@ from pdearena.models.cond_pdemodel import get_model
 from pdearena.models.registry import COND_MODEL_REGISTRY
 
 
-@pytest.mark.parametrize("name", [k for k in COND_MODEL_REGISTRY.keys() if '-1d-' not in k])
+@pytest.mark.parametrize("name", [k for k in COND_MODEL_REGISTRY.keys() if "-1d-" not in k])
 @pytest.mark.parametrize("param_conditioning", [None, "scalar"])
 @pytest.mark.slow
 def test_named_cond_models(name, param_conditioning):
@@ -38,7 +38,7 @@ def test_named_cond_models(name, param_conditioning):
     assert output.shape == (8, 1, 3, 64, 64)
 
 
-@pytest.mark.parametrize("name", [k for k in COND_MODEL_REGISTRY.keys() if '-1d-' in k])
+@pytest.mark.parametrize("name", [k for k in COND_MODEL_REGISTRY.keys() if "-1d-" in k])
 @pytest.mark.parametrize("param_conditioning", [None, "scalar", "scalar_2"])
 @pytest.mark.slow
 def test_named_1d_cond_models(name, param_conditioning):
