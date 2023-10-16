@@ -1,7 +1,13 @@
 # Datapipes
 
 
-::: pdearena.data.twod.datapipes.common
+::: pdearena.data.datapipes_common
+    options:
+        show_root_heading: true
+
+---
+
+::: pdearena.data.oned.datapipes.kuramotosivashinsky1d
     options:
         show_root_heading: true
 
