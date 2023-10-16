@@ -8,6 +8,30 @@ If you have used PDEArena in your research, and would like it listed here, pleas
 
 
 <figure markdown>
+![](assets/images/research/PDERefiner-thumbnail.png){ width="500"}
+<figcaption>
+<!-- Large font: -->
+<h2>
+<a href="https://arxiv.org/abs/2308.05732">PDE-Refiner - Achieving Accurate Long Rollouts with Neural PDE Solvers</a>
+</h2>
+</figcaption>
+</figure>
+<center>
+Phillip Lippe <sup>1</sup>, Bastiaan S. Veeling <sup>1</sup>, Paris Perdikaris <sup>1</sup>, Richard E. Turner <sup>1</sup>, Johannes Brandstetter <sup>1</sup>
+
+<small><sup>1</sup>Microsoft Research AI4Science</small>
+</center>
+**Abstract:** Time-dependent partial differential equations (PDEs) are ubiquitous in science and engineering. Recently, mostly due to the high computational cost of traditional solution techniques, deep neural network based surrogates have gained increased interest. The practical utility of such neural PDE solvers relies on their ability to provide accurate, stable predictions over long time horizons, which is a notoriously hard problem. In this work, we present a large-scale analysis of common temporal rollout strategies, identifying the neglect of non-dominant spatial frequency information, often associated with high frequencies in PDE solutions, as the primary pitfall limiting stable, accurate rollout performance. Based on these insights, we draw inspiration from recent advances in diffusion models to introduce PDE-Refiner; a novel model class that enables more accurate modeling of all frequency components via a multistep refinement process. We validate PDE-Refiner on challenging benchmarks of complex fluid dynamics, demonstrating stable and accurate rollouts that consistently outperform state-of-the-art models, including neural, numerical, and hybrid neural-numerical architectures. We further demonstrate that PDE-Refiner greatly enhances data efficiency, since the denoising objective implicitly induces a novel form of spectral data augmentation. Finally, PDE-Refiner's connection to diffusion models enables an accurate and efficient assessment of the model's predictive uncertainty, allowing us to estimate when the surrogate becomes inaccurate.
+
+
+
+
+
+---
+
+
+
+<figure markdown>
 ![](assets/images/research/CGANs-thumbnail.png){ width="500"}
 <figcaption>
 <!-- Large font: -->
@@ -25,7 +49,7 @@ David Ruhe <sup>1</sup>, Jayesh K. Gupta <sup>2</sup>, Steven de Keninck <sup>3<
 
 
 
-    
+
 
 ---
 
@@ -49,7 +73,7 @@ Jayesh K. Gupta* <sup>1</sup>, Johannes Brandstetter* <sup>2</sup>
 
 
 
-    
+
 
 ---
 
@@ -70,7 +94,3 @@ Johannes Brandstetter <sup>1</sup>, Rianne van den Berg <sup>1</sup>, Max Wellin
 <small><sup>1</sup>Microsoft Research AI4Science, <sup>2</sup>Microsoft Autonomous Systems and Robotics Research</small>
 </center>
 **Abstract:** Partial differential equations (PDEs) see widespread use in sciences and engineering to describe simulation of physical processes as scalar and vector fields interacting and coevolving over time. Due to the computationally expensive nature of their standard solution methods, neural PDE surrogates have become an active research topic to accelerate these simulations. However, current methods do not explicitly take into account the relationship between different fields and their internal components, which are often correlated. Viewing the time evolution of such correlated fields through the lens of multivector fields allows us to overcome these limitations. Multivector fields consist of scalar, vector, as well as higher-order components, such as bivectors and trivectors. Their algebraic properties, such as multiplication, addition and other arithmetic operations can be described by Clifford algebras. To our knowledge, this paper presents the first usage of such multivector representations together with Clifford convolutions and Clifford Fourier transforms in the context of deep learning. The resulting Clifford neural layers are universally applicable and will find direct use in the areas of fluid dynamics, weather forecasting, and the modeling of physical systems in general. We empirically evaluate the benefit of Clifford neural layers by replacing convolution and Fourier operations in common neural PDE surrogates by their Clifford counterparts on two-dimensional Navier-Stokes and weather modeling tasks, as well as three-dimensional Maxwell equations. Clifford neural layers consistently improve generalization capabilities of the tested neural PDE surrogates.
-
-
-
-    

@@ -127,7 +127,7 @@ class Maxwell3D(PDEConfig):
 
     @property
     def spatial_grid_size(self):
-        return(self.n, self.n, self.n)
+        return (self.n, self.n, self.n)
 
     @property
     def grid_spacing(self):

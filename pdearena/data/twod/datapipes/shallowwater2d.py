@@ -11,7 +11,7 @@ import torch.distributed as dist
 import torchdata.datapipes as dp
 import xarray as xr
 
-from .common import ZarrLister, build_datapipes
+from pdearena.data.datapipes_common import ZarrLister, build_datapipes
 
 
 class ShallowWaterDatasetOpener(dp.iter.IterDataPipe):

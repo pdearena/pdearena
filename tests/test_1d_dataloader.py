@@ -7,64 +7,50 @@ from torch.utils.data import DataLoader
 
 from pdearena.data.datamodule import collate_fn_cat, collate_fn_stack
 from pdearena.data.registry import DATAPIPE_REGISTRY
-from pdedatagen.pde import NavierStokes2D
+from pdearena.data.utils import PDEDataConfig
 
 
 @pytest.fixture(scope="session")
-def synthetic_navier_stokes(tmpdir_factory):
+def synthetic_kuramoto_sivashinsky(tmpdir_factory):
     """Generate an artificial Navier-Stokes dataset."""
-    tmpdir = tmpdir_factory.mktemp("synth_navier_stokes")
-    pde = NavierStokes2D()
+    tmpdir = tmpdir_factory.mktemp("synth_kuramoto_sivashinsky")
     modes = ["train", "valid", "test"]
     seed = 42
     num_samples = 16
-    nt = 14
-    pde.nt = nt
+    nt = 32
     nx = 128
-    ny = 128
+    pde = PDEDataConfig(n_scalar_components=1, n_vector_components=0, trajlen=nt // 4, n_spatial_dim=1)
+    pde.nx = nx
 
     filenames = {}
     for mode in modes:
-        file_name = os.path.join(tmpdir, "_".join([str(pde), mode, str(seed), f"{pde.buoyancy_y:.5f}"]))
-        file_name = file_name + "_" + str(num_samples) + ".h5"
+        file_name = os.path.join(tmpdir, f"kuramoto_sivashinsky_{mode}_{seed}_{num_samples}.h5")
         filenames[mode] = file_name
 
         h5f = h5py.File(file_name, "a")
         dataset = h5f.create_group(mode)
-        h5f_u = dataset.create_dataset("u", (num_samples, nt, nx, ny), dtype=float)
-        h5f_u[...] = np.random.rand(num_samples, nt, nx, ny)
-        h5f_vx = dataset.create_dataset("vx", (num_samples, nt, nx, ny), dtype=float)
-        h5f_vx[...] = np.random.rand(num_samples, nt, nx, ny)
-        h5f_vy = dataset.create_dataset("vy", (num_samples, nt, nx, ny), dtype=float)
-        h5f_vy[...] = np.random.rand(num_samples, nt, nx, ny)
-        tcoord = dataset.create_dataset("t", (num_samples, nt), dtype=float)
-        tcoord[...] = np.random.rand(num_samples, nt)
+        h5f_u = dataset.create_dataset("pde_traj", (num_samples, nt, nx), dtype=float)
+        h5f_u[...] = np.random.rand(num_samples, nt, nx)
         dt = dataset.create_dataset("dt", (num_samples,), dtype=float)
-        dt[...] = np.random.rand(num_samples)
-        xcoord = dataset.create_dataset("x", (num_samples, nx), dtype=float)
-        xcoord[...] = np.random.rand(num_samples, nx)
+        dt[...] = np.random.rand(num_samples) * 0.1 + 0.15
         dx = dataset.create_dataset("dx", (num_samples,), dtype=float)
-        dx[...] = np.random.rand(num_samples)
-        ycoord = dataset.create_dataset("y", (num_samples, ny), dtype=float)
-        ycoord[...] = np.random.rand(num_samples, ny)
-        dy = dataset.create_dataset("dy", (num_samples,), dtype=float)
-        dy[...] = np.random.rand(num_samples)
-        buo_y = dataset.create_dataset("buo_y", (num_samples,), dtype=float)
-        buo_y[...] = np.random.rand(num_samples)
+        dx[...] = np.random.rand(num_samples) * 0.1 + 0.2
+        v = dataset.create_dataset("v", (num_samples,), dtype=float)
+        v[...] = np.random.rand(num_samples) + 0.5
 
         h5f.close()
 
     return modes, pde, filenames
 
 
-def test_navier_stokes_dataloader(synthetic_navier_stokes):
-    modes, pde, filenames = synthetic_navier_stokes
+def test_kuramoto_sivashinsky_dataloader(synthetic_kuramoto_sivashinsky):
+    modes, pde, filenames = synthetic_kuramoto_sivashinsky
 
     batch_size = 2
     time_history = 2
     time_future = 1
     time_gap = 0
-    dps = DATAPIPE_REGISTRY["NavierStokes2D"]
+    dps = DATAPIPE_REGISTRY["KuramotoSivashinsky1D"]
     for mode in modes:
         if mode == "train":
             train_dp = dps[mode](
@@ -87,11 +73,12 @@ def test_navier_stokes_dataloader(synthetic_navier_stokes):
                 collate_fn=collate_fn_cat,
             )
 
-            for idx, (x, y, _) in enumerate(train_dataloader):
-                assert x.shape[0] == y.shape[0] == batch_size
+            for idx, (x, y, cond) in enumerate(train_dataloader):
+                assert x.shape[0] == y.shape[0] == cond.shape[0] == batch_size
                 assert x.shape[1] == time_history
                 assert y.shape[1] == time_future
-                assert x.shape[2] == y.shape[2] == 3
+                assert x.shape[2] == y.shape[2] == 1
+                assert cond.shape[1] == 3
             assert idx > 0
 
         elif mode == "valid" or mode == "test":
@@ -113,11 +100,13 @@ def test_navier_stokes_dataloader(synthetic_navier_stokes):
                 drop_last=True,
                 collate_fn=collate_fn_cat,
             )
-            for idx, (x, y, _) in enumerate(valid_dataloader1):
-                assert x.shape[0] == y.shape[0] == batch_size
+            for idx, (x, y, cond) in enumerate(valid_dataloader1):
+                print(x.shape, y.shape, cond.shape)
+                assert x.shape[0] == y.shape[0] == cond.shape[0] == batch_size
                 assert x.shape[1] == time_history
                 assert y.shape[1] == time_future
-                assert x.shape[2] == y.shape[2] == 3
+                assert x.shape[2] == y.shape[2] == 1
+                assert cond.shape[1] == 3
             assert idx > 0
 
             valid_dp2 = dps[mode][1](
@@ -139,6 +128,7 @@ def test_navier_stokes_dataloader(synthetic_navier_stokes):
                 collate_fn=collate_fn_stack,
             )
             for idx, x in enumerate(valid_dataloader2):
-                assert x[0].shape == (batch_size, pde.nt, pde.n_scalar_components, pde.nx, pde.ny)
-                assert x[1].shape == (batch_size, pde.nt, pde.n_vector_components * 2, pde.nx, pde.ny)
+                assert x[0].shape == (batch_size, pde.trajlen, pde.n_scalar_components, pde.nx)
+                assert np.prod(x[1].shape) == 0  # No vector components
+                assert x[2].shape == (batch_size, 3)
             assert idx > 0

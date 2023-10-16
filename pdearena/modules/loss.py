@@ -22,7 +22,7 @@ def scaledlp_loss(input: torch.Tensor, target: torch.Tensor, p: int = 2, reducti
 def custommse_loss(input: torch.Tensor, target: torch.Tensor, reduction: str = "mean"):
     loss = F.mse_loss(input, target, reduction="none")
     # avg across space
-    reduced_loss = torch.mean(loss, dim=(3, 4))
+    reduced_loss = torch.mean(loss, dim=tuple(range(3, loss.ndim)))
     # sum across time + fields
     reduced_loss = reduced_loss.sum(dim=(1, 2))
     # reduce along batch
@@ -34,6 +34,25 @@ def custommse_loss(input: torch.Tensor, target: torch.Tensor, reduction: str = "
         return reduced_loss
     else:
         raise NotImplementedError(reduction)
+
+
+def pearson_correlation(input: torch.Tensor, target: torch.Tensor, reduce_batch: bool = False):
+    B = input.size(0)
+    T = input.size(1)
+    input = input.reshape(B, T, -1)
+    target = target.reshape(B, T, -1)
+    input_mean = torch.mean(input, dim=(2), keepdim=True)
+    target_mean = torch.mean(target, dim=(2), keepdim=True)
+    # Unbiased since we use unbiased estimates in covariance
+    input_std = torch.std(input, dim=(2), unbiased=False)
+    target_std = torch.std(target, dim=(2), unbiased=False)
+
+    corr = torch.mean((input - input_mean) * (target - target_mean), dim=2) / (input_std * target_std).clamp(
+        min=torch.finfo(torch.float32).tiny
+    )  # shape (B, T)
+    if reduce_batch:
+        corr = torch.mean(corr, dim=0)
+    return corr
 
 
 class ScaledLpLoss(torch.nn.Module):
@@ -68,3 +87,18 @@ class CustomMSELoss(torch.nn.Module):
 
     def forward(self, input: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
         return custommse_loss(input, target, reduction=self.reduction)
+
+
+class PearsonCorrelationScore(torch.nn.Module):
+    """Pearson Correlation Score for PDEs."""
+
+    def __init__(self, channel: int = None, reduce_batch: bool = False) -> None:
+        super().__init__()
+        self.channel = channel
+        self.reduce_batch = reduce_batch
+
+    def forward(self, input: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
+        if self.channel is not None:
+            input = input[:, :, self.channel]
+            target = target[:, :, self.channel]
+        return pearson_correlation(input, target, reduce_batch=self.reduce_batch)

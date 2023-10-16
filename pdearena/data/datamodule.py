@@ -14,6 +14,10 @@ def collate_fn_cat(batch):
     # Assuming pairs
     b1 = torch.cat([b[0] for b in batch], dim=0)
     b2 = torch.cat([b[1] for b in batch], dim=0)
+    if len(batch[0]) > 2:
+        if batch[0][2] is not None:
+            b3 = torch.cat([b[2] for b in batch], dim=0)
+            return b1, b2, b3
     return b1, b2
 
 

@@ -111,6 +111,7 @@ def build_datapipes(
                 time_future,
                 time_gap,
             )
+        # For multi-step prediction, the original data pipe can be used without change.
 
     return dpipe
 
@@ -286,13 +287,6 @@ class RandomizedPDETrainData(dp.iter.IterDataPipe):
         self.time_gap = time_gap
 
     def __iter__(self):
-        # Length of trajectory
-        time_resolution = self.trajlen
-        # Max number of previous points solver can eat
-        reduced_time_resolution = time_resolution - self.time_history
-        # Number of future points to predict
-        max_start_time = reduced_time_resolution - self.time_future - self.time_gap
-
         for batch in self.dp:
             if len(batch) == 3:
                 (u, v, grid) = batch
@@ -302,9 +296,16 @@ class RandomizedPDETrainData(dp.iter.IterDataPipe):
             else:
                 raise ValueError(f"Unknown batch length of {len(batch)}.")
 
+            # Length of trajectory
+            time_resolution = min(u.shape[0], self.trajlen)
+            # Max number of previous points solver can eat
+            reduced_time_resolution = time_resolution - self.time_history
+            # Number of future points to predict
+            max_start_time = reduced_time_resolution - self.time_future - self.time_gap
+
             # Choose initial random time point at the PDE solution manifold
             start_time = random.choices([t for t in range(max_start_time + 1)], k=1)
-            yield datautils.create_data2D(
+            data, targets = datautils.create_data2D(
                 self.n_input_scalar_components,
                 self.n_input_vector_components,
                 self.n_output_scalar_components,
@@ -317,6 +318,12 @@ class RandomizedPDETrainData(dp.iter.IterDataPipe):
                 self.time_future,
                 self.time_gap,
             )
+            if cond is None and grid is None:
+                yield data, targets
+            elif cond is not None and grid is None:
+                yield data, targets, cond
+            else:
+                yield data, targets, cond, grid
 
 
 class PDEEvalTimeStepData(dp.iter.IterDataPipe):
@@ -387,4 +394,9 @@ class PDEEvalTimeStepData(dp.iter.IterDataPipe):
 
                 # add batch dim
                 labels = torch.cat((labels_scalar, labels_vector), dim=1).unsqueeze(0)
-                yield data, labels
+                if cond is None and grid is None:
+                    yield data, labels
+                elif cond is not None and grid is None:
+                    yield data, labels, cond
+                else:
+                    yield data, labels, cond, grid

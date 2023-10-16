@@ -34,6 +34,8 @@ base_requires = [
     "pytest",
     "pytest-mock",
     "pytest-explicit",
+    "diffusers==0.17.1",
+    "cliffordlayers",
 ]
 
 setup(

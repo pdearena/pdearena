@@ -10,7 +10,7 @@
 ### Standard
 
 ```bash
-# This script loops over different seeds and produces 5.2k training, 1.3k valid, 
+# This script loops over different seeds and produces 5.2k training, 1.3k valid,
 # and 1.3k test trajectories of the Navier-Stokes dataset.
 ./pdedatagen/scripts/navierstokes_jobs.sh
 ```
@@ -41,7 +41,7 @@ done
 ### Conditioned
 
 ```bash
-# This script loops over different seeds and produces 6656 training, 1664 valid, 
+# This script loops over different seeds and produces 6656 training, 1664 valid,
 # and 1664 test trajectories of the conditioned Navier-Stokes dataset.
 ./pdedatagen/scripts/navierstokes_cond_jobs.sh
 ```
@@ -76,7 +76,7 @@ The Navier-Stokes data is reasonably bounded that we didn't need any normalizati
 ## Shallow water 2D
 
 ```bash
-# This script loops over different seeds and produces 5.6k training, 1.4k valid, 
+# This script loops over different seeds and produces 5.6k training, 1.4k valid,
 # and 1.4k test trajectories of the Shallow water dataset.
 ./pdedatagen/scripts/navierstokes_cond_jobs.sh
 ```
@@ -124,7 +124,7 @@ python scripts/compute_normalization.py \
 ## Maxwell 3D
 
 ```bash
-# This script loops over different seeds and produces 6.4k training, 
+# This script loops over different seeds and produces 6.4k training,
 # 1.6k valid, and 1.6k test trajectories of the Maxwell dataset.
 ```
 

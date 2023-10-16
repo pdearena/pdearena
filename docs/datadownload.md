@@ -109,6 +109,32 @@ git clone https://huggingface.co/datasets/pdearena/Maxwell-3D
 GIT_LFS_SKIP_SMUDGE=1
 ```
 
+## Kuramoto-Sivashinsky - 1D
+
+Generated using [LPSDA](https://github.com/brandstetter-johannes/LPSDA).
+
+SSH:
+```bash
+# Make sure you have git-lfs installed (https://git-lfs.com)
+git lfs install
+git clone git@hf.co:datasets/pdearena/Kuramoto-Sivashinsky-1D
+
+# if you want to clone without large files – just their pointers
+# prepend your git clone with the following env var:
+GIT_LFS_SKIP_SMUDGE=1
+```
+
+HTTPS:
+```bash
+# Make sure you have git-lfs installed (https://git-lfs.com)
+git lfs install
+git clone https://huggingface.co/datasets/pdearena/Kuramoto-Sivashinsky-1D
+
+# if you want to clone without large files – just their pointers
+# prepend your git clone with the following env var:
+GIT_LFS_SKIP_SMUDGE=1
+```
+
 # PDEBench
 
 [`PDEBench`](https://github.com/pdebench/PDEBench) data can be downloaded with the included [`download_pdebenchdata.py`](<>) script:

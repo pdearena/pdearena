@@ -91,7 +91,7 @@ def create_maxwell_data(
 
     Returns:
         Tuple[torch.Tensor, torch.Tensor]: input, target tensore of shape `[1, t, 6, x, y, z]`
-    """   
+    """
     # Different starting points of one batch
     end_time = start + time_history
     target_start_time = end_time + time_gap

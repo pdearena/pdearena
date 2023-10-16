@@ -1,20 +1,14 @@
+from cliffordlayers.models.basic.threed import CliffordFourierBasicBlock3d
+
 from pdearena import utils
 from pdearena.modules.conditioned.twod_resnet import (
     FourierBasicBlock as CondFourierBasicBlock,
 )
+from pdearena.modules.threed import FourierBasicBlock3D
 from pdearena.modules.twod_resnet import (
     BasicBlock,
     DilatedBasicBlock,
     FourierBasicBlock,
-)
-from pdearena.modules.threed import (
-    FourierBasicBlock3D,
-)
-from cliffordlayers.models.basic.threed import (
-    CliffordFourierBasicBlock3d,
-)
-from cliffordlayers.models.gca.twod import (
-    CliffordG3UNet2d,
 )
 
 MODEL_REGISTRY = {
@@ -359,14 +353,16 @@ MODEL_REGISTRY = {
             "block": utils.partialclass("FourierBasicBlock3D", FourierBasicBlock3D, modes1=8, modes2=8, modes3=8),
             "diffmode": False,
         },
-    }, 
+    },
     "MaxwellCFNO3D-32-8": {
         "class_path": "pdearena.modules.threed.CliffordMaxwellResNet3D",
         "init_args": {
             "g": [1, 1, 1],
             "hidden_channels": 32,
             "num_blocks": [1, 1],
-            "block": utils.partialclass("CliffordFourierBasicBlock3d", CliffordFourierBasicBlock3d, modes1=8, modes2=8, modes3=8),
+            "block": utils.partialclass(
+                "CliffordFourierBasicBlock3d", CliffordFourierBasicBlock3d, modes1=8, modes2=8, modes3=8
+            ),
             "diffmode": False,
         },
     },
@@ -425,6 +421,42 @@ COND_MODEL_REGISTRY = {
             "norm": True,
             "mid_attn": True,
             "use_scale_shift_norm": True,
+        },
+    },
+    "Unetmod-1d-64": {
+        "class_path": "pdearena.modules.conditioned.oned_unet.Unet",
+        "init_args": {
+            "hidden_channels": 64,
+            "norm": True,
+            "n_dims": 1,
+        },
+    },
+    "Unetmodattn-1d-64": {
+        "class_path": "pdearena.modules.conditioned.oned_unet.Unet",
+        "init_args": {
+            "hidden_channels": 64,
+            "norm": True,
+            "mid_attn": True,
+            "n_dims": 1,
+        },
+    },
+    "Unetmod-1d-64-1x1": {
+        "class_path": "pdearena.modules.conditioned.oned_unet.Unet",
+        "init_args": {
+            "hidden_channels": 64,
+            "norm": True,
+            "use1x1": True,
+            "n_dims": 1,
+        },
+    },
+    "Unetmodattn-1d-64-1x1": {
+        "class_path": "pdearena.modules.conditioned.oned_unet.Unet",
+        "init_args": {
+            "hidden_channels": 64,
+            "norm": True,
+            "mid_attn": True,
+            "use1x1": True,
+            "n_dims": 1,
         },
     },
     "U-FNet1-16m": {

@@ -7,7 +7,7 @@ import h5py
 import torch
 import torchdata.datapipes as dp
 
-from .common import build_datapipes
+from pdearena.data.datapipes_common import build_datapipes
 
 
 class NavierStokesDatasetOpener(dp.iter.IterDataPipe):
