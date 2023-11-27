@@ -84,13 +84,11 @@ trainer:
   move_metrics_to_cpu: false
   multiple_trainloader_mode: max_size_cycle
 model:
-  class_path: pdearena.models.pdemodel.PDEModel
-  init_args:
-    name: "FourierResNet"
-    max_num_steps: 5
-    activation: "gelu"
-    criterion: mse
-    lr: 1e-3
+  name: "FourierResNet"
+  max_num_steps: 5
+  activation: "gelu"
+  criterion: mse
+  lr: 1e-3
 
 
 data:
