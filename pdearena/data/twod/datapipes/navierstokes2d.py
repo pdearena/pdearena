@@ -23,12 +23,13 @@ class NavierStokesDatasetOpener(dp.iter.IterDataPipe):
         (Tuple[torch.Tensor, torch.Tensor, Optional[torch.Tensor], Optional[torch.Tensor]]): Tuple containing particle scalar field, velocity vector field, and optionally buoyancy force parameter value  and spatial grid.
     """
 
-    def __init__(self, dp, mode: str, limit_trajectories: Optional[int] = None, usegrid: bool = False) -> None:
+    def __init__(self, dp, mode: str, limit_trajectories: Optional[int] = None, usegrid: bool = False, conditioned: bool = False) -> None:
         super().__init__()
         self.dp = dp
         self.mode = mode
         self.limit_trajectories = limit_trajectories
         self.usegrid = usegrid
+        self.conditioned = conditioned
 
     def __iter__(self):
         for path in self.dp:
@@ -46,7 +47,7 @@ class NavierStokesDatasetOpener(dp.iter.IterDataPipe):
                     u = torch.tensor(data["u"][idx])
                     vx = torch.tensor(data["vx"][idx])
                     vy = torch.tensor(data["vy"][idx])
-                    if "buo_y" in data:
+                    if "buo_y" in data and self.conditioned:
                         cond = torch.tensor(data["buo_y"][idx]).unsqueeze(0).float()
                     else:
                         cond = None
@@ -141,7 +142,7 @@ trajectory_test_datapipe_ns = functools.partial(
 
 train_datapipe_ns_cond = functools.partial(
     build_datapipes,
-    dataset_opener=NavierStokesDatasetOpener,
+    dataset_opener=functools.partial(NavierStokesDatasetOpener, conditioned=True),
     filter_fn=_train_filter,
     lister=dp.iter.FileLister,
     sharder=dp.iter.ShardingFilter,
@@ -152,7 +153,7 @@ train_datapipe_ns_cond = functools.partial(
 
 onestep_valid_datapipe_ns_cond = functools.partial(
     build_datapipes,
-    dataset_opener=NavierStokesDatasetOpener,
+    dataset_opener=functools.partial(NavierStokesDatasetOpener, conditioned=True),
     filter_fn=_valid_filter,
     lister=dp.iter.FileLister,
     sharder=dp.iter.ShardingFilter,
@@ -163,7 +164,7 @@ onestep_valid_datapipe_ns_cond = functools.partial(
 
 onestep_test_datapipe_ns_cond = functools.partial(
     build_datapipes,
-    dataset_opener=NavierStokesDatasetOpener,
+    dataset_opener=functools.partial(NavierStokesDatasetOpener, conditioned=True),
     filter_fn=_test_filter,
     lister=dp.iter.FileLister,
     sharder=dp.iter.ShardingFilter,
@@ -174,7 +175,7 @@ onestep_test_datapipe_ns_cond = functools.partial(
 
 trajectory_test_datapipe_ns_cond = functools.partial(
     build_datapipes,
-    dataset_opener=NavierStokesDatasetOpener,
+    dataset_opener=functools.partial(NavierStokesDatasetOpener, conditioned=True),
     filter_fn=_test_filter,
     lister=dp.iter.FileLister,
     sharder=dp.iter.ShardingFilter,
