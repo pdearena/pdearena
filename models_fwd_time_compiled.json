@@ -1,0 +1,184 @@
+{
+    "DilResNet-128": {
+        "fwd_time": 0.11790552824735641,
+        "model_size": 16.669708,
+        "num_params": 4167427
+    },
+    "DilResNet-128-norm": {
+        "fwd_time": 0.16652635727077722,
+        "model_size": 16.69838,
+        "num_params": 4174595
+    },
+    "FNO-128-16m": {
+        "fwd_time": 0.04213200654834509,
+        "model_size": 537.539596,
+        "num_params": 134384899
+    },
+    "FNO-128-8m": {
+        "fwd_time": 0.03967828843742609,
+        "model_size": 134.886412,
+        "num_params": 33721603
+    },
+    "FNOs-128-16m": {
+        "fwd_time": 0.022369681224226952,
+        "model_size": 268.839948,
+        "num_params": 67209987
+    },
+    "FNOs-128-32m": {
+        "fwd_time": 0.027284999564290046,
+        "model_size": 1074.1463159999998,
+        "num_params": 268536579
+    },
+    "FNOs-64-32m": {
+        "fwd_time": 0.012234333716332913,
+        "model_size": 268.539404,
+        "num_params": 67134851
+    },
+    "FNOs-96-32m": {
+        "fwd_time": 0.019528296776115894,
+        "model_size": 604.20942,
+        "num_params": 151052355
+    },
+    "ResNet-128": {
+        "fwd_time": 0.04294247891753912,
+        "model_size": 4.87118,
+        "num_params": 1217795
+    },
+    "ResNet-256": {
+        "fwd_time": 0.10069989904761315,
+        "model_size": 19.441675999999998,
+        "num_params": 4860419
+    },
+    "U-FNet1-16m": {
+        "fwd_time": 0.15560611665248872,
+        "model_size": 643.6393079999999,
+        "num_params": 160909827
+    },
+    "U-FNet1-16m-1x1": {
+        "fwd_time": 0.15629897195845843,
+        "model_size": 643.6085879999999,
+        "num_params": 160902147
+    },
+    "U-FNet1-8m": {
+        "fwd_time": 0.20040941786020994,
+        "model_size": 593.3076599999999,
+        "num_params": 148326915
+    },
+    "U-FNet1-8m-1x1": {
+        "fwd_time": 0.16780240789055825,
+        "model_size": 593.27694,
+        "num_params": 148319235
+    },
+    "U-FNet2-16m": {
+        "fwd_time": 0.09269414376467466,
+        "model_size": 700.524556,
+        "num_params": 175131139
+    },
+    "U-FNet2-16m-1x1": {
+        "fwd_time": 0.09214242793619633,
+        "model_size": 700.493836,
+        "num_params": 175123459
+    },
+    "U-FNet2-16mc": {
+        "fwd_time": 0.09153593093156814,
+        "model_size": 876.6853239999999,
+        "num_params": 219171331
+    },
+    "U-FNet2-8m": {
+        "fwd_time": 0.14453145008534193,
+        "model_size": 606.1527159999999,
+        "num_params": 151538179
+    },
+    "U-FNet2-8m-1x1": {
+        "fwd_time": 0.10672001630067825,
+        "model_size": 606.121996,
+        "num_params": 151530499
+    },
+    "U-FNet2-8mc": {
+        "fwd_time": 0.09896673135459423,
+        "model_size": 650.192908,
+        "num_params": 162548227
+    },
+    "U-FNet2attn-16m": {
+        "fwd_time": 0.1677810187265277,
+        "model_size": 717.3263479999999,
+        "num_params": 179331587
+    },
+    "U-FNet2attn-16m-1x1": {
+        "fwd_time": 0.0976870921626687,
+        "model_size": 717.295628,
+        "num_params": 179323907
+    },
+    "U-FNet3-16m": {
+        "fwd_time": 0.09094264302402735,
+        "model_size": 751.90478,
+        "num_params": 187976195
+    },
+    "U-FNet3-16m-1x1": {
+        "fwd_time": 0.09040067743510008,
+        "model_size": 751.87406,
+        "num_params": 187968515
+    },
+    "U-FNet3-8m": {
+        "fwd_time": 0.0924907785654068,
+        "model_size": 657.5329399999999,
+        "num_params": 164383235
+    },
+    "U-FNet3-8m-1x1": {
+        "fwd_time": 0.09062747821211815,
+        "model_size": 657.50222,
+        "num_params": 164375555
+    },
+    "UNO-128": {
+        "fwd_time": 0.15526045531034469,
+        "model_size": 1761.817356,
+        "num_params": 440454339
+    },
+    "UNO-64": {
+        "fwd_time": 0.06588963106274605,
+        "model_size": 440.465804,
+        "num_params": 110116451
+    },
+    "Unet2015-128": {
+        "fwd_time": 0.04260022521018982,
+        "model_size": 496.528396,
+        "num_params": 124132099
+    },
+    "Unet2015-64": {
+        "fwd_time": 0.01275121059268713,
+        "model_size": 124.17178799999999,
+        "num_params": 31042947
+    },
+    "Unetbase-128": {
+        "fwd_time": 0.04448599904775619,
+        "model_size": 496.587788,
+        "num_params": 124146947
+    },
+    "Unetbase-64": {
+        "fwd_time": 0.013479058481752872,
+        "model_size": 124.201484,
+        "num_params": 31050371
+    },
+    "Unetmod-64": {
+        "fwd_time": 0.05789634812623262,
+        "model_size": 577.054732,
+        "num_params": 144263683
+    },
+    "Unetmod-64-1x1": {
+        "fwd_time": 0.057300032004714015,
+        "model_size": 577.024012,
+        "num_params": 144256003
+    },
+    "Unetmodattn-64": {
+        "fwd_time": 0.05975494474172592,
+        "model_size": 593.8565239999999,
+        "num_params": 148464131
+    },
+    "Unetmodattn-64-1x1": {
+        "fwd_time": 0.05919426862150431,
+        "model_size": 593.825804,
+        "num_params": 148456451
+    },
+    "date-created": "2023-03-27 02:02:18.014420",
+    "gpu-name": "Tesla V100-PCIE-16GB"
+}
