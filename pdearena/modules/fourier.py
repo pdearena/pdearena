@@ -65,7 +65,7 @@ class SpectralConv1d(nn.Module):
         out_ft[:, :, : self.modes] = batchmul1d(x_ft[:, :, : self.modes], torch.view_as_complex(self.weights))
 
         # Return to physical space
-        x = torch.fft.irfft(out_ft, n=(x.size(-1),))
+        x = torch.fft.irfft(out_ft, n=x.size(-1))
         return x
 
 
