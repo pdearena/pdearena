@@ -9,7 +9,7 @@
 This repository contains code accompanying the paper [**Towards multi-spatiotemporal-scale generalized PDE modeling**](https://arxiv.org/abs/2209.15616), and as such we hope this serves as a starting point for future PDE surrogate learning research.
 We have imported models from [**Clifford neural layers for PDE modeling**](https://arxiv.org/abs/2209.04934) and [**Geometric Clifford Algebra Networks**](https://arxiv.org/abs/2302.06594).
 
-For details about usage please see [documentation](https://microsoft.github.io/pdearena).
+For details about usage please see [documentation](https://pdearena.github.io/pdearena/).
 If you have any questions or suggestions please open a [discussion](https://github.com/microsoft/pdearena/discussions). If you notice a bug, please open an [issue](https://github.com/microsoft/pdearena/issues).
 
 ## Citation
