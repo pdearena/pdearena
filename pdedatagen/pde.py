@@ -132,3 +132,44 @@ class Maxwell3D(PDEConfig):
     @property
     def grid_spacing(self):
         return self.L / self.n_large
+
+
+@dataclass
+class Wave2D(PDEConfig):
+    tmin: float = 0
+    tmax: float = 10.0
+    Lx: float = 1.0
+    Ly: float = 1.0
+    nt: int = 100
+    nx: int = 128
+    ny: int = 128
+    skip_nt: int = 0
+    sample_rate: int = 1
+    c: float = 1.0
+    n_scalar_components: int = 1  # u
+    n_vector_components: int = 0
+    init_modes: int = 5
+    device: str = "cpu"
+
+    def __repr__(self):
+        return "Wave2D"
+
+    @property
+    def trajlen(self):
+        return int(self.nt / self.sample_rate)
+
+    @property
+    def grid_size(self):
+        return (self.trajlen, self.nx, self.ny)
+
+    @property
+    def dt(self):
+        return (self.tmax - self.tmin) / self.nt
+
+    @property
+    def dx(self):
+        return self.Lx / (self.nx - 1)
+
+    @property
+    def dy(self):
+        return self.Ly / (self.ny - 1)

@@ -1,0 +1,22 @@
+dirname: ???
+experiment: ???
+mode: ???
+pdeconfig:
+  class_path: pdedatagen.pde.Wave2D
+  init_args:
+    tmin: 0.0
+    tmax: 10.0
+    Lx: 1.0
+    Ly: 1.0
+    nt: 100
+    nx: 128
+    ny: 128
+    skip_nt: 0
+    sample_rate: 1
+    c: 1.0
+    init_modes: 5
+    n_scalar_components: 1
+    n_vector_components: 0
+    device: cpu
+samples: 32
+batchsize: 8
